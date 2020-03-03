@@ -4,7 +4,7 @@ deploy="https://github.com/sdttttt/Site.git"
 dir=$(pwd)
 
 function deployToSite(){
-    cp ./public ../
+    cp -r ./public ../
     cd ../public
 
     echo "==> [Deploy] Git Runing ..."
