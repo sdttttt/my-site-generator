@@ -35,7 +35,7 @@ hugo
 echo "==> Check Status ..."
 
 if [ $? -eq 0 ]; then
-    if [-e ./public]; then
+    if [ -d "./public" ]; then
         echo "Check OK :)"
         deployToSite
     else
