@@ -36,7 +36,7 @@ protulit, sed sed aere valvis inhaesuro Pallas animam: qui _quid_, ignes.
 Miseratus fonte Ditis conubia.
 {{< /tab >}}
 
-{{< tab "Windows" >}}
+{{< tab "Win" >}}
 
 # Windows
 
