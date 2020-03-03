@@ -18,19 +18,22 @@ dir=$(pwd)
 
 echo "Warning: 该脚本执行时，别按回车!"
 
+if [-d "./public" -eq 0 ]; then
+    rm -rf ./public
+fi
+
 function deployToSite(){
     cp -r ./public ../
     cd ../public
 
     echo "==> [Deploy] Git Runing ..."
-    echo '\n'
 
     git init
     git add .
     git commit -m "[SDTTTTT] Update Site."
     git push $deploy master --force
 
-    if [ ! $? -eq 0]; then
+    if [ ! $? -eq 0 ]; then
         exit
     fi
 
@@ -40,11 +43,9 @@ function deployToSite(){
     cd $dir
 
     echo "==> OK Deploy Over :)"
-    echo '\n'
 }
 
 echo "==> [Code] Git Runing ... "
-echo '\n'
 
 git add .
 git commit -m "[SDTTTTT] Update Blog."
@@ -55,31 +56,23 @@ if [ ! $? -eq 0]; then
 fi
 
 echo "==> Hugo Building ... \n"
-echo '\n'
-
 hugo
 
 echo "==> Check Status ..."
-echo '\n'
 
 if [ $? -eq 0 ]; then
     if [ -d "./public" ]; then
         echo "Check OK :)"
-        echo '\n'
         deployToSite
     else
         echo "Oh! 不应该变成这样 :("
-        echo '\n'
     fi
 else 
     echo "环境变量中不存在 hugo: 请安装它"
-    echo '\n'
 fi
 
 echo "==> Clean work start!"
-echo '\n'
 
 rm -rf ./public
 
 echo "==> OK! We is done."
-echo '\n'
