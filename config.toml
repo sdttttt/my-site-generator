@@ -1,0 +1,5 @@
+baseURL = "http://sdttttt.org/"
+languageCode = "zh-cn"
+title = "SDTTTTT's Blog"
+
+theme = "book"
