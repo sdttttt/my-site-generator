@@ -18,7 +18,7 @@ dir=$(pwd)
 
 echo "Warning: 该脚本执行时，别按回车!"
 
-if [-d "./public" -eq 0 ]; then
+if [ -d "./public" -eq 0 ]; then
     rm -rf ./public
 fi
 
