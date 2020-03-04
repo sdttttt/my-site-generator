@@ -1,4 +1,7 @@
 ---
+
+bookFlatSection: true
+
 menu:
   after:
     name: blog
