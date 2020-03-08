@@ -46,10 +46,10 @@ Typescript 等部分前端技术栈.
 我需要团队合作开发的经验，因为我一直都是独立开发者。
 
 ## 开源项目
-{{< hint info >}}
-我不喜欢造旧轮子.
-{{< /hint >}}
 
 vscode 插件 `Bangumi Open` [![GitHub stars](https://img.shields.io/github/stars/sdttttt/vscode-bangumi?style=social)](https://github.com/sdttttt/vscode-bangumi)
+{{< hint info >}}
+为了满足一些软件工程师特别嗜好（包括我），我开发了这个插件。
+{{< /hint >}}
 
 {{< figure src="./chen.jpg" >}}

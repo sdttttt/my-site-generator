@@ -62,4 +62,4 @@ disableKinds = ['taxonomy', 'taxonomyTerm']
   # By default partals/docs/comments.html includes Disqus template
   # See https://gohugo.io/content-management/comments/#configure-disqus
   # Can be overwritten by same param in page frontmatter
-  BookComments = true
+  BookComments = false
