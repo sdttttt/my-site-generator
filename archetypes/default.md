@@ -5,4 +5,4 @@ languages: Chinese
 draft: true
 ---
 
-{{ partial "utterances.html" . }}
+{{< partial "utterances.html" . >}}

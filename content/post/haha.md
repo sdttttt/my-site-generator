@@ -1,18 +1,9 @@
 ---
-
-bookFlatSection: true
-
-menu:
-  after:
-    name: blog
-    weight: 20
-title: Blog
+title: "Haha"
+date: 2020-03-14T21:50:52+08:00
+languages: Chinese
+draft: true
 ---
-
-# About SDTTTTT
-
-Vscode Plugin: The author of the`Bangumi Open`.
-
 
 <script src="https://utteranc.es/client.js"
         repo="sdttttt/sdttttt.github.io"
