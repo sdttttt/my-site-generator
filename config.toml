@@ -4,7 +4,7 @@ title = "SDTTTTT"
 
 theme = "book"
 
-disqusShortname = "shiinatohka"
+# disqusShortname = "shiinatohka"
 
 # (Optional) Set Google Analytics if you use it to track your website.
 # Always put it on the top of the configuration file, otherwise it won't work
@@ -62,4 +62,14 @@ disableKinds = ['taxonomy', 'taxonomyTerm']
   # By default partals/docs/comments.html includes Disqus template
   # See https://gohugo.io/content-management/comments/#configure-disqus
   # Can be overwritten by same param in page frontmatter
-  BookComments = true
+  # BookComments = true
+
+[params.utteranc]
+
+  enable = true
+
+  repo = "sdttttt/sdttttt.github.io"
+  
+  issueTerm = "pathname"
+
+  theme = "github-light"
