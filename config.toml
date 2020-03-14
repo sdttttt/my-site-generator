@@ -64,12 +64,12 @@ disableKinds = ['taxonomy', 'taxonomyTerm']
   # Can be overwritten by same param in page frontmatter
   BookComments = true
 
-# [params.utteranc]
+[params.utteranc]
 
-#   enable = true
+  enable = true
 
-#   repo = "sdttttt/sdttttt.github.io"
+  repo = "sdttttt/sdttttt.github.io"
   
-#   issueTerm = "pathname"
+  issueTerm = "pathname"
 
-#   theme = "github-light"
+  theme = "github-light"
