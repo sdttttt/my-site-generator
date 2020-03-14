@@ -20,7 +20,7 @@
 #######################################################################################
 
 code_address="git@github.com:sdttttt/my-site-generator.git" # Hugo 项目地址
-deploy="git@github.com:sdttttt/Site.git" # 静态网站部署地址
+deploy="git@github.com:sdttttt/sdttttt.github.io.git" # 静态网站部署地址
 commit_message="[SDTTTTT] Update Blog."
 
 dir=$(pwd)
