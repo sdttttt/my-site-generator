@@ -12,3 +12,15 @@ title: Blog
 # About SDTTTTT
 
 Vscode Plugin: The author of the`Bangumi Open`.
+
+{{ if and ( .Site.Params.utteranc.enable ) (and (not .Params.disable_comments) (or (eq .Kind "404") (and (not .IsHome) .Content))) }}
+<section class="comments">
+<script src="https://utteranc.es/client.js"
+        repo="{{ .Site.Params.utteranc.repo }}"
+        issue-term="{{ .Site.Params.utteranc.issueTerm }}"
+        theme="{{ .Site.Params.utteranc.theme }}"
+        crossorigin="anonymous"
+        async>
+</script>
+</section>
+{{ end }}
