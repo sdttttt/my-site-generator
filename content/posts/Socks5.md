@@ -1,14 +1,8 @@
 ---
 title: "Socks5"
 weight: 1
-# bookFlatSection: false
-# bookToc: true
-# bookHidden: false
-# bookCollapseSection: false
-# bookComments: true
 ---
 
-# SOCKS5 协议介绍
 
 SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是"SOCKetS"的缩写。
 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。

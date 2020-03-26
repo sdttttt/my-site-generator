@@ -2,8 +2,6 @@
 title: Appveyor
 ---
 
-# Appveyor
-
 Appveyor 也是一款线上 CICD 工具。
 
 Support Contexts:

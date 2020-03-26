@@ -4,10 +4,7 @@ title: Rails ENV
 
 # Rails ENV
 
-
-{{< hint info >}}
  环境配置参考 Ruby China 社区的 Wiki
- {{< /hint >}}
 
 ### Windows 10
 

@@ -49,14 +49,12 @@ Goroutine 是实际并发执行的实体，它底层是使用协程(coroutine)�
 ![go_MN](/go_MN.png)
 
 
-{{< hint info >}}
 - M：是内核线程
 - P : 是调度协调，用于协调 M 和 G 的执行，内核线程只有拿到了 P 才能对 goroutine 继续调度执行，一般都是通过限定 P 的个数来控制 golang 的并发度
 - G : 是待执行的 goroutine，包含这个 goroutine 的栈空间
 - Gn : 灰色背景的 Gn 是已经挂起的 goroutine，它们被添加到了执行队列中，然后需要等待网络 IO 的 goroutine，当 P 通过 epoll 查询到特定的 fd 的时候，会重新调度起对应的，正在挂起的 goroutine.
 
 Golang 为了调度的公平性，在调度器加入了 steal working 算法 ，在一个 P 自己的执行队列，处理完之后，它会先到全局的执行队列中偷 G 进行处理，如果没有的话，再会到其他 P 的执行队列中抢 G 来进行处理。
-{{< /hint >}}
 
 ## 总结
 

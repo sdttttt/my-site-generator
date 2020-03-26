@@ -34,6 +34,4 @@ Rails 6 在生产环境下认为你使用 Apache 和 Nginx 缓存编译后的静
 config.public_file_server.enabled = true
 ```
 
-{{< hint warning >}}
  记住，打包之后的js以及css统一叫application.js/css 在view页面引用时需要引用application这个名字。其他的会报错
-{{< /hint >}}
