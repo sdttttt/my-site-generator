@@ -1,5 +1,6 @@
 ---
 title: Appveyor
+tags: ["CICD"]
 ---
 
 Appveyor 也是一款线上 CICD 工具。

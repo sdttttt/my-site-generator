@@ -1,6 +1,6 @@
 ---
 title: "Socks5"
-weight: 1
+tags: ["network protocol"]
 ---
 
 

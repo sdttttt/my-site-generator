@@ -1,5 +1,6 @@
 ---
 title: Rails ENV
+tag: ["Rails"]
 ---
 
 # Rails ENV
