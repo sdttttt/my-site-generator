@@ -3,6 +3,7 @@ title: "Kratos 初始化流程源码解析"
 date: 2020-03-31T20:17:28+08:00
 languages: Chinese
 draft: false
+tags: ["microservice","Source code analysis"]
 ---
 
 **Kratos** 是bilibili开源的一套Go微服务框架，包含大量微服务相关框架及工具。

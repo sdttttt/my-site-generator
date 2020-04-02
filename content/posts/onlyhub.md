@@ -2,7 +2,8 @@
 title: "只需要服务中心"
 date: 2020-04-02T15:58:01+08:00
 languages: Chinese
-draft: true
+draft: false
+tags: ["microservice"]
 ---
 
 目前，市面上以及出现了各种各样的适用于微服务(下面简称ms)的注册中心，配合其使用的还有各种ms框架，例如Alibaba的`Dubbo`。
