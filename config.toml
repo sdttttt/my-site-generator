@@ -26,13 +26,20 @@ summaryLength = 1
 
   [[params.links]]
     [[params.links.link]]
+      name = "About"
+      href = "/about"
+      new_tab = true
+    
+    [[params.links.link]]
       name = "Github"
       href = "https://github.com/sdttttt"
       new_tab = true
+    
     [[params.links.link]]
       name = "Twitter"
       href = "https://twitter.com/kaierxs"
       new_tab = true
+    
     [[params.links.link]]
       name = "Bilibili"
       href = "https://space.bilibili.com/27781539"
