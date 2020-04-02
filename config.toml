@@ -18,10 +18,10 @@ summaryLength = 1
 [params]
   favicon = "/laopo.png"
   mainSections = ["posts", "photos"]
-  email = "mail@example.com"
+  email = "760159537@qq.com"
   smart_email_link = ["Email"]
   about = """
-Developer freak.
+  Design and execute.
 """
 
   [[params.links]]
@@ -32,4 +32,8 @@ Developer freak.
     [[params.links.link]]
       name = "Twitter"
       href = "https://twitter.com/kaierxs"
+      new_tab = true
+    [[params.links.link]]
+      name = "Bilibili"
+      href = "https://space.bilibili.com/27781539"
       new_tab = true
