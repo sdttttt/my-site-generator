@@ -25,11 +25,19 @@ summaryLength = 1
 """
 
   [[params.links]]
+    
     [[params.links.link]]
       name = "About"
       href = "/about"
       new_tab = true
     
+    [[params.links.link]]
+      name = "Tags"
+      href = "/tags"
+      new_tab = true
+
+  [[params.links]]
+
     [[params.links.link]]
       name = "Github"
       href = "https://github.com/sdttttt"
