@@ -41,6 +41,11 @@ summaryLength = 1
       new_tab = true
     
     [[params.links.link]]
+      name = "Telegram"
+      href = "https://t.me/tohkashiina"
+      new_tab = true
+
+    [[params.links.link]]
       name = "Bilibili"
       href = "https://space.bilibili.com/27781539"
       new_tab = true
