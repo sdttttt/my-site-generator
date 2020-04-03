@@ -20,8 +20,6 @@ date: 2020-03-04
 
 - Other: 平时没事就喜欢看看一些框架的源码，还有软件架构设计类的书。有时会开发一些独立小游戏。
 
-![](/gophers.png)
-
 ## Open Source Projects
 
 **Bangumi Open** for vscode
@@ -31,3 +29,6 @@ date: 2020-03-04
 **go-tds**
 
 > 这是一个分布式微服务库，是因为我突发的一个灵感而诞生，目前还处于开发。
+
+
+![](/gophers.png)
