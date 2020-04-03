@@ -21,7 +21,7 @@ summaryLength = 1
   email = "760159537@qq.com"
   smart_email_link = ["Email"]
   about = """
-  Design and execute.
+  ✔ Design and execute.
 """
 
   [[params.links]]
