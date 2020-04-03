@@ -20,6 +20,8 @@ date: 2020-03-04
 
 - Other: 平时没事就喜欢看看一些框架的源码，还有软件架构设计类的书。有时会开发一些独立小游戏。
 
+![](/gophers.png)
+
 ## Open Source Projects
 
 **Bangumi Open** for vscode
