@@ -9,7 +9,7 @@ date: 2020-03-04
 - programing language: Go, Java, Typescript, Ruby, Rust. 
 
 - Direction: 熟悉市面上大部分Web应用架构以及技术栈
-(这部分比较广，具体请看[这里](/todo)), 
+(这部分比较广，具体请看[这里](/posts/todo)), 
 对一些分布式应用的架构有一定的研究。
 
 - Be good at: `OOP`编程模式. 掌握`Refactoring`, `TDD`以及大部分软件开发模式. 
