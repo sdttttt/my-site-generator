@@ -62,10 +62,6 @@ git add .
 git commit -m "${commit_message}"
 git push $code_address master
 
-if [ ! $? -eq 0 ]; then
-    exit
-fi
-
 echo "==> Hugo Building ... \n"
 hugo
 
