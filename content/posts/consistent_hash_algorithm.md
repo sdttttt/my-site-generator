@@ -27,7 +27,7 @@ draft: false
 - 然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍
   然找不到服务器,就会保存到第一台 memcached 服务器上。
 
-!()[/ConsistentHashAlgorithm/1.png]
+![](/ConsistentHashAlgorithm/1.png)
 
 从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化
 而影响缓存的命中率,但`一致性Hashing` 中,只有在圆(continuum)上增加服务器的地点逆时针方向
@@ -78,7 +78,7 @@ draft: false
 
 假设在圆上`Node A`和`Node B`距离过近，按照以上的环形一致 HASH 算法就会发生两个节点所拥有的数据数量不一致的问题。
 
-!()[/ConsistentHashAlgorithm/1.png]
+![](/ConsistentHashAlgorithm/2.png)
 
 为了解决这种数据倾斜问题，一致性哈希算法引入了虚拟节点机制，即对每一个服务节点计算`多个哈希`，每个计算结果位置都放置一个此`服务节点`，称为虚拟节点。具体做法可以在服务器 ip 或主机名的后面增加编号来实现。例如上面的情况，可以为每台服务器计算三个虚拟节点，于是可以分别计算 “Node A#1”、“Node A#2”、“Node A#3”、“Node B#1”、“Node B#2”、“Node B#3”的哈希值，于是形成六个虚拟节点：
 
