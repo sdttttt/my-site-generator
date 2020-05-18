@@ -21,7 +21,8 @@ summaryLength = 1
   email = "760159537@qq.com"
   smart_email_link = ["Email"]
   about = """
-  ✔ Design and execute.
+  Hi! I'm SDTTTTT, and I've been contributing to distributed systems. It is my main research direction. Here is my blog, I will record some learning content here, as well as some ideas. If you want to find me, please use Telegram. If you like japanese animation,  We can use bilibili to make 
+friends.
 """
 
   [[params.links]]
