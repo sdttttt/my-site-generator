@@ -4,7 +4,7 @@ title = "SDTTTTT"
 
 theme = "rocinante"
 
-paginate = 3
+paginate = 5
 
 # Number of characters to show in summary.
 summaryLength = 1
