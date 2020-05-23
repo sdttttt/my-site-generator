@@ -5,3 +5,4 @@
 set -e
 
 hugo new posts/$1.md
+
