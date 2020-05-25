@@ -15,6 +15,7 @@ summaryLength = 1
   [markup.goldmark.renderer]
     unsafe= true
 
+
 [params]
   favicon = "/rust.png"
   mainSections = ["posts", "photos"]
