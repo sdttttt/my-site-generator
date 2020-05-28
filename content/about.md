@@ -34,4 +34,4 @@ date: 2020-03-04
 
 在抽象层的同时，通用学习底层。
 
-![](/haha.gif)
+![](https://gitee.com/sdttttt/images/raw/master//haha.gif)
