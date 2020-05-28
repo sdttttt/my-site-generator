@@ -84,4 +84,3 @@ echo "==> Clean work start!"
 rm -rf ./public
 
 echo "==> OK! We is done."
-
