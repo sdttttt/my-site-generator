@@ -2,62 +2,68 @@ baseURL = "https://sdttttt.github.io/"
 languageCode = "zh-cn"
 title = "SDTTTTT"
 
-theme = "rocinante"
+themesdir = "themes"
+theme = "friend"
 
 paginate = 5
 
-# Number of characters to show in summary.
-summaryLength = 1
-
-[markup]
-  [markup.highlight]
-    style = "monokailight"
-  [markup.goldmark.renderer]
-    unsafe= true
-
-
 [params]
-  favicon = "/rust.png"
-  mainSections = ["posts", "photos"]
-  email = "760159537@qq.com"
-  smart_email_link = ["Email"]
-  about = """
-  Hi! I'm **SDTTTTT**, my research direction is distributed system. Here is my blog, I will record some learning content here, as well as some ideas. If you want to find me, please use **Telegram**. 
-At the same time, I also like Japanese animation. **（//▽//）**
+  # dir name of your blog content (default is `content/posts`)
+  contentTypeName = "post"
 
-<img src="https://gitee.com/sdttttt/images/raw/master//haha.gif" width="33%" />
-"""
+  # "light" or "dark"
+  defaultTheme = "light"
 
-  [[params.links]]
-    
-    [[params.links.link]]
-      name = "About"
-      href = "/about"
-      new_tab = true
-    
-    [[params.links.link]]
-      name = "Tags"
-      href = "/tags"
-      new_tab = true
+  # if you set this to 0, only submenu trigger will be visible
+  showMenuItems = 2
 
-  [[params.links]]
+  # Show reading time in minutes for posts
+  showReadingTime = true
 
-    [[params.links.link]]
-      name = "Github"
-      href = "https://github.com/sdttttt"
-      new_tab = true
-    
-    [[params.links.link]]
-      name = "Twitter"
-      href = "https://twitter.com/kaierxs"
-      new_tab = true
-    
-    [[params.links.link]]
-      name = "Telegram"
-      href = "https://t.me/tohkashiina"
-      new_tab = true
+  # Show table of contents at the top of your posts (defaults to false)
+  # Alternatively, add this param to post front matter for specific posts
+  # toc = true
 
-    [[params.links.link]]
-      name = "Bilibili"
-      href = "https://space.bilibili.com/27781539"
-      new_tab = true
+  # Show full page content in RSS feed items
+  #(default is Description or Summary metadata in the front matter)
+  # rssFullText = true
+
+[languages]
+  [languages.en]
+    title = "SDTTTTT"
+    subtitle = "Thanks"
+    keywords = ""
+    copyright = "None"
+    menuMore = "Show more"
+    writtenBy = "Written by"
+    readMore = "Read more"
+    readOtherPosts = "Read other posts"
+    newerPosts = "Newer posts"
+    olderPosts = "Older posts"
+    minuteReadingTime = "min read"
+    dateFormatSingle = "2006-01-02"
+    dateFormatList = "2006-01-02"
+    # leave empty to disable, enter display text to enable
+    lastModDisplay = ""
+
+    [languages.en.params.logo]
+      logoText = "SDTTTTT"
+      logoHomeLink = "/"
+    # or
+    #
+    # path = "/img/your-example-logo.svg"
+    # alt = "Your example logo alt text"
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        identifier = "about"
+        name = "About"
+        url = "/about"
+      [[languages.en.menu.main]]
+        identifier = "Github"
+        name = "Github"
+        url = "https://github.com/sdttttt"
+      [[languages.en.menu.main]]
+        identifier = "Telegram"
+        name = "Telegram"
+        url = "https://t.me/tohkashiina"

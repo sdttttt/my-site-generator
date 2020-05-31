@@ -1,0 +1,33 @@
+<!--
+To add comments section, please create `layouts/partials/comments.html` in your
+Hugo directory and insert:
+
+{{ template "_internal/disqus.html" . }}
+
+or whatever comment engine you want -> https://gohugo.io/content-management/comments/#readout
+-->
+<link rel="stylesheet" href="https://unpkg.com/vssue/dist/vssue.min.css">
+<script src="https://unpkg.com/vue/dist/vue.runtime.min.js"></script>
+<script src="https://unpkg.com/vssue/dist/vssue.github.min.js"></script>
+
+<div id="vssue">
+    
+</div>
+
+<script>
+    new Vue({
+      el: '#vssue',
+
+      render: h => h('Vssue', {
+        props: {
+          title: 'Vssue',
+          options: {
+            owner: 'sdttttt',
+            repo: 'sdttttt.github.io',
+            clientId: '97eb9ce8ac126f0c7833',
+            clientSecret: '831b0efc43a7dd1a3ee0bd1cf221df7531410e18', // 只有在使用某些平台时需要
+          },
+        }
+      })
+    })
+  </script>
