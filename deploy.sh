@@ -23,6 +23,8 @@
 set -e
 
 code_address="git@github.com:sdttttt/my-site-generator.git" # Hugo 项目地址
+code_address_gitee="git@gitee.com:sdttttt/my-site-generator.git" # Hugo 项目地址 Gitee
+
 deploy="git@github.com:sdttttt/sdttttt.github.io.git" # 静态网站部署地址
 commit_message="[SDTTTTT] Update Blog."
 
@@ -62,6 +64,7 @@ echo "==> [Code] Git Runing ... "
 git add .
 git commit -m "${commit_message}"
 git push $code_address master
+git push $code_address_gitee master
 
 echo "==> Hugo Building ... \n"
 hugo
