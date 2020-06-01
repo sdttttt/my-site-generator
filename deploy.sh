@@ -63,7 +63,10 @@ echo "==> [Code] Git Runing ... "
 
 git add .
 git commit -m "${commit_message}"
+
+echo "正在同步到Github..."
 git push $code_address master
+echo "正在同步到Gitee..."
 git push $code_address_gitee master
 
 echo "==> Hugo Building ... \n"
