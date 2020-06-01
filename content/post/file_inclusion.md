@@ -1,5 +1,5 @@
 ---
-title: "File_inclusion"
+title: "File Inclusion"
 date: 2020-04-13T11:16:14+08:00
 tags: ["penetration test"]
 draft: true

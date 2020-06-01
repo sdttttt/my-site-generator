@@ -1,5 +1,5 @@
 ---
-title: "Sql_injection_blind"
+title: "Sql Injection Blind"
 date: 2020-04-10T11:11:22+08:00
 tags: ["penetration test"]
 draft: false
