@@ -1,1 +1,1 @@
-[sdttttt.github.io](sdttttt.github.io) 网站的生成器, 使用hugo生成.
+[sdttttt.github.io](https://sdttttt.github.io) 网站的生成器, 使用hugo生成.
