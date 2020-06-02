@@ -75,4 +75,7 @@ paginate = 5
         identifier = "Bilibili"
         name = "Bilibili"
         url = "https://space.bilibili.com/27781539"
-      
+      [[languages.en.menu.main]]
+        identifier = "Twitter"
+        name = "Twitter"
+        url = "https://twitter.com/shiina38092638"
