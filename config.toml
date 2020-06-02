@@ -71,3 +71,8 @@ paginate = 5
         identifier = "Telegram"
         name = "Telegram"
         url = "https://t.me/tohkashiina"
+      [[languages.en.menu.main]]
+        identifier = "Bilibili"
+        name = "Bilibili"
+        url = "https://space.bilibili.com/27781539"
+      
