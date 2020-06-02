@@ -4,4 +4,4 @@
 
 set -e
 
-hugo new posts/$1.md
+hugo new post/$1.md
