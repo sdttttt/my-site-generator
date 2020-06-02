@@ -1,0 +1,36 @@
+baseURL = "https://sdttttt.github.io/"
+languageCode = "zh-cn"
+title = "SDTTTTT"
+
+theme = "eiio"
+
+paginate = 15
+
+disqusShortname = "sdttttt"
+
+preserveTaxonomyNames = false
+disablePathToLower = true
+hasCJKLanguage = true
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[params]
+  hljsStyle="atom-one-dark" #code highlightjs css style . See [Style List](https://github.com/highlightjs/highlight.js/tree/master/src/styles "CSS Style list")
+
+  showNextAndPrePost = true #Is Show Next and Previous Post Button
+  description = "A newcome."
+  author = "sdttttt"
+  github ="sdttttt"
+  email="sdttttt@outlook.com"
+  twitter="?" 
+  securityPolicy = false #disable https content security policy
+  footerRight="no think." #footer right content
+  addthisID="None"
+  mainSections = ['page']
+
+[sitemap]
+  changefreq = "monthly"
+  priority = 0.5
+  filename = "sitemap.xml"

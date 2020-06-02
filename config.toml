@@ -2,35 +2,72 @@ baseURL = "https://sdttttt.github.io/"
 languageCode = "zh-cn"
 title = "SDTTTTT"
 
-theme = "eiio"
+themesdir = "themes"
+theme = "friend"
 
-paginate = 15
+paginate = 5
 
-disqusShortname = "sdttttt"
-
-preserveTaxonomyNames = false
-disablePathToLower = true
-hasCJKLanguage = true
-
-[taxonomies]
-  category = "categories"
-  tag = "tags"
 
 [params]
-  hljsStyle="atom-one-dark" #code highlightjs css style . See [Style List](https://github.com/highlightjs/highlight.js/tree/master/src/styles "CSS Style list")
+  # dir name of your blog content (default is `content/posts`)
+  contentTypeName = "post"
 
-  showNextAndPrePost = true #Is Show Next and Previous Post Button
-  description = "A newcome."
-  author = "sdttttt"
-  github ="sdttttt"
-  email="sdttttt@outlook.com"
-  twitter="?" 
-  securityPolicy = false #disable https content security policy
-  footerRight="no think." #footer right content
-  addthisID="None"
-  mainSections = ['page']
 
-[sitemap]
-  changefreq = "monthly"
-  priority = 0.5
-  filename = "sitemap.xml"
+  DisqusShortname = true
+
+  # "light" or "dark"
+  defaultTheme = "light"
+
+  # if you set this to 0, only submenu trigger will be visible
+  showMenuItems = 2
+
+  # Show reading time in minutes for posts
+  showReadingTime = true
+
+  # Show table of contents at the top of your posts (defaults to false)
+  # Alternatively, add this param to post front matter for specific posts
+  # toc = true
+
+  # Show full page content in RSS feed items
+  #(default is Description or Summary metadata in the front matter)
+  # rssFullText = true
+
+[languages]
+  [languages.en]
+    title = "SDTTTTT"
+    subtitle = "Thanks"
+    keywords = ""
+    copyright = "None"
+    menuMore = "Show more"
+    writtenBy = "Written by"
+    readMore = "Read more"
+    readOtherPosts = "Read other posts"
+    newerPosts = "Newer posts"
+    olderPosts = "Older posts"
+    minuteReadingTime = "min read"
+    dateFormatSingle = "2006-01-02"
+    dateFormatList = "2006-01-02"
+    # leave empty to disable, enter display text to enable
+    lastModDisplay = ""
+
+    [languages.en.params.logo]
+      logoText = "SDTTTTT"
+      logoHomeLink = "/"
+    # or
+    #
+    # path = "/img/your-example-logo.svg"
+    # alt = "Your example logo alt text"
+
+    [languages.en.menu]
+      [[languages.en.menu.main]]
+        identifier = "about"
+        name = "About"
+        url = "/about"
+      [[languages.en.menu.main]]
+        identifier = "Github"
+        name = "Github"
+        url = "https://github.com/sdttttt"
+      [[languages.en.menu.main]]
+        identifier = "Telegram"
+        name = "Telegram"
+        url = "https://t.me/tohkashiina"
