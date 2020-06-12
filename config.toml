@@ -7,6 +7,10 @@ theme = "friend"
 
 paginate = 5
 
+[markup] 
+  [markup.goldmark] 
+    [markup.goldmark.renderer] 
+      unsafe = true
 
 [params]
   # dir name of your blog content (default is `content/posts`)
