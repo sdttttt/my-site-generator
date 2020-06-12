@@ -8,7 +8,7 @@ cover: "https://gitee.com/sdttttt/images/raw/master//EaNWc1iUcAA0hxM.png"
 draft: false
 ---
 
-<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=26134218&auto=1&height=66"></iframe>
+<iframe frameborder="no" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=26134218&auto=1&height=66"></iframe>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
 
