@@ -24,3 +24,5 @@ Raft最基础分为三种状态: **Leader**, **Follower**, **Candidate**.
 - LogSynchronizer: 同步LogBuffer中的日志到Raft本体.
 
 三个部分可以使用Channel来到达互相通信.
+
+![](https://static01.imgkr.com/temp/4b34da085c8742018791aa36e4921210.jpg)
