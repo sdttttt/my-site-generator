@@ -49,14 +49,23 @@ function deployToSite(){
 
     if [ ! $? -eq 0 ]; then
         exit
+        return false
     fi
 
-    cd ..
-    rm -rf ./public
+    echo "==> OK Deploy Over :)"
+    return true
+}
+
+function cleanWork(){
+
+    echo "==> Clean work start!"
 
     cd $dir
+    cd ..
 
-    echo "==> OK Deploy Over :)"
+    rm -rf ./public
+
+    echo "==> OK! We is done."
 }
 
 echo "==> [Code] Git Runing ... "
@@ -77,7 +86,7 @@ echo "==> Check Status ..."
 if [ $? -eq 0 ]; then
     if [ -d "./public" ]; then
         echo "Check OK :)"
-        deployToSite
+        deployToSite && cleanWork
     else
         echo "Oh! 不应该变成这样 :("
     fi
@@ -85,8 +94,4 @@ else
     echo "环境变量中不存在 hugo: 请安装它"
 fi
 
-echo "==> Clean work start!"
-
-rm -rf ./public
-
-echo "==> OK! We is done."
+cd $dir
