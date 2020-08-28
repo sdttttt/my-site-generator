@@ -43,8 +43,8 @@ function deployToSite(){
     echo "==> [Deploy] Git Runing ..."
 
     git init
-    git add .
-    git commit -m "${commit_message}"
+    git add --ignore-errors .
+    git commit --quiet -m "${commit_message}"
     git push $deploy master --force
 
     if [ ! $? -eq 0 ]; then
