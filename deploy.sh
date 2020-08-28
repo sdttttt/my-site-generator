@@ -49,11 +49,11 @@ function deployToSite(){
 
     if [ ! $? -eq 0 ]; then
         exit
-        return false
+        return 1
     fi
 
     echo "==> OK Deploy Over :)"
-    return true
+    return 0
 }
 
 function cleanWork(){
