@@ -32,13 +32,18 @@ dir=$(pwd)
 
 echo -e "\033[33m[Warning]\033[0m 如果您使用的是密码登录, 该脚本执行时，请保持冷静, 别按回车!"
 
-if [ -d "./public" ]; then
-    rm -rf ./public
-fi
+function envClean(){
+    if [ -d "./public" ];
+    then
+        rm -rf ./public
+    fi
 
-if [ -d "../public" ]; then
-    rm -rf ../public
-fi
+    if [ -d "../public" ];
+    then
+        rm -rf ../public
+    fi
+}
+
 
 function deployToSite(){
     cp -r ./public ../
@@ -51,7 +56,8 @@ function deployToSite(){
     git commit --quiet -m "${commit_message}"
     git push $deploy master --force
 
-    if [ ! $? -eq 0 ]; then
+    if [ ! $? -eq 0 ];
+    then
         exit
         return 1
     fi
@@ -87,29 +93,45 @@ function syncSourceCode(){
 }
 
 function generateSite(){
-
     echo -e "\033[32m[HugoGenerator]\033[0m Hugo Building..."
     hugo
 
 }
 
-syncSourceCode
-generateSite
+function checkEnv() {
+    echo -e "\033[34m[Monitor]\033[0m Check Status..."
 
-echo -e "\033[34m[Monitor]\033[0m Check Status..."
+    if [ $? -eq 0 ];
+    then
+        if [ -d "./public" ];
+        then
+            echo -e "\033[34m[Monitor]\033[0m Check OK :)"        
+            return 0
+            
+        else
+            echo -e "\033[31m[Error]\033[0m Oh! 不应该变成这样 :("
+        fi
+    else 
+        echo -e "\033[31m[Error]\033[0m 环境变量中不存在 hugo: 请安装它"
+    fi
+}
 
-if [ $? -eq 0 ]; then
-    if [ -d "./public" ]; then
-        echo -e "\033[34m[Monitor]\033[0m Check OK :)"
-        
-        deployToSite && cleanWork
+function deploy(){
 
+    checkEnv
+    if [ $? -eq 0 ];
+    then
+        deployToSite
+        cleanWork
         echo -e "\033[32m[Successful]\033[0m We did it! 🎉"
     else
-        echo -e "\033[31m[Error]\033[0m Oh! 不应该变成这样 :("
+        cleanWork
     fi
-else 
-    echo -e "\033[31m[Error]\033[0m 环境变量中不存在 hugo: 请安装它"
-fi
+}
+
+envClean
+syncSourceCode
+generateSite
+deploy
 
 cd $dir
