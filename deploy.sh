@@ -72,15 +72,21 @@ function cleanWork(){
     echo -e "\033[32m[Clean]\033[0m OK! We is done."
 }
 
-echo -e "\033[32m[Deploying]\033[0m Push Running... "
+function syncSourceCode(){
 
-git add .
-git commit -m "${commit_message}"
+    echo -e "\033[32m[Deploying]\033[0m Push Running... "
 
-echo -e "\033[32m[Synchronizing]\033[0m Source code to Github..."
-git push $code_address master
-echo -e "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
-git push $code_address_gitee master
+    git add .
+    git commit -m "${commit_message}"
+
+    echo -e "\033[32m[Synchronizing]\033[0m Source code to Github..."
+    git push $code_address master
+    echo -e "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
+    git push $code_address_gitee master
+
+}
+
+syncSourceCode
 
 echo -e "\033[32m[HugoGenerator]\033[0m Hugo Building..."
 hugo
