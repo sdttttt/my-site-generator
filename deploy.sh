@@ -32,8 +32,12 @@ dir=$(pwd)
 
 echo "Warning: 该脚本执行时，别按回车!"
 
-if [ -d "./public" -eq 0 ]; then
+if [ -d "./public" ]; then
     rm -rf ./public
+fi
+
+if [ -d "../public" ]; then
+    rm -rf ../public
 fi
 
 function deployToSite(){
@@ -58,7 +62,7 @@ function deployToSite(){
 
 function cleanWork(){
 
-    echo "==> Clean work start!"
+    echo "==> Clean work Running..."
 
     cd $dir
     cd ..
@@ -93,5 +97,4 @@ if [ $? -eq 0 ]; then
 else 
     echo "环境变量中不存在 hugo: 请安装它"
 fi
-
 cd $dir
