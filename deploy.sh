@@ -86,10 +86,15 @@ function syncSourceCode(){
 
 }
 
-syncSourceCode
+function generateSite(){
 
-echo -e "\033[32m[HugoGenerator]\033[0m Hugo Building..."
-hugo
+    echo -e "\033[32m[HugoGenerator]\033[0m Hugo Building..."
+    hugo
+
+}
+
+syncSourceCode
+generateSite
 
 echo -e "\033[34m[Monitor]\033[0m Check Status..."
 
