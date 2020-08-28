@@ -30,7 +30,7 @@ commit_message="[SDTTTTT] Update Blog."
 
 dir=$(pwd)
 
-echo "\033[33m[Warning]\033[0m 如果您使用的是密码登录, 该脚本执行时，请保持冷静, 别按回车!"
+echo -e "\033[33m[Warning]\033[0m 如果您使用的是密码登录, 该脚本执行时，请保持冷静, 别按回车!"
 
 if [ -d "./public" ]; then
     rm -rf ./public
@@ -44,7 +44,7 @@ function deployToSite(){
     cp -r ./public ../
     cd ../public
 
-    echo "\033[32m[Deploying]\033[0m Push Running..."
+    echo -e "\033[32m[Deploying]\033[0m Push Running..."
 
     git init
     git add --ignore-errors .
@@ -56,49 +56,49 @@ function deployToSite(){
         return 1
     fi
 
-    echo "\033[32m[Deploying]\033[0m OK Deploy Over :)"
+    echo -e "\033[32m[Deploying]\033[0m OK Deploy Over :)"
     return 0
 }
 
 function cleanWork(){
 
-    echo "\033[32m[Clean]\033[0m Running..."
+    echo -e "\033[32m[Clean]\033[0m Running..."
 
     cd $dir
     cd ..
 
     rm -rf ./public
 
-    echo "\033[32m[Clean]\033[0m OK! We is done."
+    echo -e "\033[32m[Clean]\033[0m OK! We is done."
 }
 
-echo "\033[32m[Deploying]\033[0m Push Running... "
+echo -e "\033[32m[Deploying]\033[0m Push Running... "
 
 git add .
 git commit -m "${commit_message}"
 
-echo "\033[32m[Synchronizing]\033[0m Source code to Github..."
+echo -e "\033[32m[Synchronizing]\033[0m Source code to Github..."
 git push $code_address master
-echo "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
+echo -e "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
 git push $code_address_gitee master
 
-echo "\033[32m[HugoGenerator]\033[0m Hugo Building..."
+echo -e "\033[32m[HugoGenerator]\033[0m Hugo Building..."
 hugo
 
-echo "\033[34m[Monitor]\033[0m Check Status..."
+echo -e "\033[34m[Monitor]\033[0m Check Status..."
 
 if [ $? -eq 0 ]; then
     if [ -d "./public" ]; then
-        echo "\033[34m[Monitor]\033[0m Check OK :)"
+        echo -e "\033[34m[Monitor]\033[0m Check OK :)"
         
         deployToSite && cleanWork
 
-        echo "\033[32m[Successful]\033[0m We did it! 🎉"
+        echo -e "\033[32m[Successful]\033[0m We did it! 🎉"
     else
-        echo "\033[31m[Error]\033[0m Oh! 不应该变成这样 :("
+        echo -e "\033[31m[Error]\033[0m Oh! 不应该变成这样 :("
     fi
 else 
-    echo "\033[31m[Error]\033[0m 环境变量中不存在 hugo: 请安装它"
+    echo -e "\033[31m[Error]\033[0m 环境变量中不存在 hugo: 请安装它"
 fi
 
 cd $dir
