@@ -6,7 +6,9 @@
         
         {{- partial "render_single_article.html" . -}}
         
-        {{ template "_internal/disqus.html" . }}
+        <!-- {{ template "_internal/disqus.html" . }} -->
+
+        {{- partial "vuees.html" . -}}
     </div>
 </div>
 {{ end }}
