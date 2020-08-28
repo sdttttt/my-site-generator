@@ -48,7 +48,7 @@ function deployToSite(){
 
     git init
     git add --ignore-errors .
-    git commit --short -m "${commit_message}"
+    git commit --quiet -m "${commit_message}"
     git push $deploy master --force
 
     if [ ! $? -eq 0 ]; then
