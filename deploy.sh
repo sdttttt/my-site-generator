@@ -115,9 +115,9 @@ function deploy(){
         syncSourceCode
         cleanWork
 
-        endtime=`date +'%Y-%m-%d %H:%M:%S'`
-        start_seconds=$(date --date="$starttime" +%s);
-        end_seconds=$(date --date="$endtime" +%s);
+        local endtime=`date +'%Y-%m-%d %H:%M:%S'`
+        local start_seconds=$(date --date="$starttime" +%s);
+        local end_seconds=$(date --date="$endtime" +%s);
 
         echo -e "\033[32m[Successful]\033[0m 🎉 We did it! 🕒 Total Time: "$((end_seconds-start_seconds))"s"
     else
