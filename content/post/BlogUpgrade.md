@@ -1,5 +1,5 @@
 ---
-title: "BlogUpgrade"
+title: "Blog Upgrade"
 date: 2020-08-29T18:07:48+08:00
 languages: Chinese
 tags: ["Blog"]
