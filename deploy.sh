@@ -119,8 +119,27 @@ function deploy(){
     fi
 }
 
+function waitDisplay() {
+    i=0
+    str='#'
+    ch=('|' '\' '-' '/' '-' '\')
+    index=0
+    while [ $i -eq -1 ]
+    do
+        printf "%c\r" ${ch[$index]}
+        let i++
+        let index=i%6
+        sleep 0.01
+    done
+    printf "\n"
+}
+
+waitDisplay &
+
 envClean
 generateSite
 deploy
+
+i=-1
 
 cd $dir
