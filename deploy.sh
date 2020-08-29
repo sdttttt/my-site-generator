@@ -56,8 +56,6 @@ function cleanWork(){
     cd ..
 
     rm -rf ./public
-
-    echo -e "\033[32m[Clean]\033[0m OK! We is done."
 }
 
 function syncSourceCode(){
@@ -78,8 +76,6 @@ function syncSourceCode(){
     else
         git push $code_address master
     fi
-
-    echo -e "\033[32m[Deploying]\033[0m OK Deploy Over :)"
 }
 
 function generateSite(){
