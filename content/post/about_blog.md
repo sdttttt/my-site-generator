@@ -1,5 +1,5 @@
 ---
-title: "About Blog"
+title: "About the Blog"
 date: 2020-04-03T15:36:02+08:00
 tags: ["Blog"]
 draft: false
