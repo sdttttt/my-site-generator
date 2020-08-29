@@ -31,6 +31,7 @@ dir=$(pwd)
 
 echo -e "\033[33m[Warning]\033[0m 如果您使用的是密码登录, 该脚本执行时，请保持冷静, 别按回车!"
 
+
 function envClean(){
     if [ -d "./public" ];
     then
@@ -65,7 +66,7 @@ function syncSourceCode(){
     echo -e "\033[32m[Deploying]\033[0m Push Running... "
 
     git add .
-    git commit -m "${commit_message}"
+    git commit -q -m "${commit_message}"
 
 
     echo -e "\033[32m[Synchronizing]\033[0m Source code to Github and Gitee..."

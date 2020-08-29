@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>penetration test on SDTTTTT</title>
+    <link>https://sdttttt.github.io/tags/penetration-test/</link>
+    <description>Recent content in penetration test on SDTTTTT</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 12 Apr 2020 10:46:06 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/tags/penetration-test/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>File Upload</title>
+      <link>https://sdttttt.github.io/post/file_upload/</link>
+      <pubDate>Sun, 12 Apr 2020 10:46:06 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/file_upload/</guid>
+      <description>DVWA File upload 过关秘籍.
+LOW if( isset( $_POST[ &amp;#39;Upload&amp;#39; ] ) ) { // Where are we going to be writing to? $target_path = DVWA_WEB_PAGE_TO_ROOT . &amp;#34;hackable/uploads/&amp;#34;; $target_path .= basename( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;name&amp;#39; ] ); // Can we move the file to the upload folder? // 完全没做过滤. // 上传一个PHP文件也是可以的. if( !move_uploaded_file( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;tmp_name&amp;#39; ], $target_path ) ) { // No echo &amp;#39;&amp;lt;pre&amp;gt;Your image was not uploaded.&amp;lt;/pre&amp;gt;&amp;#39;; } else { // Yes!</description>
+    </item>
+    
+    <item>
+      <title>Sql Injection Blind</title>
+      <link>https://sdttttt.github.io/post/sql_injection_blind/</link>
+      <pubDate>Fri, 10 Apr 2020 11:11:22 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/sql_injection_blind/</guid>
+      <description>返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+DVWA SQL Injection blind 过关秘籍.
+Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input $id = $_GET[ &amp;#39;id&amp;#39; ]; // Check database $getid = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,2 # &amp;#39;; // User ID exists in the database. &amp;lt;存在注入漏洞&amp;gt; // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,if(length( database())=4,sleep(4),2) # &amp;#39;; $result = mysql_query( $getid ); // Removed &amp;#39;or die&amp;#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &amp;#39;@&amp;#39; character suppresses errors if( $num &amp;gt; 0 ) { // Feedback for end user echo &amp;#39;&amp;lt;pre&amp;gt;User ID exists in the database.</description>
+    </item>
+    
+    <item>
+      <title>SQL Injection</title>
+      <link>https://sdttttt.github.io/post/sql_injection/</link>
+      <pubDate>Fri, 10 Apr 2020 10:54:47 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/sql_injection/</guid>
+      <description>DVWA SQL Injection 过关秘籍.
+LOW if( isset( $_REQUEST[ &amp;#39;Submit&amp;#39; ] ) ) { // Get input $id = $_REQUEST[ &amp;#39;id&amp;#39; ]; // Check database $query = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 并没有做什么注入防护 // 尝试构造： // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=1; // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=2; // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; or 1=1; $result = mysql_query( $query ) or die( &amp;#39;&amp;lt;pre&amp;gt;&amp;#39; .</description>
+    </item>
+    
+  </channel>
+</rss>

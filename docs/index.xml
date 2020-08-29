@@ -1,0 +1,25 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>SDTTTTT </title>
+        <link>https://sdttttt.github.io/</link>
+        <language>en-us</language>
+        <author>Sdttttt</author>
+        <rights>(c) 2020</rights>
+        <updated>2020-03-04 00:00:00 &#43;0000 UTC</updated>
+
+        
+        
+            <item>
+            <title>Posts</title>
+            <link>https://sdttttt.github.io/post/</link>
+            <pubDate>Tue, 25 Aug 2020 17:29:15 CST</pubDate>
+            <author>Sdttttt</author>
+            <guid>https://sdttttt.github.io/post/</guid>
+            <description></description>
+            </item>
+        
+        
+        
+        
+    </channel>
+</rss>

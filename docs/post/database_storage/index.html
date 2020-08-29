@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#000" />
+    <title>
+        
+            Database Storage &middot; SDTTTTT SDTTTTT
+        
+    </title>
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+        integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    
+    
+    <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+    
+
+    
+    <meta name="author" content="Sdttttt"></head>
+<body>
+        <div class="container"><div id="navbar" class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-scrollable">
+    <a href="/" class="pure-menu-heading">
+         
+            SDTTTTT 
+         
+    </a>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+            <a href="/posts" class="pure-menu-link">
+                <i class="fa fa-archive"></i>
+                Articles
+            </a>
+        </li>
+        <li class="pure-menu-item">
+            <a href="/tags" class="pure-menu-link">
+                <i class="fas fa-comments"></i>
+                Categories
+            </a>
+        </li>
+        <li class="pure-menu-item">
+            <a href="/about" class="pure-menu-link">
+                <i class="fas fa-smile"></i>
+                About
+            </a>
+        </li>
+    </ul>
+    <ul class="pure-menu-list pull-right">
+        
+        <li class="pure-menu-item">
+            <a href="https://github.com/sdttttt" title="Github" class="pure-menu-link">
+                <i class="fab fa-github"></i>
+                <span class="hide">Github</span>
+            </a>
+        </li>
+        
+        
+        <li class="pure-menu-item">
+            <a href="http://twitter.com/shiina38092638" title="@pravin" class="pure-menu-link">
+                <i class="fab fa-twitter-square"></i>
+                <span class="hide">Twitter</span>
+            </a>
+        </li>
+        
+        
+        
+        
+        <li class="pure-menu-item">
+            <a href="https://www.facebook.com/sdzzzzz" title="Facebook" class="pure-menu-link">
+                <i class="fab fa-facebook"></i>
+                <span class="hide">Facebook</span>
+            </a>
+        </li>
+        
+        <li class="pure-menu-item">
+            <a href="/posts/index.xml" title="Atom Feed" class="pure-menu-link">
+                <i class="fas fa-rss-square"></i>
+                <span class="hide">RSS Feed</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="pure-u-1">
+    <div class="pad">
+    </div>
+</div>
+<div class="pure-g">
+
+
+<div id="content" class="pure-u-1 pure-u-md-3-4 pure-u-sm-1">
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-06-02">June 2, 2020</time>
+    <span class="author">by sdttttt</span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/database_storage/">Database Storage</a></h1>
+    <div class="tags">
+        
+    </div>
+    <p><strong>CMU Database System 15-445/645</strong> 储存 Part 1</p>
+<p>数据库存储的数据在 FS(File System) 中是以 <strong>块(Block)</strong> 的方式表示的.</p>
+<p>实际上你很可能已经见到过了,在MySQL中的数据库就是以一切Block文件的方式存储的.</p>
+<p>这篇文章会告诉你目前常见的数据库存储方式.</p>
+<hr>
+<p>最开始用<strong>Tuple Storage</strong>来尝试改善数据库的存储结构.</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/0029ea52-6d5b-4989-a8e0-a7dec2e0d49c.png" alt=""></p>
+<p>它的工作原理比较简单, 每一个<strong>Page</strong>维护一个<strong>Header</strong>,
+Header中会包含一些Page的元数据,以及被存储数据的偏移值.</p>
+<p>每当插入一个Tuple,我们就会Update Header中的偏移值.</p>
+<p>这个设计中存在比较大的问题, 如果我们删除了底下Tuple,就不得不移动所有Tuple.
+如果不移动数据, 那我们也要花费高昂的代价去维护Header中Page的meta数据.</p>
+<hr>
+<p>目前最常见的就是<strong>Slotted Pages</strong>的方式去存储数据.
+在不同数据库中的实现细节可能不同,但是从高级层面来讲,大多数数据库系统,
+用的都是这种方式去存储数据.</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/a47909a8-e0e6-48ea-a0b7-e3e327d7fdf2.png" alt=""></p>
+<p>每个Page中有三个部分:</p>
+<ul>
+<li><strong>Header</strong>: 保存最基本的matedata, 还包含一些checksum和访问时间之类的.</li>
+<li><strong>SlotArray</strong>: 将每一个特定的Slot映射到对应Tuple的偏移值上.</li>
+<li><strong>TupleArray</strong>: 储存每一个Tuple.</li>
+</ul>
+<p>在这个结构中Header后面紧接这SoltArray, 而Tuple是从Page的尾部开始存储的.
+每个Page存储的Tuple的个数是固定的.</p>
+<p>如果Tuple被删除,我们也只需要删除固定的Solt就行. 
+空出来的空间碎片,可以由数据库的空间整理功能去完成.
+维护每个Tuple的成本也比较小.只需要改变Solt就可以.</p>
+<hr>
+<p>最后讲一个Demo来演示数据库的工作过程.</p>
+<p>假如我想要找一个叫A的人,我会先去查找索引.
+从索引里我知道A的Page是123, Solt是2.
+我去找管理Pages的人,让他把Page123的指针给我,
+然后拿着Page的指针,找到Solt2中的偏移地址,找到了A这个人.</p>
+
+</article>
+<br />
+<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script></div>
+</div>
+
+
+                
+<div id="sidebar" class="pure-u-1 pure-u-md-1-4 pure-u-sm-1">
+    <div class="pad">
+        <a name="about"></a>
+        <h3>About Me</h3>
+        <div style="text-align: center;">
+            <img src="/me.png" alt="Sdttttt" class="pure-img" />
+            <p><em>突如其来的变故使得本就不富裕的晦气小伙雪上加霜.</em></p>
+        </div>
+
+        <h3>Latest Articles</h3>
+        <div class="pure-menu pure-menu-open">
+            <ul class="pure-menu-list">
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/thread_pool_executor/" class="pure-menu-link">Thread Pool Executor 运行细节<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/raft_impl/" class="pure-menu-link">Raft实现的思考<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/kanon/" class="pure-menu-link">Kanon<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/database_storage/" class="pure-menu-link">Database Storage<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/red-black-tree/" class="pure-menu-link">Red Black Tree<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/tree_rust/" class="pure-menu-link">Tree by Rust implement<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/stack_rust/" class="pure-menu-link">Stack by Rust implement<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/gfs/" class="pure-menu-link">GFS<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/consistent_hash_algorithm/" class="pure-menu-link">一致性哈希算法<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/file_upload/" class="pure-menu-link">File Upload<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+
+        <h3>Categories</h3>
+        <div style="text-align:center" class="tags">
+            
+            
+            <a href="/tags/data-structure" class="pure-button"> data-structure
+                <small>(3)</small></a>
+            
+            
+            
+            <a href="/tags/penetration-test" class="pure-button"> penetration-test
+                <small>(3)</small></a>
+            
+            
+            
+            <a href="/tags/assembly" class="pure-button"> assembly
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/cicd" class="pure-button"> cicd
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/design" class="pure-button"> design
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/microservice" class="pure-button"> microservice
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/rust" class="pure-button"> rust
+                <small>(2)</small></a>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>
+    </div> 
+</div> 
+
+                
+            </div><div class="pure-g">
+	<footer class="pure-u-1 pure-u-md-1 pure-u-sm-1">
+		<p>This page and its contents are copyright &copy; 2020,
+			<a href="">Sdttttt</a>.</p>
+		<p><a href="https://github.com/pravin/hugo-theme-prav">Theme Prav</a> by <a href="https://cto.me.uk">Pravin
+				Paratey</a></p>
+	</footer>
+
+	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+		integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+		crossorigin="anonymous"></script>
+</div></div></body>
+</html>

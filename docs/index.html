@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#000" />
+    <title>
+        
+             
+                SDTTTTT 
+             
+            &middot; Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        
+    </title>
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+        integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    
+    
+    <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+    
+
+    
+    <meta name="author" content="Sdttttt"></head>
+<body>
+        <div class="container"><div id="navbar" class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-scrollable">
+    <a href="/" class="pure-menu-heading">
+         
+            SDTTTTT 
+         
+    </a>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+            <a href="/posts" class="pure-menu-link">
+                <i class="fa fa-archive"></i>
+                Articles
+            </a>
+        </li>
+        <li class="pure-menu-item">
+            <a href="/tags" class="pure-menu-link">
+                <i class="fas fa-comments"></i>
+                Categories
+            </a>
+        </li>
+        <li class="pure-menu-item">
+            <a href="/about" class="pure-menu-link">
+                <i class="fas fa-smile"></i>
+                About
+            </a>
+        </li>
+    </ul>
+    <ul class="pure-menu-list pull-right">
+        
+        <li class="pure-menu-item">
+            <a href="https://github.com/sdttttt" title="Github" class="pure-menu-link">
+                <i class="fab fa-github"></i>
+                <span class="hide">Github</span>
+            </a>
+        </li>
+        
+        
+        <li class="pure-menu-item">
+            <a href="http://twitter.com/shiina38092638" title="@pravin" class="pure-menu-link">
+                <i class="fab fa-twitter-square"></i>
+                <span class="hide">Twitter</span>
+            </a>
+        </li>
+        
+        
+        
+        
+        <li class="pure-menu-item">
+            <a href="https://www.facebook.com/sdzzzzz" title="Facebook" class="pure-menu-link">
+                <i class="fab fa-facebook"></i>
+                <span class="hide">Facebook</span>
+            </a>
+        </li>
+        
+        <li class="pure-menu-item">
+            <a href="/posts/index.xml" title="Atom Feed" class="pure-menu-link">
+                <i class="fas fa-rss-square"></i>
+                <span class="hide">RSS Feed</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="pure-u-1">
+    <div class="pad">
+    </div>
+</div>
+<div class="pure-g">
+
+<div id="content" class="pure-u-1 pure-u-md-3-4 pure-u-sm-1">
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-08-25">August 25, 2020</time>
+    <span class="author">by sdttttt</span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/thread_pool_executor/">Thread Pool Executor 运行细节</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/java" class="pure-button">Java</a>
+        
+    </div>
+    <p>先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.</p>
+<p>ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ThreadPoolExecutor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> corePoolSize<span style="color:#f92672">,</span> <span style="color:#75715e">// 核心线程数量
+</span><span style="color:#75715e"></span>                              <span style="color:#66d9ef">int</span> maximumPoolSize<span style="color:#f92672">,</span> <span style="color:#75715e">// 最大线程数量
+</span><span style="color:#75715e"></span>                              <span style="color:#66d9ef">long</span> keepAliveTime<span style="color:#f92672">,</span> <span style="color:#75715e">// 存活时间
+</span><span style="color:#75715e"></span>                              TimeUnit unit<span style="color:#f92672">,</span> <span style="color:#75715e">// 时间单位
+</span><span style="color:#75715e"></span>                              BlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span> workQueue <span style="color:#75715e">// 来个列队
+</span><span style="color:#75715e"></span>                        <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>corePoolSize<span style="color:#f92672">,</span> maximumPoolSize<span style="color:#f92672">,</span> keepAliveTime<span style="color:#f92672">,</span> unit<span style="color:#f92672">,</span> workQueue<span style="color:#f92672">,</span>
+             Executors<span style="color:#f92672">.</span><span style="color:#a6e22e">defaultThreadFactory</span><span style="color:#f92672">(),</span> defaultHandler<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>提交任务时的运行如下:</p>
+<ul>
+<li>如果正在运行的线程数 &lt; coreSize，马上创建线程执行该task，不排队等待；</li>
+<li>如果正在运行的线程数 &gt;= coreSize，把该task放入阻塞队列；</li>
+<li>如果队列已满 &amp;&amp; 正在运行的线程数 &lt; maximumPoolSize，创建新的线程执行该task；</li>
+<li>如果队列已满 &amp;&amp; 正在运行的线程数 &gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。</li>
+<li>从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。</li>
+</ul>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-06-25">June 25, 2020</time>
+    <span class="author">by sdttttt</span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/raft_impl/">Raft实现的思考</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/distribute-system" class="pure-button">distribute system</a>
+        
+    </div>
+    <p>比较Raft算法和Paxos算法之后,确实能感受到Raft算法更加接近正常人的思维逻辑, Paxos反而比较<code>专业?</code></p>
+<p>本文会说一些Raft算法实现上的一些考量, 我目前还没有正式开始开发Raft的实现.
+文中所有的内容仅供参考.</p>
+<p>Raft最基础分为三种状态: <strong>Leader</strong>, <strong>Follower</strong>, <strong>Candidate</strong>.
+整个Raft主体即是一个状态机.</p>
+<p>每个RaftNode都需要处理外部的事件.所以我们可以采用事件驱动模型.</p>
+<p>整体我们可以拆分为三个部分:</p>
+<ul>
+<li>RaftProcessor: 处理事件的处理器.</li>
+<li>EventDispatcher: 负责接收外部任务,发送给Raft本体, 或者接收Raft本体发来的事件,向外发布.</li>
+<li>LogSynchronizer: 同步LogBuffer中的日志到Raft本体.</li>
+</ul>
+<p>三个部分可以使用Channel来到达互相通信.</p>
+<p><img src="https://static01.imgkr.com/temp/4b34da085c8742018791aa36e4921210.jpg" alt=""></p>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-06-12">June 12, 2020</time>
+    <span class="author">by sdttttt</span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/kanon/">Kanon</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/gal" class="pure-button">GAL</a>
+        
+    </div>
+    <iframe frameborder="no" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=26134218&auto=1&height=66"></iframe>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<p>有一段时间没有玩过<code>GALGAME</code>了.</p>
+<p>所以就去尝试玩了<code>Kanon</code>.</p>
+<p>总之就是, <strong>非常后悔</strong>.</p>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-06-02">June 2, 2020</time>
+    <span class="author">by sdttttt</span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/database_storage/">Database Storage</a></h1>
+    <div class="tags">
+        
+    </div>
+    <p><strong>CMU Database System 15-445/645</strong> 储存 Part 1</p>
+<p>数据库存储的数据在 FS(File System) 中是以 <strong>块(Block)</strong> 的方式表示的.</p>
+<p>实际上你很可能已经见到过了,在MySQL中的数据库就是以一切Block文件的方式存储的.</p>
+<p>这篇文章会告诉你目前常见的数据库存储方式.</p>
+<hr>
+<p>最开始用<strong>Tuple Storage</strong>来尝试改善数据库的存储结构.</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/0029ea52-6d5b-4989-a8e0-a7dec2e0d49c.png" alt=""></p>
+<p>它的工作原理比较简单, 每一个<strong>Page</strong>维护一个<strong>Header</strong>,
+Header中会包含一些Page的元数据,以及被存储数据的偏移值.</p>
+<p>每当插入一个Tuple,我们就会Update Header中的偏移值.</p>
+<p>这个设计中存在比较大的问题, 如果我们删除了底下Tuple,就不得不移动所有Tuple.
+如果不移动数据, 那我们也要花费高昂的代价去维护Header中Page的meta数据.</p>
+<hr>
+<p>目前最常见的就是<strong>Slotted Pages</strong>的方式去存储数据.
+在不同数据库中的实现细节可能不同,但是从高级层面来讲,大多数数据库系统,
+用的都是这种方式去存储数据.</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/a47909a8-e0e6-48ea-a0b7-e3e327d7fdf2.png" alt=""></p>
+<p>每个Page中有三个部分:</p>
+<ul>
+<li><strong>Header</strong>: 保存最基本的matedata, 还包含一些checksum和访问时间之类的.</li>
+<li><strong>SlotArray</strong>: 将每一个特定的Slot映射到对应Tuple的偏移值上.</li>
+<li><strong>TupleArray</strong>: 储存每一个Tuple.</li>
+</ul>
+<p>在这个结构中Header后面紧接这SoltArray, 而Tuple是从Page的尾部开始存储的.
+每个Page存储的Tuple的个数是固定的.</p>
+<p>如果Tuple被删除,我们也只需要删除固定的Solt就行. 
+空出来的空间碎片,可以由数据库的空间整理功能去完成.
+维护每个Tuple的成本也比较小.只需要改变Solt就可以.</p>
+<hr>
+<p>最后讲一个Demo来演示数据库的工作过程.</p>
+<p>假如我想要找一个叫A的人,我会先去查找索引.
+从索引里我知道A的Page是123, Solt是2.
+我去找管理Pages的人,让他把Page123的指针给我,
+然后拿着Page的指针,找到Solt2中的偏移地址,找到了A这个人.</p>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-05-25">May 25, 2020</time>
+    <span class="author">by </span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/red-black-tree/">Red Black Tree</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/data-structure" class="pure-button">Data Structure</a>
+        
+    </div>
+    <p>半年前在研究<code>HashMap</code>的时候已经学习过红黑树的规则原理了.
+不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的)
+这次就把这个数据结构做一个了断.</p>
+<h3 id="性质">性质</h3>
+<ul>
+<li>性质1：每个节点要么是黑色，要么是红色。</li>
+<li>性质2：根节点是黑色。</li>
+<li>性质3：每个叶子节点（NIL）是黑色。</li>
+<li>性质4：每个红色结点的两个子结点一定都是黑色。</li>
+<li>性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。</li>
+</ul>
+<p>满足这5个性质就能保证红黑树是平衡的.</p>
+<h3 id="insert">Insert</h3>
+<p>插入的节点默认是红色的.因为这样可以最大限度满足红黑树的5个性质.</p>
+<p>请试想一下.如果插入的节点是红色:</p>
+<ul>
+<li>性质1可以满足.</li>
+<li>性质2可以满足.</li>
+<li>性质3可以满足(插入红色节点后自动衍生出2个黑色的NIL节点).</li>
+<li>性质4可能没法满足(新插入的节点的父节点也是红色).</li>
+<li>性质5可能没法满足(父节点是黑色时就不行).</li>
+</ul>
+<p>然后是红黑树节点的左右旋.</p>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//1323444-ff870251222c460e.gif" alt=""></p>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//1323444-3f68be339d2a3983.gif" alt=""></p>
+<p>看懂没? 节点的旋转大概就是这样。</p>
+<p>然后就是要分插入的情况了.</p>
+<ul>
+<li>
+<p>第一种：根节点为空。这种情况，将node的颜色改为黑色即可.</p>
+</li>
+<li>
+<p>第二种: node的父节点为黑色。这种情况不需要做修改.</p>
+</li>
+<li>
+<p>第三种: node的父节点为红色 (根据性质3，N的祖父节点必为黑色). 这种情况和变换规则都比较多.下面细说&hellip;</p>
+<ul>
+<li>node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树.</li>
+</ul>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//Red-black_tree_insert_case_3.png" alt=""></p>
+<ul>
+<li>node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋)</li>
+</ul>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//Red-black_tree_insert_case_5.png" alt=""></p>
+<ul>
+<li>node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。</li>
+</ul>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//Red-black_tree_insert_case_4.png" alt=""></p>
+</li>
+</ul>
+<h3 id="delete">Delete</h3>
+<p>这个以后再说.</p>
+<h3 id="search">Search</h3>
+<p>红黑树算是搜索二叉树的一个子集，<code>Search</code>方法是相同的。</p>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-05-20">May 20, 2020</time>
+    <span class="author">by </span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/tree_rust/">Tree by Rust implement</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/rust" class="pure-button">Rust</a>
+        
+        
+        <a href="/tags/data-structure" class="pure-button">Data Structure</a>
+        
+    </div>
+    <p><img src="/code/carbon2.png" alt=""></p>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-05-20">May 20, 2020</time>
+    <span class="author">by </span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/stack_rust/">Stack by Rust implement</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/rust" class="pure-button">Rust</a>
+        
+        
+        <a href="/tags/data-structure" class="pure-button">Data Structure</a>
+        
+    </div>
+    <p><img src="/code/carbon.png" alt=""></p>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-05-09">May 9, 2020</time>
+    <span class="author">by sdttttt</span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/gfs/">GFS</a></h1>
+    <div class="tags">
+        
+    </div>
+    <p>这是 <code>MIT 6.824</code> 课程<code>GFS</code>部分的一些总结.</p>
+<p>GFS (Google File System) 是Google为了管理海量数据而开发的一个分布式文件系统.</p>
+<p>直接进入正题.</p>
+<p>在GFS中文件是以<code>Chunk</code>的形式存储。所谓的<code>Chunk</code>是一个储存块。一个Chunk的大小为64MB.一个文件会分为多个Chunk.储存在不同的服务器里。当然也会有2-3份<code>Chunk</code>的拷贝。</p>
+<p>GFS中还存在一个<code>Master</code>，Master收集所有文件的metadata, 保存在一张表中。</p>
+<p>下面简单的解释一下读操作的交互。</p>
+<ul>
+<li><code>Client</code>指定的文件名和字节偏移转换成文件的一个块索引（<code>Chunk Index</code>）。</li>
+<li>给<code>Master</code>发送一个包含文件名和块索引的请求。</li>
+<li>master回应对应的<code>Chunk Handle</code>(存储数据服务器以<code>Chunk Handle</code>标识<code>Chunk</code>)和副本的位置（多个副本）。</li>
+<li><code>Client</code>以文件名和块索引为键缓存这些信息。（handle和副本的位置）</li>
+<li><code>Client</code>向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了<code>Chunk Handle</code>和块内的一个字节区间。</li>
+<li>除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。</li>
+</ul>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-04-27">April 27, 2020</time>
+    <span class="author">by </span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/consistent_hash_algorithm/">一致性哈希算法</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/distrbuted-system" class="pure-button">distrbuted system</a>
+        
+    </div>
+    <p>第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是<code>中央节点</code>成为了整个个分布式系统的<code>单点故障</code>.</p>
+<p>第二代分布式系统，节点之间通行采用的是<code>广播</code>，每个节点都向自己相连的<code>所有节点</code>进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行<code>广播</code>&hellip;&hellip;如此往复,直至找到所需文件。请求变多就意味着会产生<code>广播风暴</code>，这会严重占用带宽和系统资源。</p>
+<p>第三代分布式系统开始采用<code>DHT</code>(Distrbuted Hash Table)，也就是<code>一致性HASH算法</code>.</p>
+<h2 id="算法背景">算法背景</h2>
+<p>一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了
+解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希
+算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。</p>
+<p>但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 <code>memcached</code> 缓存数据库的人都知道,
+<code>memcached</code> 服务器端本身不提供分布式 <code>Cache</code> 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:</p>
+<ul>
+<li>
+<p>首先求出 memcached 服务器(节点)的哈希值,并将其配置到 <code>0 ~ 2^32</code> 的圆(continuum)上。</p>
+</li>
+<li>
+<p>然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。</p>
+</li>
+<li>
+<p>然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。</p>
+</li>
+</ul>
+<p><img src="/ConsistentHashAlgorithm/1.png" alt=""></p>
+<p>从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化	
+而影响缓存的命中率,但<code>一致性Hashing</code> 中,只有在圆(continuum)上增加服务器的地点逆时针方向	
+的第一台服务器上的键会受到影响。</p>
+<h2 id="性质">性质</h2>
+<p>因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。	
+在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。
+如果不采用<code>一致性HASH算法</code>, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关),
+由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以<code>一致性HASH算法</code>，在分布式系统中十分重要。</p>
+<p>良好的<code>一致性HASH算法</code>需要满足一下特点：</p>
+<p><strong>平衡性(Balance)</strong></p>
+<p>平衡性是指哈希的结果能够尽可能分布到所有的缓冲中去,这样可以使得所有的缓冲空间都得到利用。很多哈希算法都能够满足这一条件。</p>
+<p><strong>单调性(Monotonicity)</strong></p>
+<p>单调性是指如果已经有一些内容通过哈希分派到了相应的缓冲中,又有新的缓冲区加入到系统中,那么哈 希的结果应能够保证原有已分配的内容可以被映射到新的缓冲区中去,而不会被映射到旧的缓冲集合中的 其他缓冲区。简单的哈希算法往往不能满足单调性的要求,如最简单的线性哈希:x = (ax + b) mod (P), 在上式中,P 表示全部缓冲的大小。不难看出,当缓冲大小发生变化时(从 P1 到 P2),原来所有的哈希结果 均会发生变化,从而不满足单调性的要求。哈希结果的变化意味着当缓冲空间发生变化时,所有的映射关 系需要在系统内全部更新。而在 P2P 系统内,缓冲的变化等价于 Peer 加入或退出系统,这一情况在 P2P 系 统中会频繁发生,因此会带来极大计算和传输负荷。单调性就是要求哈希算法能够应对这种情况。</p>
+<p><strong>分散性(Spread)</strong></p>
+<p>在分布式环境中,终端有可能看不到所有的缓冲,而是只能看到其中的一部分。当终端希望通过哈希过程 将内容映射到缓冲上时,由于不同终端所见的缓冲范围有可能不同,从而导致哈希的结果不一致,最终的 结果是相同的内容被不同的终端映射到不同的缓冲区中。这种情况显然是应该避免的,因为它导致相同内 容被存储到不同缓冲中去,降低了系统存储的效率。分散性的定义就是上述情况发生的严重程度。好的哈 希算法应能够尽量避免不一致的情况发生,也就是尽量降低分散性。</p>
+<p><strong>负载(Load)</strong></p>
+<p>负载问题实际上是从另一个角度看待分散性问题。既然不同的终端可能将相同的内容映射到不同的缓冲区 中,那么对于一个特定的缓冲区而言,也可能被不同的用户映射为不同的内容。与分散性一样,这种情况 也是应当避免的,因此好的哈希算法应能够尽量降低缓冲的负荷。</p>
+<p><strong>平滑性(Smoothness)</strong></p>
+<p>平滑性是指缓存服务器的数目平滑改变和缓存对象的平滑改变是一致的。</p>
+<h2 id="虚拟节点">虚拟节点</h2>
+<p>假设在圆上<code>Node A</code>和<code>Node B</code>距离过近，按照以上的环形一致 HASH 算法就会发生两个节点所拥有的数据数量不一致的问题。</p>
+<p><img src="/ConsistentHashAlgorithm/2.png" alt=""></p>
+<p>为了解决这种数据倾斜问题，一致性哈希算法引入了虚拟节点机制，即对每一个服务节点计算<code>多个哈希</code>，每个计算结果位置都放置一个此<code>服务节点</code>，称为虚拟节点。具体做法可以在服务器 ip 或主机名的后面增加编号来实现。例如上面的情况，可以为每台服务器计算三个虚拟节点，于是可以分别计算 “Node A#1”、“Node A#2”、“Node A#3”、“Node B#1”、“Node B#2”、“Node B#3”的哈希值，于是形成六个虚拟节点：</p>
+<p>同时数据定位算法不变，只是多了一步虚拟节点到实际节点的映射，例如定位到“Node A#1”、“Node A#2”、“Node A#3”三个虚拟节点的数据均定位到 Node A 上。这样就解决了服务节点少时数据倾斜的问题。在实际应用中，通常将虚拟节点数设置为 32 甚至更大，因此即使很少的服务节点也能做到相对均匀的数据分布。</p>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-04-12">April 12, 2020</time>
+    <span class="author">by </span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/file_upload/">File Upload</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/penetration-test" class="pure-button">penetration test</a>
+        
+    </div>
+    <p>DVWA File upload 过关秘籍.</p>
+<h3 id="low">LOW</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_POST[ &#39;Upload&#39; ] ) ) {
+    // Where are we going to be writing to?
+    $target_path  = DVWA_WEB_PAGE_TO_ROOT . &#34;hackable/uploads/&#34;;
+    $target_path .= basename( $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ] );
+
+    // Can we move the file to the upload folder?
+    // 完全没做过滤.
+    // 上传一个PHP文件也是可以的.
+    if( !move_uploaded_file( $_FILES[ &#39;uploaded&#39; ][ &#39;tmp_name&#39; ], $target_path ) ) {
+        // No
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;Your image was not uploaded.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+    else {
+        // Yes!
+        echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;{$target_path} succesfully uploaded!&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+    }
+}
+</code></pre></div><h3 id="medium">Medium</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_POST[ &#39;Upload&#39; ] ) ) {
+    // Where are we going to be writing to?
+    $target_path  = DVWA_WEB_PAGE_TO_ROOT . &#34;hackable/uploads/&#34;;
+    $target_path .= basename( $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ] );
+
+    // File information
+    $uploaded_name = $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ];
+    $uploaded_type = $_FILES[ &#39;uploaded&#39; ][ &#39;type&#39; ];
+    $uploaded_size = $_FILES[ &#39;uploaded&#39; ][ &#39;size&#39; ];
+
+    // Is it an image?
+    // // 开始做了一些过滤
+
+    // 下面是官方对$_FILES 函数的描述
+    //  [name] =&gt; MyFile.txt (comes from the browser, so treat as tainted)
+    //         [type] =&gt; text/plain  (not sure where it gets this from - assume the browser, so treat as tainted)
+    //         [tmp_name] =&gt; /tmp/php/php1h4j1o (could be anywhere on your system, depending on your config        settings, but the user has no control, so this isn&#39;t tainted)
+    //         [error] =&gt; UPLOAD_ERR_OK  (= 0)
+    //         [size] =&gt; 123   (the size in bytes)
+    
+    // 其中对name和type的description的描述都是 `treat as tainted`(被污染的)
+    // 这意味着它有可能会被修改 unsafe
+    
+    // 我们可以尝试上传一个PHP文件，使用一些拦截请求工具，修改即将发出的请求.
+    // 来达到修改`name`中的后缀名和`type`中的媒体类型.
+    if( ( $uploaded_type == &#34;image/jpeg&#34; || $uploaded_type == &#34;image/png&#34; ) <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span>
+        ( $uploaded_size &lt; <span style="color:#f92672">100000</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">Can</span> <span style="color:#a6e22e">we</span> <span style="color:#a6e22e">move</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">file</span> <span style="color:#a6e22e">to</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">upload</span> <span style="color:#a6e22e">folder</span><span style="color:#960050;background-color:#1e0010">?</span>
+        <span style="color:#a6e22e">if</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">!</span><span style="color:#a6e22e">move_uploaded_file</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">_FILES</span><span style="color:#960050;background-color:#1e0010">[</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">uploaded</span><span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#960050;background-color:#1e0010">][</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">tmp_name</span><span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#960050;background-color:#1e0010">],</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">target_path</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+            <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">No</span>
+            <span style="color:#a6e22e">echo</span> <span style="color:#960050;background-color:#1e0010">&#39;&lt;</span><span style="color:#a6e22e">pre</span>&gt;Your image was not uploaded.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        }
+        else {
+            // Yes!
+            echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;{$target_path} succesfully uploaded!&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+        }
+    }
+    else {
+        // Invalid file
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+}
+</code></pre></div><h3 id="high">High</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_POST[ &#39;Upload&#39; ] ) ) {
+    // Where are we going to be writing to?
+    $target_path  = DVWA_WEB_PAGE_TO_ROOT . &#34;hackable/uploads/&#34;;
+    $target_path .= basename( $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ] );
+
+    // File information
+    $uploaded_name = $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ];
+        // jpg
+    $uploaded_ext  = substr( $uploaded_name, strrpos( $uploaded_name, &#39;.&#39; ) + 1);
+    
+    // file size
+    $uploaded_size = $_FILES[ &#39;uploaded&#39; ][ &#39;size&#39; ];
+    
+    // tmp_name 是临时副本的名字
+    $uploaded_tmp  = $_FILES[ &#39;uploaded&#39; ][ &#39;tmp_name&#39; ];
+
+    // Is it an image?
+    // 和上面的比起来多个一个文件后缀名的判断.
+    // strtolower 转小写
+    // 扩展名只要满足jpeg,png或者jpg就行
+    if( ( strtolower( $uploaded_ext ) == &#34;jpg&#34; || strtolower( $uploaded_ext ) == &#34;jpeg&#34; || strtolower( $uploaded_ext ) == &#34;png&#34; ) <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span>
+        ( $uploaded_size &lt; <span style="color:#f92672">100000</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span>
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">getimagesize</span> <span style="color:#a6e22e">获取图像信息</span>
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">这个函数保证你穿的一定得是个图像</span>
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">可以用图片木马绕过</span>
+        <span style="color:#a6e22e">getimagesize</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_tmp</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">Can</span> <span style="color:#a6e22e">we</span> <span style="color:#a6e22e">move</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">file</span> <span style="color:#a6e22e">to</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">upload</span> <span style="color:#a6e22e">folder</span><span style="color:#960050;background-color:#1e0010">?</span>
+        <span style="color:#a6e22e">if</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">!</span><span style="color:#a6e22e">move_uploaded_file</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_tmp</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">target_path</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+            <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">No</span>
+            <span style="color:#a6e22e">echo</span> <span style="color:#960050;background-color:#1e0010">&#39;&lt;</span><span style="color:#a6e22e">pre</span>&gt;Your image was not uploaded.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        }
+        else {
+            // Yes!
+            echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;{$target_path} succesfully uploaded!&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+        }
+    }
+    else {
+        // Invalid file
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+}
+</code></pre></div><h3 id="high-1">High</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_POST[ &#39;Upload&#39; ] ) ) {
+    // Where are we going to be writing to?
+    $target_path  = DVWA_WEB_PAGE_TO_ROOT . &#34;hackable/uploads/&#34;;
+    $target_path .= basename( $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ] );
+
+    // File information
+    $uploaded_name = $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ];
+    $uploaded_ext  = substr( $uploaded_name, strrpos( $uploaded_name, &#39;.&#39; ) + 1);
+    $uploaded_size = $_FILES[ &#39;uploaded&#39; ][ &#39;size&#39; ];
+    $uploaded_tmp  = $_FILES[ &#39;uploaded&#39; ][ &#39;tmp_name&#39; ];
+
+    // Is it an image?
+    // 对比上面多验证了文件的后缀名
+    if( ( strtolower( $uploaded_ext ) == &#34;jpg&#34; || strtolower( $uploaded_ext ) == &#34;jpeg&#34; || strtolower( $uploaded_ext ) == &#34;png&#34; ) <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span>
+        ( $uploaded_size &lt; <span style="color:#f92672">100000</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span>
+
+        
+       
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">函数会通过读取文件头</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">返回图片的长</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">宽等信息</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果没有相关的图片文件头</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">函数会报错</span>
+        <span style="color:#a6e22e">getimagesize</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_tmp</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">可以看到</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">High级别的代码读取文件名中最后一个</span><span style="color:#960050;background-color:#1e0010">”.”</span><span style="color:#a6e22e">后的字符串</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">期望通过文件名来限制文件类型</span>
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">因此要求上传文件名形式必须是</span><span style="color:#960050;background-color:#1e0010">”*.</span><span style="color:#a6e22e">jpg</span><span style="color:#960050;background-color:#1e0010">”、”*.</span><span style="color:#a6e22e">jpeg</span><span style="color:#960050;background-color:#1e0010">”</span> <span style="color:#960050;background-color:#1e0010">、”*.</span><span style="color:#a6e22e">png</span><span style="color:#960050;background-color:#1e0010">”</span><span style="color:#a6e22e">之一</span>
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">同时</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">getimagesize函数更是限制了上传文件的文件头必须为图像类型</span>
+
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">Can</span> <span style="color:#a6e22e">we</span> <span style="color:#a6e22e">move</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">file</span> <span style="color:#a6e22e">to</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">upload</span> <span style="color:#a6e22e">folder</span><span style="color:#960050;background-color:#1e0010">?</span>
+        <span style="color:#a6e22e">if</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">!</span><span style="color:#a6e22e">move_uploaded_file</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_tmp</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">target_path</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+            <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">No</span>
+            <span style="color:#a6e22e">echo</span> <span style="color:#960050;background-color:#1e0010">&#39;&lt;</span><span style="color:#a6e22e">pre</span>&gt;Your image was not uploaded.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        }
+        else {
+            // Yes!
+            echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;{$target_path} succesfully uploaded!&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+        }
+    }
+    else {
+        // Invalid file
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+}
+</code></pre></div><h3 id="impossible">Impossible</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_POST[ &#39;Upload&#39; ] ) ) {
+    // Check Anti-CSRF token
+    checkToken( $_REQUEST[ &#39;user_token&#39; ], $_SESSION[ &#39;session_token&#39; ], &#39;index.php&#39; );
+
+    // File information
+    $uploaded_name = $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ];
+    $uploaded_ext  = substr( $uploaded_name, strrpos( $uploaded_name, &#39;.&#39; ) + 1);
+    $uploaded_size = $_FILES[ &#39;uploaded&#39; ][ &#39;size&#39; ];
+    $uploaded_type = $_FILES[ &#39;uploaded&#39; ][ &#39;type&#39; ];
+    $uploaded_tmp  = $_FILES[ &#39;uploaded&#39; ][ &#39;tmp_name&#39; ];
+
+    // Where are we going to be writing to?
+    $target_path   = DVWA_WEB_PAGE_TO_ROOT . &#39;hackable/uploads/&#39;;
+    //$target_file   = basename( $uploaded_name, &#39;.&#39; . $uploaded_ext ) . &#39;-&#39;;
+
+    // MD5 加密
+    $target_file   =  md5( uniqid() . $uploaded_name ) . &#39;.&#39; . $uploaded_ext;
+    $temp_file     = ( ( ini_get( &#39;upload_tmp_dir&#39; ) == &#39;&#39; ) ? ( sys_get_temp_dir() ) : ( ini_get( &#39;upload_tmp_dir&#39; ) ) );
+    $temp_file    .= DIRECTORY_SEPARATOR . md5( uniqid() . $uploaded_name ) . &#39;.&#39; . $uploaded_ext;
+
+    // Is it an image?
+    if( ( strtolower( $uploaded_ext ) == &#39;jpg&#39; || strtolower( $uploaded_ext ) == &#39;jpeg&#39; || strtolower( $uploaded_ext ) == &#39;png&#39; ) <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span>
+        ( $uploaded_size &lt; <span style="color:#f92672">100000</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span>
+        <span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_type </span><span style="color:#f92672">=</span><span style="color:#e6db74">=</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">image</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">jpeg</span><span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#960050;background-color:#1e0010">||</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_type </span><span style="color:#f92672">=</span><span style="color:#e6db74">=</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">image</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">png</span><span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">&amp;&amp;</span>
+        <span style="color:#a6e22e">getimagesize</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_tmp</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">Strip</span> <span style="color:#a6e22e">any</span> <span style="color:#a6e22e">metadata</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#a6e22e">by</span> <span style="color:#a6e22e">re-encoding</span> <span style="color:#a6e22e">image</span> <span style="color:#960050;background-color:#1e0010">(</span><span style="color:#a6e22e">Note</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#a6e22e">using</span> <span style="color:#a6e22e">php-Imagick</span> <span style="color:#a6e22e">is</span> <span style="color:#a6e22e">recommended</span> <span style="color:#a6e22e">over</span> <span style="color:#a6e22e">php-GD</span><span style="color:#960050;background-color:#1e0010">)</span>
+        <span style="color:#a6e22e">if</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_type </span><span style="color:#f92672">=</span><span style="color:#e6db74">=</span> <span style="color:#960050;background-color:#1e0010">&#39;</span><span style="color:#a6e22e">image</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#a6e22e">jpeg</span><span style="color:#960050;background-color:#1e0010">&#39;</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+            <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">img </span><span style="color:#f92672">=</span> <span style="color:#e6db74">imagecreatefromjpeg(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_tmp</span> <span style="color:#960050;background-color:#1e0010">);</span>
+            <span style="color:#a6e22e">imagejpeg</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">img</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">temp_file</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#a6e22e">100</span><span style="color:#960050;background-color:#1e0010">);</span>
+        <span style="color:#960050;background-color:#1e0010">}</span>
+        <span style="color:#a6e22e">else</span> <span style="color:#960050;background-color:#1e0010">{</span>
+            <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">img </span><span style="color:#f92672">=</span> <span style="color:#e6db74">imagecreatefrompng(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">uploaded_tmp</span> <span style="color:#960050;background-color:#1e0010">);</span>
+            <span style="color:#a6e22e">imagepng</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">img</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">temp_file</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#a6e22e">9</span><span style="color:#960050;background-color:#1e0010">);</span>
+        <span style="color:#960050;background-color:#1e0010">}</span>
+        <span style="color:#a6e22e">imagedestroy</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">img</span> <span style="color:#960050;background-color:#1e0010">);</span>
+
+        <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">Can</span> <span style="color:#a6e22e">we</span> <span style="color:#a6e22e">move</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">file</span> <span style="color:#a6e22e">to</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">web</span> <span style="color:#a6e22e">root</span> <span style="color:#a6e22e">from</span> <span style="color:#a6e22e">the</span> <span style="color:#a6e22e">temp</span> <span style="color:#a6e22e">folder</span><span style="color:#960050;background-color:#1e0010">?</span>
+        <span style="color:#a6e22e">if</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#a6e22e">rename</span><span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">temp_file</span><span style="color:#960050;background-color:#1e0010">,</span> <span style="color:#960050;background-color:#1e0010">(</span> <span style="color:#a6e22e">getcwd</span><span style="color:#960050;background-color:#1e0010">()</span> <span style="color:#960050;background-color:#1e0010">.</span> <span style="color:#a6e22e">DIRECTORY_SEPARATOR</span> <span style="color:#960050;background-color:#1e0010">.</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">target_path</span> <span style="color:#960050;background-color:#1e0010">.</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">target_file</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+            <span style="color:#960050;background-color:#1e0010">//</span> <span style="color:#a6e22e">Yes</span><span style="color:#960050;background-color:#1e0010">!</span>
+            <span style="color:#a6e22e">echo</span> <span style="color:#960050;background-color:#1e0010">&#34;&lt;</span><span style="color:#a6e22e">pre</span>&gt;&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;${target_path}${target_file}&#39;</span>&gt;${target_file}&lt;/<span style="color:#f92672">a</span>&gt; succesfully uploaded!&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+        }
+        else {
+            // No
+            echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;Your image was not uploaded.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        }
+
+        // Delete any temp files
+        if( file_exists( $temp_file ) )
+            unlink( $temp_file );
+    }
+    else {
+        // Invalid file
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+}
+
+// Generate Anti-CSRF token
+generateSessionToken();
+</code></pre></div><h3 id="extension">Extension</h3>
+<p><strong>00%截断</strong></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">$is_upload = false;
+$msg = null;
+if(isset($_POST[&#39;submit&#39;])){
+    // 白名单
+    $ext_arr = array(&#39;jpg&#39;,&#39;png&#39;,&#39;gif&#39;);
+    $file_ext = substr($_FILES[&#39;upload_file&#39;][&#39;name&#39;],strrpos($_FILES[&#39;upload_file&#39;][&#39;name&#39;],&#34;.&#34;)+1);
+    if(in_array($file_ext,$ext_arr)){
+        $temp_file = $_FILES[&#39;upload_file&#39;][&#39;tmp_name&#39;];
+        // 注意这个位置
+        // 最后拼接的储存路径，是由用户提交上的数据来做为路径
+        $img_path = $_POST[&#39;save_path&#39;].&#34;/&#34;.rand(10, 99).date(&#34;YmdHis&#34;).&#34;.&#34;.$file_ext;
+
+        if(move_uploaded_file($temp_file,$img_path)){
+            $is_upload = true;
+        } else {
+            $msg = &#34;上传失败&#34;;
+        }
+    } else {
+        $msg = &#34;只允许上传.jpg|.png|.gif类型文件！&#34;;
+    }
+}
+</code></pre></div><p>代码采用的白名单校验，只允许上传图片格式，理论上这个上传是不好绕过的。</p>
+<p>但是后面采用保存文件的时候，是路径拼接的形式，而路径又是从前端获取，所以我们可以在路径上做手脚。</p>
+<p>如下上传，显示文件路径中有个空格，这并不是真正意义上的空格，而是%00截断后显示成的空格。</p>
+<blockquote>
+<p>在url中%00表示ascll码中的0 ，而ascii中0作为特殊字符保留，表示字符串结束，所以当url中出现%00时就会认为读取已结束 (php版本要小于5.3.4，5.3.4及以上已经修复该问题)</p>
+</blockquote>
+
+</article>
+</div>
+    <div class="pad"></div>
+
+    
+
+    <div class="pagination">
+        
+        <a class="pure-button pagination-item older" href="/page/2/">Older</a>
+        
+
+        
+        <span class="pagination-item newer">Newer</span>
+        
+    </div>
+</div>
+
+
+                
+<div id="sidebar" class="pure-u-1 pure-u-md-1-4 pure-u-sm-1">
+    <div class="pad">
+        <a name="about"></a>
+        <h3>About Me</h3>
+        <div style="text-align: center;">
+            <img src="/me.png" alt="Sdttttt" class="pure-img" />
+            <p><em>突如其来的变故使得本就不富裕的晦气小伙雪上加霜.</em></p>
+        </div>
+
+        <h3>Latest Articles</h3>
+        <div class="pure-menu pure-menu-open">
+            <ul class="pure-menu-list">
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/thread_pool_executor/" class="pure-menu-link">Thread Pool Executor 运行细节<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/raft_impl/" class="pure-menu-link">Raft实现的思考<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/kanon/" class="pure-menu-link">Kanon<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/database_storage/" class="pure-menu-link">Database Storage<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/red-black-tree/" class="pure-menu-link">Red Black Tree<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/tree_rust/" class="pure-menu-link">Tree by Rust implement<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/stack_rust/" class="pure-menu-link">Stack by Rust implement<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/gfs/" class="pure-menu-link">GFS<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/consistent_hash_algorithm/" class="pure-menu-link">一致性哈希算法<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/file_upload/" class="pure-menu-link">File Upload<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+
+        <h3>Categories</h3>
+        <div style="text-align:center" class="tags">
+            
+            
+            <a href="/tags/data-structure" class="pure-button"> data-structure
+                <small>(3)</small></a>
+            
+            
+            
+            <a href="/tags/penetration-test" class="pure-button"> penetration-test
+                <small>(3)</small></a>
+            
+            
+            
+            <a href="/tags/assembly" class="pure-button"> assembly
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/cicd" class="pure-button"> cicd
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/design" class="pure-button"> design
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/microservice" class="pure-button"> microservice
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/rust" class="pure-button"> rust
+                <small>(2)</small></a>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>
+    </div> 
+</div> 
+
+                
+            </div><div class="pure-g">
+	<footer class="pure-u-1 pure-u-md-1 pure-u-sm-1">
+		<p>This page and its contents are copyright &copy; 2020,
+			<a href="">Sdttttt</a>.</p>
+		<p><a href="https://github.com/pravin/hugo-theme-prav">Theme Prav</a> by <a href="https://cto.me.uk">Pravin
+				Paratey</a></p>
+	</footer>
+
+	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+		integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+		crossorigin="anonymous"></script>
+</div></div></body>
+</html>

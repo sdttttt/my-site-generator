@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#000" />
+    <title>
+        
+            SS:SP鸡你太美存器 &middot; SDTTTTT SDTTTTT
+        
+    </title>
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+        integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    
+    
+    <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+    
+
+    
+    <meta name="keywords" content="assembly">
+    
+    <meta name="author" content="Sdttttt"></head>
+<body>
+        <div class="container"><div id="navbar" class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-scrollable">
+    <a href="/" class="pure-menu-heading">
+         
+            SDTTTTT 
+         
+    </a>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+            <a href="/posts" class="pure-menu-link">
+                <i class="fa fa-archive"></i>
+                Articles
+            </a>
+        </li>
+        <li class="pure-menu-item">
+            <a href="/tags" class="pure-menu-link">
+                <i class="fas fa-comments"></i>
+                Categories
+            </a>
+        </li>
+        <li class="pure-menu-item">
+            <a href="/about" class="pure-menu-link">
+                <i class="fas fa-smile"></i>
+                About
+            </a>
+        </li>
+    </ul>
+    <ul class="pure-menu-list pull-right">
+        
+        <li class="pure-menu-item">
+            <a href="https://github.com/sdttttt" title="Github" class="pure-menu-link">
+                <i class="fab fa-github"></i>
+                <span class="hide">Github</span>
+            </a>
+        </li>
+        
+        
+        <li class="pure-menu-item">
+            <a href="http://twitter.com/shiina38092638" title="@pravin" class="pure-menu-link">
+                <i class="fab fa-twitter-square"></i>
+                <span class="hide">Twitter</span>
+            </a>
+        </li>
+        
+        
+        
+        
+        <li class="pure-menu-item">
+            <a href="https://www.facebook.com/sdzzzzz" title="Facebook" class="pure-menu-link">
+                <i class="fab fa-facebook"></i>
+                <span class="hide">Facebook</span>
+            </a>
+        </li>
+        
+        <li class="pure-menu-item">
+            <a href="/posts/index.xml" title="Atom Feed" class="pure-menu-link">
+                <i class="fas fa-rss-square"></i>
+                <span class="hide">RSS Feed</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="pure-u-1">
+    <div class="pad">
+    </div>
+</div>
+<div class="pure-g">
+
+
+<div id="content" class="pure-u-1 pure-u-md-3-4 pure-u-sm-1">
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-04-06">April 6, 2020</time>
+    <span class="author">by </span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/sssp/">SS:SP鸡你太美存器</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/assembly" class="pure-button">assembly</a>
+        
+    </div>
+    <p>如今的CPU都有提供栈机制，8086也不例外。</p>
+<p>8086提供的最基本的两个指令就是<code>push</code> and <code>pop</code>.</p>
+<pre><code>push ax ;将寄存器ax中的数据送入栈顶
+pop ax ;将栈顶的数据送入ax
+</code></pre><p>我们知道CS:IP寄存器存放了下一条指令的段地址和偏移地址，那么CPU是如何知道栈顶在哪呐？
+显然也有两个寄存器专门存放栈顶的地址，那就是SS:SP寄存器，SS = 段地址， SP = 偏移地址</p>
+<p>任意时刻，SS:SP都指向栈顶元素。<code>push</code>和<code>pop</code>指令执行时CPU将从SS和SP中获得栈顶的地址。</p>
+<p><code>push</code> 有2步:</p>
+<ul>
+<li>SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。</li>
+<li>将AX中的内容送入 SS:SP 所指的位置.</li>
+</ul>
+<pre><code>10000H  |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______| 
+        |_______| 
+1000EH  |__23___| &lt;= SS:SP
+1000FH  |__01___|
+</code></pre><pre><code>10000H  |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______| &lt;= SS:SP: 换个位置
+        |_______| 
+1000EH  |__23___| 
+1000FH  |__01___|
+</code></pre><pre><code>10000H  |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|  ;来自ax寄存器的数据
+        |__54___| &lt;= SS:SP: 换个位置
+        |__11___| 
+1000EH  |__23___| 
+1000FH  |__01___|
+</code></pre><hr>
+<p>假设 10000H -&gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？</p>
+<pre><code>10000H  |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______| 
+1000EH  |_______| 
+1000FH  |_______| &lt;= SS:SP: 我在这？
+</code></pre><pre><code>10000H  |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______|
+        |_______| 
+1000EH  |_______| 
+1000FH  |_______| 
+10010H  |_______| &lt;= SS:SP: 其实爷在这里。
+</code></pre><p>至于为什么只要想想 <code>SP -= 2</code> 你就知道了。</p>
+<h1 id="关于爆栈">关于爆栈</h1>
+<p>栈一旦爆了，SS:SP就会指到别的地方去。
+这么一想CPU应该会知道栈顶在哪里。</p>
+<p>每次<code>push</code>,<code>pop</code>都会检查栈顶和栈底的位置，保证栈不会超。这么一想美滋滋。</p>
+<p>然而，8086CPU并没有做这样的设计。
+它只知道栈顶在哪里。不知道栈有多大。</p>
+<p>换个说法就是：<strong>只知道下一条指令在哪里，而不知道要处理的指令有多少条。</strong></p>
+
+</article>
+<br />
+<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script></div>
+</div>
+
+
+                
+<div id="sidebar" class="pure-u-1 pure-u-md-1-4 pure-u-sm-1">
+    <div class="pad">
+        <a name="about"></a>
+        <h3>About Me</h3>
+        <div style="text-align: center;">
+            <img src="/me.png" alt="Sdttttt" class="pure-img" />
+            <p><em>突如其来的变故使得本就不富裕的晦气小伙雪上加霜.</em></p>
+        </div>
+
+        <h3>Latest Articles</h3>
+        <div class="pure-menu pure-menu-open">
+            <ul class="pure-menu-list">
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/thread_pool_executor/" class="pure-menu-link">Thread Pool Executor 运行细节<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/raft_impl/" class="pure-menu-link">Raft实现的思考<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/kanon/" class="pure-menu-link">Kanon<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/database_storage/" class="pure-menu-link">Database Storage<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/red-black-tree/" class="pure-menu-link">Red Black Tree<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/tree_rust/" class="pure-menu-link">Tree by Rust implement<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/stack_rust/" class="pure-menu-link">Stack by Rust implement<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/gfs/" class="pure-menu-link">GFS<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/consistent_hash_algorithm/" class="pure-menu-link">一致性哈希算法<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/file_upload/" class="pure-menu-link">File Upload<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+
+        <h3>Categories</h3>
+        <div style="text-align:center" class="tags">
+            
+            
+            <a href="/tags/data-structure" class="pure-button"> data-structure
+                <small>(3)</small></a>
+            
+            
+            
+            <a href="/tags/penetration-test" class="pure-button"> penetration-test
+                <small>(3)</small></a>
+            
+            
+            
+            <a href="/tags/assembly" class="pure-button"> assembly
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/cicd" class="pure-button"> cicd
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/design" class="pure-button"> design
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/microservice" class="pure-button"> microservice
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/rust" class="pure-button"> rust
+                <small>(2)</small></a>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>
+    </div> 
+</div> 
+
+                
+            </div><div class="pure-g">
+	<footer class="pure-u-1 pure-u-md-1 pure-u-sm-1">
+		<p>This page and its contents are copyright &copy; 2020,
+			<a href="">Sdttttt</a>.</p>
+		<p><a href="https://github.com/pravin/hugo-theme-prav">Theme Prav</a> by <a href="https://cto.me.uk">Pravin
+				Paratey</a></p>
+	</footer>
+
+	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+		integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+		crossorigin="anonymous"></script>
+</div></div></body>
+</html>

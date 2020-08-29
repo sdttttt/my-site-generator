@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#000" />
+    <title>
+        
+            Thread Pool Executor 运行细节 &middot; SDTTTTT SDTTTTT
+        
+    </title>
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
+        integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+    
+    
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
+    
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+
+    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="">
+    
+    
+    <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+    
+
+    
+    <meta name="keywords" content="Java">
+    
+    <meta name="author" content="Sdttttt"></head>
+<body>
+        <div class="container"><div id="navbar" class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-scrollable">
+    <a href="/" class="pure-menu-heading">
+         
+            SDTTTTT 
+         
+    </a>
+    <ul class="pure-menu-list">
+        <li class="pure-menu-item">
+            <a href="/posts" class="pure-menu-link">
+                <i class="fa fa-archive"></i>
+                Articles
+            </a>
+        </li>
+        <li class="pure-menu-item">
+            <a href="/tags" class="pure-menu-link">
+                <i class="fas fa-comments"></i>
+                Categories
+            </a>
+        </li>
+        <li class="pure-menu-item">
+            <a href="/about" class="pure-menu-link">
+                <i class="fas fa-smile"></i>
+                About
+            </a>
+        </li>
+    </ul>
+    <ul class="pure-menu-list pull-right">
+        
+        <li class="pure-menu-item">
+            <a href="https://github.com/sdttttt" title="Github" class="pure-menu-link">
+                <i class="fab fa-github"></i>
+                <span class="hide">Github</span>
+            </a>
+        </li>
+        
+        
+        <li class="pure-menu-item">
+            <a href="http://twitter.com/shiina38092638" title="@pravin" class="pure-menu-link">
+                <i class="fab fa-twitter-square"></i>
+                <span class="hide">Twitter</span>
+            </a>
+        </li>
+        
+        
+        
+        
+        <li class="pure-menu-item">
+            <a href="https://www.facebook.com/sdzzzzz" title="Facebook" class="pure-menu-link">
+                <i class="fab fa-facebook"></i>
+                <span class="hide">Facebook</span>
+            </a>
+        </li>
+        
+        <li class="pure-menu-item">
+            <a href="/posts/index.xml" title="Atom Feed" class="pure-menu-link">
+                <i class="fas fa-rss-square"></i>
+                <span class="hide">RSS Feed</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="pure-u-1">
+    <div class="pad">
+    </div>
+</div>
+<div class="pure-g">
+
+
+<div id="content" class="pure-u-1 pure-u-md-3-4 pure-u-sm-1">
+    <div class="pad">
+<div class="date">
+    <time pubdate="2020-08-25">August 25, 2020</time>
+    <span class="author">by sdttttt</span>
+</div>
+
+<article>
+    <h1><a href="https://sdttttt.github.io/post/thread_pool_executor/">Thread Pool Executor 运行细节</a></h1>
+    <div class="tags">
+        
+        
+        <a href="/tags/java" class="pure-button">Java</a>
+        
+    </div>
+    <p>先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.</p>
+<p>ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ThreadPoolExecutor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> corePoolSize<span style="color:#f92672">,</span> <span style="color:#75715e">// 核心线程数量
+</span><span style="color:#75715e"></span>                              <span style="color:#66d9ef">int</span> maximumPoolSize<span style="color:#f92672">,</span> <span style="color:#75715e">// 最大线程数量
+</span><span style="color:#75715e"></span>                              <span style="color:#66d9ef">long</span> keepAliveTime<span style="color:#f92672">,</span> <span style="color:#75715e">// 存活时间
+</span><span style="color:#75715e"></span>                              TimeUnit unit<span style="color:#f92672">,</span> <span style="color:#75715e">// 时间单位
+</span><span style="color:#75715e"></span>                              BlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span> workQueue <span style="color:#75715e">// 来个列队
+</span><span style="color:#75715e"></span>                        <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">(</span>corePoolSize<span style="color:#f92672">,</span> maximumPoolSize<span style="color:#f92672">,</span> keepAliveTime<span style="color:#f92672">,</span> unit<span style="color:#f92672">,</span> workQueue<span style="color:#f92672">,</span>
+             Executors<span style="color:#f92672">.</span><span style="color:#a6e22e">defaultThreadFactory</span><span style="color:#f92672">(),</span> defaultHandler<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>提交任务时的运行如下:</p>
+<ul>
+<li>如果正在运行的线程数 &lt; coreSize，马上创建线程执行该task，不排队等待；</li>
+<li>如果正在运行的线程数 &gt;= coreSize，把该task放入阻塞队列；</li>
+<li>如果队列已满 &amp;&amp; 正在运行的线程数 &lt; maximumPoolSize，创建新的线程执行该task；</li>
+<li>如果队列已满 &amp;&amp; 正在运行的线程数 &gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。</li>
+<li>从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。</li>
+</ul>
+
+</article>
+<br />
+<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script></div>
+</div>
+
+
+                
+<div id="sidebar" class="pure-u-1 pure-u-md-1-4 pure-u-sm-1">
+    <div class="pad">
+        <a name="about"></a>
+        <h3>About Me</h3>
+        <div style="text-align: center;">
+            <img src="/me.png" alt="Sdttttt" class="pure-img" />
+            <p><em>突如其来的变故使得本就不富裕的晦气小伙雪上加霜.</em></p>
+        </div>
+
+        <h3>Latest Articles</h3>
+        <div class="pure-menu pure-menu-open">
+            <ul class="pure-menu-list">
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/thread_pool_executor/" class="pure-menu-link">Thread Pool Executor 运行细节<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/raft_impl/" class="pure-menu-link">Raft实现的思考<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/kanon/" class="pure-menu-link">Kanon<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/database_storage/" class="pure-menu-link">Database Storage<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/red-black-tree/" class="pure-menu-link">Red Black Tree<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/tree_rust/" class="pure-menu-link">Tree by Rust implement<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/stack_rust/" class="pure-menu-link">Stack by Rust implement<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/gfs/" class="pure-menu-link">GFS<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/consistent_hash_algorithm/" class="pure-menu-link">一致性哈希算法<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+                <li class="pure-menu-item">
+                    <a href="https://sdttttt.github.io/post/file_upload/" class="pure-menu-link">File Upload<br>
+                        <small></small>
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+
+        <h3>Categories</h3>
+        <div style="text-align:center" class="tags">
+            
+            
+            <a href="/tags/data-structure" class="pure-button"> data-structure
+                <small>(3)</small></a>
+            
+            
+            
+            <a href="/tags/penetration-test" class="pure-button"> penetration-test
+                <small>(3)</small></a>
+            
+            
+            
+            <a href="/tags/assembly" class="pure-button"> assembly
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/cicd" class="pure-button"> cicd
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/design" class="pure-button"> design
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/microservice" class="pure-button"> microservice
+                <small>(2)</small></a>
+            
+            
+            
+            <a href="/tags/rust" class="pure-button"> rust
+                <small>(2)</small></a>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>
+    </div> 
+</div> 
+
+                
+            </div><div class="pure-g">
+	<footer class="pure-u-1 pure-u-md-1 pure-u-sm-1">
+		<p>This page and its contents are copyright &copy; 2020,
+			<a href="">Sdttttt</a>.</p>
+		<p><a href="https://github.com/pravin/hugo-theme-prav">Theme Prav</a> by <a href="https://cto.me.uk">Pravin
+				Paratey</a></p>
+	</footer>
+
+	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+		integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+		crossorigin="anonymous"></script>
+</div></div></body>
+</html>
