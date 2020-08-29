@@ -21,6 +21,8 @@
 
 set -e
 
+starttime=`date +'%Y-%m-%d %H:%M:%S'`
+
 code_address="git@github.com:sdttttt/sdttttt.github.io.git" # Hugo 项目地址
 code_address_gitee="git@gitee.com:sdttttt/my-site-generator.git" # Hugo 项目地址 Gitee
 
@@ -113,7 +115,12 @@ function deploy(){
     then
         syncSourceCode
         cleanWork
-        echo -e "\033[32m[Successful]\033[0m We did it! 🎉"
+
+        endtime=`date +'%Y-%m-%d %H:%M:%S'`
+        start_seconds=$(date --date="$starttime" +%s);
+        end_seconds=$(date --date="$endtime" +%s);
+
+        echo -e "\033[32m[Successful]\033[0m We did it! 🎉 Total Time: "$((end_seconds-start_seconds))"s"
     else
         cleanWork
     fi
