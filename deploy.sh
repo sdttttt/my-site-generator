@@ -68,13 +68,13 @@ function syncSourceCode(){
     if [ -n  $code_address_gitee ];
     then
         echo -e "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
-        git push --progress --verbose --atomic $code_address_gitee master &
+        git push --progress --atomic $code_address_gitee master &
         pid=$!
         echo -e "\033[32m[Synchronizing]\033[0m Source code to Github..."
-        git push --progress --verbose --atomic $code_address master
+        git push --progress --atomic $code_address master
         wait $pid
     else
-        git push --progress --verbose --atomic $code_address master
+        git push --progress --atomic $code_address master
     fi
 }
 
