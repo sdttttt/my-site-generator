@@ -120,7 +120,7 @@ function deploy(){
         start_seconds=$(date --date="$starttime" +%s);
         end_seconds=$(date --date="$endtime" +%s);
 
-        echo -e "\033[32m[Successful]\033[0m We did it! 🎉 Total Time: "$((end_seconds-start_seconds))"s"
+        echo -e "\033[32m[Successful]\033[0m 🎉 We did it! 🕒 Total Time: "$((end_seconds-start_seconds))"s"
     else
         cleanWork
     fi
