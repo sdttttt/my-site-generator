@@ -16,7 +16,6 @@ paginate = 5
   # dir name of your blog content (default is `content/posts`)
   contentTypeName = "post"
 
-
   DisqusShortname = true
 
   # "light" or "dark"
