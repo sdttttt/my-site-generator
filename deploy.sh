@@ -70,15 +70,12 @@ function syncSourceCode(){
 
     echo -e "\033[32m[Synchronizing]\033[0m Source code to Github and Gitee..."
 
-    # git push $code_address_gitee master &
-    # pid=$!
+    git push $code_address_gitee master &
+    pid=$!
 
-    # git push $code_address master
-
-    # wait $pid
-
-    git push $code_address_gitee master
     git push $code_address master
+
+    wait $pid
 
     echo -e "\033[32m[Deploying]\033[0m OK Deploy Over :)"
 }
