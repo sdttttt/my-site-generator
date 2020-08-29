@@ -25,7 +25,6 @@ set -e
 code_address="git@github.com:sdttttt/my-site-generator.git" # Hugo 项目地址
 code_address_gitee="git@gitee.com:sdttttt/my-site-generator.git" # Hugo 项目地址 Gitee
 
-deploy="git@github.com:sdttttt/sdttttt.github.io.git" # 静态网站部署地址
 commit_message="[SDTTTTT] Update Blog."
 
 dir=$(pwd)
@@ -42,28 +41,11 @@ function envClean(){
     then
         rm -rf ../public
     fi
-}
 
-
-function deployToSite(){
-    cp -r ./public ../
-    cd ../public
-
-    echo -e "\033[32m[Deploying]\033[0m Push Running..."
-
-    git init
-    git add --ignore-errors .
-    git commit --quiet -m "${commit_message}"
-    git push $deploy master --force
-
-    if [ ! $? -eq 0 ];
+    if [ -d "./docs" ];
     then
-        exit
-        return 1
+        rm -rf ./docs
     fi
-
-    echo -e "\033[32m[Deploying]\033[0m OK Deploy Over :)"
-    return 0
 }
 
 function cleanWork(){
@@ -85,17 +67,26 @@ function syncSourceCode(){
     git add .
     git commit -m "${commit_message}"
 
-    echo -e "\033[32m[Synchronizing]\033[0m Source code to Github..."
-    git push $code_address master
-    echo -e "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
-    git push $code_address_gitee master
 
+    echo -e "\033[32m[Synchronizing]\033[0m Source code to Github and Gitee..."
+
+    git push $code_address_gitee master &
+    pid=$!
+
+    git push $code_address master
+
+    wait $pid
+
+    echo -e "\033[32m[Deploying]\033[0m OK Deploy Over :)"
 }
 
 function generateSite(){
     echo -e "\033[32m[HugoGenerator]\033[0m Hugo Building..."
     hugo
-
+    if [ -d "./public" ];
+    then
+        mv ./public ./docs
+    fi
 }
 
 function checkEnv() {
@@ -104,10 +95,8 @@ function checkEnv() {
     if [ $? -eq 0 ];
     then
         if [ -d "./public" ];
-        then
-            echo -e "\033[34m[Monitor]\033[0m Check OK :)"        
+        then    
             return 0
-            
         else
             echo -e "\033[31m[Error]\033[0m Oh! 不应该变成这样 :("
         fi
@@ -121,7 +110,7 @@ function deploy(){
     checkEnv
     if [ $? -eq 0 ];
     then
-        deployToSite
+        syncSourceCode
         cleanWork
         echo -e "\033[32m[Successful]\033[0m We did it! 🎉"
     else
@@ -130,7 +119,6 @@ function deploy(){
 }
 
 envClean
-syncSourceCode
 generateSite
 deploy
 
