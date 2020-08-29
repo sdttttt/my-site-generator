@@ -69,7 +69,7 @@ function syncSourceCode(){
     then
         echo -e "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
         git push -q --progress --atomic $code_address_gitee master &
-        pid=$!
+        local pid=$!
         echo -e "\033[32m[Synchronizing]\033[0m Source code to Github..."
         git push -q --progress --atomic $code_address master
         wait $pid
