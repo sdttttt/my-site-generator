@@ -62,12 +62,14 @@ function syncSourceCode(){
     git add --ignore-errors .
     git commit -q -m "${commit_message}"
 
-    echo -e "\033[32m[Synchronizing]\033[0m Source code to Github and Gitee..."
+   
 
     if [ -n  $code_address_gitee ];
     then
+        echo -e "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
         git push $code_address_gitee master &
         pid=$!
+        echo -e "\033[32m[Synchronizing]\033[0m Source code to Github..."
         git push $code_address master
         wait $pid
     else
