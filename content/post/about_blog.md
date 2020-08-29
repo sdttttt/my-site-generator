@@ -1,7 +1,7 @@
 ---
 title: "About Blog"
 date: 2020-04-03T15:36:02+08:00
-tags: ["blog"]
+tags: ["Blog"]
 draft: false
 ---
 
