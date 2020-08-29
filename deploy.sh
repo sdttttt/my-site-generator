@@ -62,8 +62,6 @@ function syncSourceCode(){
     git add --ignore-errors .
     git commit -q -m "${commit_message}"
 
-   
-
     if [ -n  $code_address_gitee ];
     then
         echo -e "\033[32m[Synchronizing]\033[0m Source code to Gitee..."
