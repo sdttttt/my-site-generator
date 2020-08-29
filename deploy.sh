@@ -77,7 +77,7 @@ function syncSourceCode(){
 
     # wait $pid
 
-    git push $code_address_gitee master &
+    git push $code_address_gitee master
     git push $code_address master
 
     echo -e "\033[32m[Deploying]\033[0m OK Deploy Over :)"
