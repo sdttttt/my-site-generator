@@ -4,9 +4,7 @@ language: Chinese
 date: 2020-03-04
 ---
 
-> 突如其来的剧变使得本就不富裕的SDTTTTT雪上加霜.
-
-Hey! 我是SDTTTTT, 我特别热爱软件开发, 这是我为数不多的爱好之一.
+Hey! 我是SDTTTTT, 我热爱软件开发, 这是我为数不多的爱好之一.
 
 ## Open Source Projects
 
