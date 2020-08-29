@@ -80,6 +80,7 @@ function syncSourceCode(){
 function generateSite(){
     echo -e "\033[32m[HugoGenerator]\033[0m Hugo Building..."
     hugo
+
     if [ -d "./public" ];
     then
         mv ./public ./docs
@@ -91,15 +92,17 @@ function checkEnv() {
 
     if [ $? -eq 0 ];
     then
-        if [ -d "./public" ];
+        if [ -d "./docs" ];
         then    
             return 0
         else
-            echo -e "\033[31m[Error]\033[0m Oh! 不应该变成这样 :("
+            echo -e "\033[31m[Error]\033[0m Oh! 没有找到docs目录."
         fi
-    else 
+    else
         echo -e "\033[31m[Error]\033[0m 环境变量中不存在 hugo: 请安装它"
     fi
+
+    return 1
 }
 
 function deploy(){
