@@ -22,7 +22,7 @@
 
 set -e
 
-code_address="git@github.com:sdttttt/my-site-generator.git" # Hugo 项目地址
+code_address="git@github.com:sdttttt/sdttttt.github.io.git" # Hugo 项目地址
 code_address_gitee="git@gitee.com:sdttttt/my-site-generator.git" # Hugo 项目地址 Gitee
 
 commit_message="[SDTTTTT] Update Blog."
@@ -65,18 +65,20 @@ function syncSourceCode(){
 
     echo -e "\033[32m[Deploying]\033[0m Push Running... "
 
-    git add .
+    git add --ignore-errors .
     git commit -q -m "${commit_message}"
-
 
     echo -e "\033[32m[Synchronizing]\033[0m Source code to Github and Gitee..."
 
+    # git push $code_address_gitee master &
+    # pid=$!
+
+    # git push $code_address master
+
+    # wait $pid
+
     git push $code_address_gitee master &
-    pid=$!
-
     git push $code_address master
-
-    wait $pid
 
     echo -e "\033[32m[Deploying]\033[0m OK Deploy Over :)"
 }
