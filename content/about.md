@@ -6,8 +6,7 @@ date: 2020-03-04
 
 
 [![https://t.me/sdzzzzz](https://img.shields.io/badge/Telegram-SDTTTTT-blue.svg?logo=telegram)](https://t.me/sdzzzzz)
-[![](https://img.shields.io/badge/bilibili-SDTTTTT-red?logo=niconico)](https://space.bilibili.com/27781539)
-
+[![sdt](https://img.shields.io/badge/bilibili-SDTTTTT-red?logo=niconico)](https://space.bilibili.com/27781539)
 
 Hey! 我是SDTTTTT, 我热爱软件开发, 这是我为数不多的爱好之一.
 
