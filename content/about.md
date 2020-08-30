@@ -11,6 +11,8 @@ date: 2020-03-04
 
 Hey! 我是SDTTTTT, 我热爱软件开发, 这是我为数不多的爱好之一.
 
+如果想要联系我，请使用Telegram.
+
 ## Open Source Projects
 
 **Bangumi Open** for vscode
