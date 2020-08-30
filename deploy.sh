@@ -66,6 +66,8 @@ function syncSourceCode(){
     git add --ignore-errors .
     git commit -q -m "${commit_message}"
 
+    push_starttime=`date +'%Y-%m-%d %H:%M:%S'`
+
     if [ -n  $code_address_gitee ];
     then
         echo -e "\033[32m[Synchronizing]\033[0m 🚀 Source code to Gitee..."
@@ -77,6 +79,12 @@ function syncSourceCode(){
     else
         git push --progress --atomic $code_address master
     fi
+
+    local push_endtime=`date +'%Y-%m-%d %H:%M:%S'`
+    local start_seconds=$(date --date="$push_starttime" +%s);
+    local end_seconds=$(date --date="$push_endtime" +%s);
+
+    echo -e "Total in "$((end_seconds-start_seconds))" s"
 }
 
 function generateSite(){
