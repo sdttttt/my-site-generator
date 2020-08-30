@@ -16,7 +16,7 @@
 
 值得注意的是我在我的博客中使用了`Telegram Comment`作为评论系统.
 在fork后如果您想要删除它, 请删除`theme/prav/layouts/partials/comment.html`中所有的代码.
-如果您想要继续使用, 请在**https://comments.app/**处生成属于你自己的评论脚本.然后更换`theme/prav/layouts/partials/comment.html`中的代码.
+如果您想要继续使用, 请在 **https://comments.app/** 处生成属于你自己的评论脚本.然后更换`theme/prav/layouts/partials/comment.html`中的代码.
 
 配置是简单的, 我不喜欢复杂的东西.
 
