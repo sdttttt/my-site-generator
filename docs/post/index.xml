@@ -17,8 +17,8 @@
       <pubDate>Sat, 29 Aug 2020 18:07:48 +0800</pubDate>
       
       <guid>https://sdttttt.github.io/post/blogupgrade/</guid>
-      <description>这次有修改了这个Blog的主题, 加载速度应该是更快了, 而且优化了整个项目的自动部署. 取消了双仓库的部署策略, 在任务的执行上也用上了异步.
-现在每次修改完成后的生成以及部署的速度比以前快了大概85%左右.但是访问Github Page的速度还是一如既往的的满.</description>
+      <description>这几天修改了这个Blog的主题, 加载速度应该是更快了, 而且优化了整个项目的自动部署. 取消了双仓库的部署策略, 在部署任务的执行上也用上了异步.
+现在每次修改完成后的生成以及部署的速度比以前快了大概40%左右.但是访问Github Page的速度还是一如既往的的满.</description>
     </item>
     
     <item>
