@@ -260,9 +260,9 @@ generateSessionToken();
 <p>恶意用户更新了自己的密码.</p>
 <p>更新SQL:</p>
 <blockquote>
-<p>update from users 
-set password = &lsquo;$password&rsquo; 
-where 
+<p>update from users
+set password = &lsquo;$password&rsquo;
+where
 username = &lsquo;$username&rsquo; and password &lsquo;$password&rsquo;</p>
 </blockquote>
 <p>替换为恶意用户写入的数据:</p>

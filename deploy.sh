@@ -59,6 +59,7 @@ function cleanWork(){
     rm -rf ./public
 }
 
+
 function syncSourceCode(){
 
     echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
