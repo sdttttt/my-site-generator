@@ -26,7 +26,7 @@ starttime=`date +'%Y-%m-%d %H:%M:%S'`
 code_address="git@github.com:sdttttt/sdttttt.github.io.git" # Hugo 项目地址
 code_address_gitee="git@gitee.com:sdttttt/my-site-generator.git" # Hugo 项目地址 Gitee
 
-commit_message="[SDTTTTT] ✔ Update Blog."
+commit_message="docs: ☣ Update Blog."
 
 dir=$(pwd)
 
