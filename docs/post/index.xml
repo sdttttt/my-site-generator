@@ -6,10 +6,24 @@
     <description>Recent content in Posts on SDTTTTT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 29 Aug 2020 18:07:48 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 30 Aug 2020 20:41:54 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>B Tree</title>
+      <link>https://sdttttt.github.io/post/btree/</link>
+      <pubDate>Sun, 30 Aug 2020 20:41:54 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/btree/</guid>
+      <description>这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B+树.
+试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
+数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
+哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.
+二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.
+ </description>
+    </item>
     
     <item>
       <title>Blog Upgrade</title>

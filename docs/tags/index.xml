@@ -6,10 +6,19 @@
     <description>Recent content in Tags on SDTTTTT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 29 Aug 2020 18:07:48 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 30 Aug 2020 20:41:54 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Data Structure</title>
+      <link>https://sdttttt.github.io/tags/data-structure/</link>
+      <pubDate>Sun, 30 Aug 2020 20:41:54 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/tags/data-structure/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Blog</title>
@@ -44,15 +53,6 @@
       <pubDate>Fri, 12 Jun 2020 17:09:04 +0800</pubDate>
       
       <guid>https://sdttttt.github.io/tags/gal/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Data Structure</title>
-      <link>https://sdttttt.github.io/tags/data-structure/</link>
-      <pubDate>Mon, 25 May 2020 19:27:28 +0800</pubDate>
-      
-      <guid>https://sdttttt.github.io/tags/data-structure/</guid>
       <description></description>
     </item>
     

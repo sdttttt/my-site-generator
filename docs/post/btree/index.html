@@ -4,7 +4,7 @@
     <meta name="theme-color" content="#000" />
     <title>
         
-            Blog Upgrade &middot; SDTTTTT SDTTTTT
+            B Tree &middot; SDTTTTT SDTTTTT
         
     </title>
 
@@ -29,7 +29,7 @@
     
 
     
-    <meta name="keywords" content="Blog">
+    <meta name="keywords" content="Data Structure">
     
     <meta name="author" content="Sdttttt"></head>
 <body>
@@ -104,20 +104,24 @@
 <div id="content" class="pure-u-1 pure-u-md-3-4 pure-u-sm-1">
     <div class="pad">
 <div class="date">
-    <time pubdate="2020-08-29">August 29, 2020</time>
+    <time pubdate="2020-08-30">August 30, 2020</time>
     <span class="author">by sdttttt</span>
 </div>
 
 <article>
-    <h1><a href="https://sdttttt.github.io/post/blogupgrade/">Blog Upgrade</a></h1>
+    <h1><a href="https://sdttttt.github.io/post/btree/">B Tree</a></h1>
     <div class="tags">
         
         
-        <a href="/tags/blog" class="pure-button">Blog</a>
+        <a href="/tags/data-structure" class="pure-button">Data Structure</a>
         
     </div>
-    <p>这几天修改了这个Blog的主题, 加载速度应该是更快了, 而且优化了整个项目的自动部署. 取消了双仓库的部署策略, 在部署任务的执行上也用上了异步.</p>
-<p>现在每次修改完成后的生成以及部署的速度比以前快了大概40%左右.但是访问<strong>Github Page</strong>的速度还是一如既往的的满.</p>
+    <p>这篇文章以数据库存储的数据结构来引出本文的重点<strong>B树</strong>,以及后面还有另一种数据结构<strong>B+树</strong>.</p>
+<p>试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.</p>
+<p>数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.</p>
+<p>哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.</p>
+<p>二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.</p>
+<hr>
 
 </article>
 <br />
