@@ -6,10 +6,19 @@
     <description>Recent content in Tags on SDTTTTT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 30 Aug 2020 20:41:54 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 03 Sep 2020 17:06:04 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Golang</title>
+      <link>https://sdttttt.github.io/tags/golang/</link>
+      <pubDate>Thu, 03 Sep 2020 17:06:04 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/tags/golang/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Data Structure</title>

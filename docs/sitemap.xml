@@ -3,22 +3,32 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://sdttttt.github.io/tags/golang/</loc>
+    <lastmod>2020-09-03T17:06:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sdttttt.github.io/post/gosyncpool/</loc>
+    <lastmod>2020-09-03T17:06:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sdttttt.github.io/post/</loc>
+    <lastmod>2020-09-03T17:06:04+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://sdttttt.github.io/tags/</loc>
+    <lastmod>2020-09-03T17:06:04+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://sdttttt.github.io/post/btree/</loc>
     <lastmod>2020-08-30T20:41:54+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://sdttttt.github.io/tags/data-structure/</loc>
-    <lastmod>2020-08-30T20:41:54+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://sdttttt.github.io/post/</loc>
-    <lastmod>2020-08-30T20:41:54+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://sdttttt.github.io/tags/</loc>
     <lastmod>2020-08-30T20:41:54+08:00</lastmod>
   </url>
   
