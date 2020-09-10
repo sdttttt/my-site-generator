@@ -24,7 +24,6 @@ navbarTitle = "Home"
 # Sets where "View More Posts" links
 viewMorePostLink = "/blog/"
 
-# Optional Params
 # Sets navbarTitle to match the section of the website
 dynamicTitles = true
 # Sets RSS icons to appear on the sidebar with the social media buttons
