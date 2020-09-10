@@ -10,10 +10,10 @@
              "@type": "WebPage",
              "@id": "https:\/\/sdttttt.github.io\/"
         },
-        "articleSection" : "",
-        "name" : "SDTTTTT",
-        "headline" : "SDTTTTT",
-        "description" : "",
+        "articleSection" : "post",
+        "name" : "MyBatis 源码分析",
+        "headline" : "MyBatis 源码分析",
+        "description" : "其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.\nInit 现在开始正片.\n首先是 iBatis 的初始化工作.我们看下面的代码:\n\/\/ `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); \/\/ JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); \/\/ Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(\x26#34;development\x26#34;, transactionFactory, dataSource); \/\/ Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); \/\/ 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); \/\/ 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! \/\/ 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.\n\/\/ 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public \x26lt;T\x26gt; void addMapper(Class\x26lt;T\x26gt; type) { mapperRegistry.",
         "inLanguage" : "en",
         "author" : "",
         "creator" : "",
@@ -21,16 +21,16 @@
         "accountablePerson" : "",
         "copyrightHolder" : "",
         "copyrightYear" : "2020",
-        "datePublished": "2020-03-04 00:00:00 \x2b0000 UTC",
-        "dateModified" : "2020-03-04 00:00:00 \x2b0000 UTC",
-        "url" : "https:\/\/sdttttt.github.io\/",
-        "wordCount" : "0",
-        "keywords" : [ "Blog" ]
+        "datePublished": "2020-09-10 22:15:42 \x2b0800 CST",
+        "dateModified" : "2020-09-10 22:15:42 \x2b0800 CST",
+        "url" : "https:\/\/sdttttt.github.io\/post\/mybatissourcecode\/",
+        "wordCount" : "313",
+        "keywords" : [ "Java","Blog" ]
     }
     </script>
         
             
-                <title>SDTTTTT</title>
+                <title>MyBatis 源码分析</title>
             
         
 
@@ -41,26 +41,48 @@
 
 
         
+            <meta name="author" content="sdttttt">
+        
         
             
         
 
         <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="SDTTTTT"/>
-<meta name="twitter:description" content=""/>
+<meta name="twitter:title" content="MyBatis 源码分析"/>
+<meta name="twitter:description" content="其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
+Init 现在开始正片.
+首先是 iBatis 的初始化工作.我们看下面的代码:
+// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&#34;development&#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
+// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &lt;T&gt; void addMapper(Class&lt;T&gt; type) { mapperRegistry."/>
 
-        <meta property="og:title" content="SDTTTTT" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://sdttttt.github.io/" />
-<meta property="og:updated_time" content="2020-03-04T00:00:00+00:00" />
+        <meta property="og:title" content="MyBatis 源码分析" />
+<meta property="og:description" content="其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
+Init 现在开始正片.
+首先是 iBatis 的初始化工作.我们看下面的代码:
+// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&#34;development&#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
+// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &lt;T&gt; void addMapper(Class&lt;T&gt; type) { mapperRegistry." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/post/mybatissourcecode/" />
+<meta property="article:published_time" content="2020-09-10T22:15:42+08:00" />
+<meta property="article:modified_time" content="2020-09-10T22:15:42+08:00" />
 
         <meta property="og:image" content="https://sdttttt.github.io//images/logo.png">
         <meta property="og:image:type" content="image/png">
         <meta property="og:image:width" content="512">
         <meta property="og:image:height" content="512">
-        <meta itemprop="name" content="SDTTTTT">
-<meta itemprop="description" content="">
+        <meta itemprop="name" content="MyBatis 源码分析">
+<meta itemprop="description" content="其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
+Init 现在开始正片.
+首先是 iBatis 的初始化工作.我们看下面的代码:
+// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&#34;development&#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
+// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &lt;T&gt; void addMapper(Class&lt;T&gt; type) { mapperRegistry.">
+<meta itemprop="datePublished" content="2020-09-10T22:15:42&#43;08:00" />
+<meta itemprop="dateModified" content="2020-09-10T22:15:42&#43;08:00" />
+<meta itemprop="wordCount" content="313">
+
+
+
+<meta itemprop="keywords" content="Java," />
         
 
         
@@ -102,7 +124,7 @@
     
 <header id="header">
     
-      <h1><a href="/">Home</a></h1>
+      <h1><a href="/">post</a></h1>
     
 
     <nav class="links">
@@ -279,14 +301,74 @@
         
 </section>
 
+    <section id="share-menu">
+    <section id="social-share-nav">
+        <ul class="links">
+            <header>
+                <h3>Share this post <i class="fa fa-smile-o"></i></h3>
+            </header>
+            
+
+
+
+<li>
+  <a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fmybatissourcecode%2f&amp;text=MyBatis%20%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90&amp;via=" target="_blank" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+    <p>Twitter</p>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+<li>
+  <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fmybatissourcecode%2f" target="_blank" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+    <p>Facebook</p>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+  <a href="mailto:?subject=Check out this post by sdttttt&amp;body=https%3a%2f%2fsdttttt.github.io%2fpost%2fmybatissourcecode%2f" target="_blank" class="share-btn email">
+    <i class="fa fa-envelope"></i>
+    <p>Email</p>
+  </a>
+</li>
+
+
+        </ul>
+    </section>
+</section>
+
     
     <div id="main">
         
-            <article class="post">
+        
+        <article class="post">
   <header>
     <div class="title">
         
-            <h2><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h2>
+            <h1><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h1>
+            
         
         
     </div>
@@ -498,66 +580,6 @@ SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。
 </ul>
 
 
-
-            <section id="share-menu">
-    <section id="social-share-nav">
-        <ul class="links">
-            <header>
-                <h3>Share this post <i class="fa fa-smile-o"></i></h3>
-            </header>
-            
-
-
-
-<li>
-  <a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fmybatissourcecode%2f&amp;text=MyBatis%20%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90&amp;via=" target="_blank" class="share-btn twitter">
-    <i class="fa fa-twitter"></i>
-    <p>Twitter</p>
-    </a>
-</li>
-
-
-
-
-
-
-
-
-<li>
-  <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fmybatissourcecode%2f" target="_blank" class="share-btn facebook">
-    <i class="fa fa-facebook"></i>
-    <p>Facebook</p>
-    </a>
-</li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<li>
-  <a href="mailto:?subject=Check out this post by sdttttt&amp;body=https%3a%2f%2fsdttttt.github.io%2fpost%2fmybatissourcecode%2f" target="_blank" class="share-btn email">
-    <i class="fa fa-envelope"></i>
-    <p>Email</p>
-  </a>
-</li>
-
-
-        </ul>
-    </section>
-</section>
-
-        
     </div>
     
 <section id="sidebar">

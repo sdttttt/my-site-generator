@@ -6,10 +6,23 @@
     <description>Recent content in Java on SDTTTTT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 25 Aug 2020 17:29:15 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 10 Sep 2020 22:15:42 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>MyBatis 源码分析</title>
+      <link>https://sdttttt.github.io/post/mybatissourcecode/</link>
+      <pubDate>Thu, 10 Sep 2020 22:15:42 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/mybatissourcecode/</guid>
+      <description>其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
+Init 现在开始正片.
+首先是 iBatis 的初始化工作.我们看下面的代码:
+// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&amp;#34;development&amp;#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
+// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &amp;lt;T&amp;gt; void addMapper(Class&amp;lt;T&amp;gt; type) { mapperRegistry.</description>
+    </item>
     
     <item>
       <title>Thread Pool Executor 运行细节</title>
