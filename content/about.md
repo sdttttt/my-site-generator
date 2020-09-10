@@ -5,19 +5,19 @@ date: 2020-03-04
 featured: "me.jpg"
 ---
 
-
 [![https://t.me/sdzzzzz](https://img.shields.io/badge/Telegram-SDTTTTT-blue.svg?logo=telegram)](https://t.me/sdzzzzz)
+[![https://t.me/sdzzzzz](https://img.shields.io/badge/Discord-SDTTTTT-99f.svg?logo=Discord)](https://discord.gg/VVqZzus)
 [![sdt](https://img.shields.io/badge/bilibili-SDTTTTT-red?logo=niconico)](https://space.bilibili.com/27781539)
 
-Hey! 我是SDTTTTT, 我热爱软件开发, 这是我为数不多的爱好之一.
+Hi! 我是SDTTTTT, 我是一个充满激情的软件工程师, 我常常和网络编程还有分布式程序打交道, 对系统编程也非常有兴趣, 当热, 我的领域不仅限于此.
 
-本人是一个并不善于社交，但是喜欢分享的人，我只是希望自己所编写的东西能被很多人使用并且喜欢着。我很喜欢开发开源软件时的感觉.
-
-如果想要联系我，请使用Telegram.
+如果想要联系我，请使用`Telegram`, 或者`Discord`.
 
 ## Open Source Projects
 
-### Bangumi Open** for vscode
+下面是我编写的一些小项目, 有兴趣的话可以看看.
+
+### Bangumi Open for vscode
 
 > 为了满足一些软件工程师特别嗜好（包括我），我开发了这个插件。
 

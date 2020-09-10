@@ -387,11 +387,11 @@ https://github.com/sdttttt/go-tds
       <pubDate>Wed, 04 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>https://sdttttt.github.io/about/</guid>
-      <description> 
-Hey! 我是SDTTTTT, 我热爱软件开发, 这是我为数不多的爱好之一.
-本人是一个并不善于社交，但是喜欢分享的人，我只是希望自己所编写的东西能被很多人使用并且喜欢着。我很喜欢开发开源软件时的感觉.
-如果想要联系我，请使用Telegram.
-Open Source Projects Bangumi Open** for vscode  为了满足一些软件工程师特别嗜好（包括我），我开发了这个插件。
+      <description>  
+Hi! 我是SDTTTTT, 我是一个充满激情的软件工程师, 我常常和网络编程还有分布式程序打交道, 对系统编程也非常有兴趣, 当热, 我的领域不仅限于此.
+如果想要联系我，请使用Telegram, 或者Discord.
+Open Source Projects 下面是我编写的一些小项目, 有兴趣的话可以看看.
+Bangumi Open for vscode  为了满足一些软件工程师特别嗜好（包括我），我开发了这个插件。
  go-tds  这是一个分布式微服务库，是因为我突发的一个灵感而诞生，由于一些原因目前还处于停滞阶段.
  </description>
     </item>
