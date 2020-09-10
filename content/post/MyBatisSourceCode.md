@@ -12,7 +12,7 @@ draft: false
 其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近
 重新捡起 Java 就把以前没填的坑,填一下.
 
-### Init
+# Init
 
 现在开始正片.
 
@@ -71,7 +71,7 @@ SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(confi
     }
 ```
 
-### SqlSessionFactory
+# SqlSessionFactory
 
 既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。
 SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。

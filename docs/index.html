@@ -365,7 +365,7 @@
   <div id="content">
     <p>其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近
 重新捡起 Java 就把以前没填的坑,填一下.</p>
-<h3 id="init">Init</h3>
+<h1 id="init">Init</h1>
 <p>现在开始正片.</p>
 <p>首先是 iBatis 的初始化工作.我们看下面的代码:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java"><span style="color:#75715e">// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource
@@ -414,7 +414,7 @@
         <span style="color:#f92672">}</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="sqlsessionfactory">SqlSessionFactory</h3>
+</code></pre></div><h1 id="sqlsessionfactory">SqlSessionFactory</h1>
 <p>既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。
 SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。
 你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
