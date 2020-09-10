@@ -1,121 +1,483 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-    <meta charset="utf-8">
-    <meta name="theme-color" content="#000" />
-    <title>
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script type="application/ld+json">
+    {
+        "@context" : "http://schema.org",
+        "@type" : "BlogPosting",
+        "mainEntityOfPage": {
+             "@type": "WebPage",
+             "@id": "https:\/\/sdttttt.github.io\/"
+        },
+        "articleSection" : "post",
+        "name" : "B Tree",
+        "headline" : "B Tree",
+        "description" : "这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B\x2b树.\n试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.\n数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.\n哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.\n二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.\nB Tree B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量\x2b1.\n在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.\nRules   排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.\n  子节点数：非叶节点的子节点数\x26gt;1，且\x26lt;=M ，且M\x26gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；\n  关键字数：子节点的关键字数量大于等于ceil(m\/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);\n  所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;\n  Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C\x26gt;B\x26gt;A):\n如上图我要从上图中找到E字母，查找流程如下:\n  获取根节点的关键字进行比较，当前根节点关键字为M，E\x26lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；\n  拿到关键字D和G，D\x26lt;E\x26lt;G 所以直接找到D和G中间的节点；\n  拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null).",
+        "inLanguage" : "en",
+        "author" : "",
+        "creator" : "",
+        "publisher": "",
+        "accountablePerson" : "",
+        "copyrightHolder" : "",
+        "copyrightYear" : "2020",
+        "datePublished": "2020-08-30 20:41:54 \x2b0800 CST",
+        "dateModified" : "2020-08-30 20:41:54 \x2b0800 CST",
+        "url" : "https:\/\/sdttttt.github.io\/post\/btree\/",
+        "wordCount" : "56",
+        "keywords" : [ "Data Structure","Blog" ]
+    }
+    </script>
         
-            B Tree &middot; SDTTTTT SDTTTTT
+            
+                <title>B Tree</title>
+            
         
-    </title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="generator" content="Hugo 0.70.0" />
+        
+
+
+        
+            <meta name="author" content="sdttttt">
+        
+        
+            
+        
+
+        <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="B Tree"/>
+<meta name="twitter:description" content="这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B&#43;树.
+试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
+数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
+哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.
+二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.
+B Tree B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量&#43;1.
+在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.
+Rules   排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.
+  子节点数：非叶节点的子节点数&gt;1，且&lt;=M ，且M&gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；
+  关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);
+  所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;
+  Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&gt;B&gt;A):
+如上图我要从上图中找到E字母，查找流程如下:
+  获取根节点的关键字进行比较，当前根节点关键字为M，E&lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；
+  拿到关键字D和G，D&lt;E&lt;G 所以直接找到D和G中间的节点；
+  拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null)."/>
+
+        <meta property="og:title" content="B Tree" />
+<meta property="og:description" content="这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B&#43;树.
+试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
+数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
+哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.
+二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.
+B Tree B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量&#43;1.
+在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.
+Rules   排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.
+  子节点数：非叶节点的子节点数&gt;1，且&lt;=M ，且M&gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；
+  关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);
+  所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;
+  Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&gt;B&gt;A):
+如上图我要从上图中找到E字母，查找流程如下:
+  获取根节点的关键字进行比较，当前根节点关键字为M，E&lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；
+  拿到关键字D和G，D&lt;E&lt;G 所以直接找到D和G中间的节点；
+  拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/post/btree/" />
+<meta property="article:published_time" content="2020-08-30T20:41:54+08:00" />
+<meta property="article:modified_time" content="2020-08-30T20:41:54+08:00" />
+
+        <meta property="og:image" content="https://sdttttt.github.io//images/logo.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="512">
+        <meta property="og:image:height" content="512">
+        <meta itemprop="name" content="B Tree">
+<meta itemprop="description" content="这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B&#43;树.
+试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
+数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
+哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.
+二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.
+B Tree B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量&#43;1.
+在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.
+Rules   排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.
+  子节点数：非叶节点的子节点数&gt;1，且&lt;=M ，且M&gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；
+  关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);
+  所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;
+  Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&gt;B&gt;A):
+如上图我要从上图中找到E字母，查找流程如下:
+  获取根节点的关键字进行比较，当前根节点关键字为M，E&lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；
+  拿到关键字D和G，D&lt;E&lt;G 所以直接找到D和G中间的节点；
+  拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null).">
+<meta itemprop="datePublished" content="2020-08-30T20:41:54&#43;08:00" />
+<meta itemprop="dateModified" content="2020-08-30T20:41:54&#43;08:00" />
+<meta itemprop="wordCount" content="56">
+
+
+
+<meta itemprop="keywords" content="Data Structure," />
+        
+
+        
+            
+        
+
+        
+        
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,800,900|Source+Sans+Pro:400,700">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/add-on.css">
+            <link rel="stylesheet" href="/css/academicons.min.css">
+        
+
+        
+            
+                
+            
+        
+
+
+  
+    
+    <link href='//cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+  
+
+
+      
+    </head>
+    <body>
+
+      
+      <div id="wrapper">
 
     
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
-        integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     
+<header id="header">
     
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
-    
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-
-    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="">
-    
-    
-    <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+      <h1><a href="/">post</a></h1>
     
 
+    <nav class="links">
+        <ul>
+            
+                <li>
+                    <a href="/">
+                            <i class="fa fa-home">&nbsp;</i>Home
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="/about/">
+                            <i class="fa fa-id-card-o">&nbsp;</i>About
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="/tags">
+                            <i class="fa fa-sitemap">&nbsp;</i>Tags
+                    </a>
+                </li>
+            
+        </ul>
+    </nav>
+    <nav class="main">
+        <ul>
+            
+            <li id="share-nav" class="share-menu" style="display:none;">
+                <a class="fa-share-alt" href="#share-menu">Share</a>
+            </li>
+            
+            <li class="search">
+                <a class="fa-search" href="#search">Search</a>
+                <form id="search" method="get" action="//google.com/search">
+                    <input type="text" name="q" placeholder="Search" />
+                    <input type="hidden" name="as_sitesearch" value="https://sdttttt.github.io/">
+                </form>
+            </li>
+            <li class="menu">
+                <a class="fa-bars" href="#menu">Menu</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+
+<section id="menu">
+
     
-    <meta name="keywords" content="Data Structure">
+        <section>
+            <form class="search" method="get" action="//google.com/search">
+                <input type="text" name="q" placeholder="Search" />
+                <input type="hidden" name="as_sitesearch" value="https://sdttttt.github.io/">
+            </form>
+        </section>
+
     
-    <meta name="author" content="Sdttttt"></head>
-<body>
-        <div class="container"><div id="navbar" class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-scrollable">
-    <a href="/" class="pure-menu-heading">
-         
-            SDTTTTT 
-         
+        <section>
+            <ul class="links">
+                
+                    <li>
+                        <a href="/">
+                            <h3>
+                                <i class="fa fa-home">&nbsp;</i>Home
+                            </h3>
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about/">
+                            <h3>
+                                <i class="fa fa-id-card-o">&nbsp;</i>About
+                            </h3>
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            <h3>
+                                <i class="fa fa-sitemap">&nbsp;</i>Tags
+                            </h3>
+                        </a>
+                    </li>
+                
+            </ul>
+        </section>
+
+    
+        <section class="recent-posts">
+            <div class="mini-posts">
+                <header>
+                    <h3>Recent Posts</h3>
+                </header>
+                
+
+                
+                    
+                
+
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/gosyncpool/">GoSyncPool</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-03'>
+                                    September 3, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/">Posts</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-03'>
+                                    September 3, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/btree/">B Tree</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-08-30'>
+                                    August 30, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/blogupgrade/">Blog Upgrade</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-08-29'>
+                                    August 29, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/thread_pool_executor/">Thread Pool Executor 运行细节</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-08-25'>
+                                    August 25, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+
+                
+                    <a href=
+                        
+                            /blog/
+                        
+                        class="button">View more posts</a>
+                
+            </div>
+        </section>
+
+    
+        
+</section>
+
+    <section id="share-menu">
+    <section id="social-share-nav">
+        <ul class="links">
+            <header>
+                <h3>Share this post <i class="fa fa-smile-o"></i></h3>
+            </header>
+            
+
+
+
+<li>
+  <a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fbtree%2f&amp;text=B%20Tree&amp;via=" target="_blank" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+    <p>Twitter</p>
     </a>
-    <ul class="pure-menu-list">
-        <li class="pure-menu-item">
-            <a href="/posts" class="pure-menu-link">
-                <i class="fa fa-archive"></i>
-                Articles
-            </a>
-        </li>
-        <li class="pure-menu-item">
-            <a href="/tags" class="pure-menu-link">
-                <i class="fas fa-comments"></i>
-                Categories
-            </a>
-        </li>
-        <li class="pure-menu-item">
-            <a href="/about" class="pure-menu-link">
-                <i class="fas fa-smile"></i>
-                About
-            </a>
-        </li>
-    </ul>
-    <ul class="pure-menu-list pull-right">
-        
-        <li class="pure-menu-item">
-            <a href="https://github.com/sdttttt" title="Github" class="pure-menu-link">
-                <i class="fab fa-github"></i>
-                <span class="hide">Github</span>
-            </a>
-        </li>
-        
-        
-        <li class="pure-menu-item">
-            <a href="http://twitter.com/shiina38092638" title="@pravin" class="pure-menu-link">
-                <i class="fab fa-twitter-square"></i>
-                <span class="hide">Twitter</span>
-            </a>
-        </li>
-        
-        
-        
-        
-        <li class="pure-menu-item">
-            <a href="https://www.facebook.com/sdzzzzz" title="Facebook" class="pure-menu-link">
-                <i class="fab fa-facebook"></i>
-                <span class="hide">Facebook</span>
-            </a>
-        </li>
-        
-        <li class="pure-menu-item">
-            <a href="/posts/index.xml" title="Atom Feed" class="pure-menu-link">
-                <i class="fas fa-rss-square"></i>
-                <span class="hide">RSS Feed</span>
-            </a>
-        </li>
-    </ul>
-</div>
-<div class="pure-u-1">
-    <div class="pad">
-    </div>
-</div>
-<div class="pure-g">
+</li>
 
 
-<div id="content" class="pure-u-1 pure-u-md-3-4 pure-u-sm-1">
-    <div class="pad">
-<div class="date">
-    <time pubdate="2020-08-30">August 30, 2020</time>
-    <span class="author">by sdttttt</span>
-</div>
 
-<article>
-    <h1><a href="https://sdttttt.github.io/post/btree/">B Tree</a></h1>
-    <div class="tags">
+
+
+
+
+
+<li>
+  <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fbtree%2f" target="_blank" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+    <p>Facebook</p>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+  <a href="mailto:?subject=Check out this post by sdttttt&amp;body=https%3a%2f%2fsdttttt.github.io%2fpost%2fbtree%2f" target="_blank" class="share-btn email">
+    <i class="fa fa-envelope"></i>
+    <p>Email</p>
+  </a>
+</li>
+
+
+        </ul>
+    </section>
+</section>
+
+    
+    <div id="main">
         
         
-        <a href="/tags/data-structure" class="pure-button">Data Structure</a>
+        <article class="post">
+  <header>
+    <div class="title">
+        
+            <h1><a href="/post/btree/">B Tree</a></h1>
+            
+        
         
     </div>
+    <div class="meta">
+        
+
+        <time class="published"
+            datetime='2020-08-30'>
+            August 30, 2020</time>
+        <span class="author">sdttttt</span>
+        
+            <p>1 minute read</p>
+        
+        
+    </div>
+</header>
+
+
+  
+    <section id="social-share">
+      <ul class="icons">
+        
+
+
+
+<li>
+  <a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fbtree%2f&amp;text=B%20Tree&amp;via=" target="_blank" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+    <p>Twitter</p>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+<li>
+  <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fbtree%2f" target="_blank" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+    <p>Facebook</p>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+  <a href="mailto:?subject=Check out this post by sdttttt&amp;body=https%3a%2f%2fsdttttt.github.io%2fpost%2fbtree%2f" target="_blank" class="share-btn email">
+    <i class="fa fa-envelope"></i>
+    <p>Email</p>
+  </a>
+</li>
+
+
+      </ul>
+    </section>
+  
+
+  
+
+  <div id="content">
     <p>这篇文章以数据库存储的数据结构来引出本文的重点<strong>B树</strong>,以及后面还有另一种数据结构<strong>B+树</strong>.</p>
 <p>试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.</p>
 <p>数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.</p>
@@ -157,167 +519,440 @@
 <h3 id="insert">Insert</h3>
 <p>下次更新.</p>
 
+  </div>
+
+  <footer>
+    <ul class="stats">
+  <li class="categories">
+    <ul>
+        
+    </ul>
+  </li>
+  <li class="tags">
+    <ul>
+        
+            
+            
+                <i class="fa fa-tags"></i>
+                
+                
+                <li><a class="article-category-link" href="https://sdttttt.github.io/tags/data-structure">Data Structure</a></li>
+                
+            
+        
+    </ul>
+  </li>
+</ul>
+
+  </footer>
+
 </article>
-<br />
-<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script></div>
-</div>
+
+    <article class="post">
+        <script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
+    </article>
 
 
-                
-<div id="sidebar" class="pure-u-1 pure-u-md-1-4 pure-u-sm-1">
-    <div class="pad">
-        <a name="about"></a>
-        <h3>About Me</h3>
-        <div style="text-align: center;">
-            <img src="/me.png" alt="Sdttttt" class="pure-img" />
-            <p><em>突如其来的变故使得本就不富裕的晦气小伙雪上加霜.</em></p>
-        </div>
+<ul class="actions pagination">
+    
+        <li><a href="/post/blogupgrade/"
+                class="button big previous">Blog Upgrade</a></li>
+    
 
-        <h3>Latest Articles</h3>
-        <div class="pure-menu pure-menu-open">
-            <ul class="pure-menu-list">
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/gosyncpool/" class="pure-menu-link">GoSyncPool<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/btree/" class="pure-menu-link">B Tree<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/blogupgrade/" class="pure-menu-link">Blog Upgrade<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/thread_pool_executor/" class="pure-menu-link">Thread Pool Executor 运行细节<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/raft_impl/" class="pure-menu-link">Raft实现的思考<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/kanon/" class="pure-menu-link">Kanon<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/database_storage/" class="pure-menu-link">Database Storage<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/red-black-tree/" class="pure-menu-link">Red Black Tree<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/tree_rust/" class="pure-menu-link">Tree by Rust implement<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/stack_rust/" class="pure-menu-link">Stack by Rust implement<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-            </ul>
-        </div>
+    
+        <li><a href="/post/gosyncpool/"
+                class="button big next">GoSyncPool</a></li>
+    
+</ul>
 
-        <h3>Categories</h3>
-        <div style="text-align:center" class="tags">
-            
-            
-            <a href="/tags/data-structure" class="pure-button"> data-structure
-                <small>(4)</small></a>
-            
-            
-            
-            <a href="/tags/penetration-test" class="pure-button"> penetration-test
-                <small>(3)</small></a>
-            
-            
-            
-            <a href="/tags/assembly" class="pure-button"> assembly
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/blog" class="pure-button"> blog
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/cicd" class="pure-button"> cicd
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/design" class="pure-button"> design
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/microservice" class="pure-button"> microservice
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/rust" class="pure-button"> rust
-                <small>(2)</small></a>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        </div>
-    </div> 
-</div> 
 
-                
-            </div><div class="pure-g">
-	<footer class="pure-u-1 pure-u-md-1 pure-u-sm-1">
-		<p>This page and its contents are copyright &copy; 2020,
-			<a href="">Sdttttt</a>.</p>
-		<p><a href="https://github.com/pravin/hugo-theme-prav">Theme Prav</a> by <a href="https://cto.me.uk">Pravin
-				Paratey</a></p>
-	</footer>
+    </div>
+    
+<section id="sidebar">
 
-	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
-		integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
-		crossorigin="anonymous"></script>
-</div></div></body>
+  
+  <section id="intro">
+    
+    
+      
+        <a href='/' class="logo"><img src="/me.jpg" alt="Hugo Future Imperfect" /></a>
+      
+    
+    
+      <header>
+        <h2>SDTTTTT</h2>
+        <p></p>
+      </header>
+    
+    
+      <ul class="icons">
+        
+          
+    <li><a href="https://sdttttt.github.io/index.xml" type="application/rss+xml" target="_blank" title="RSS" class="fa fa-rss"></a></li>
+
+
+        
+        
+  <li><a href="//github.com/sdttttt" target="_blank" title="GitHub" class="fa fa-github"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="//telegram.me/sdzzzzz" target="_blank" title="telegram" class="fa fa-telegram"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="mailto:sdttttt@outlook.com" title="Email" class="fa fa-envelope"></a></li>
+
+
+      </ul>
+    
+  </section>
+
+  
+  <section class="recent-posts">
+    <div class="mini-posts">
+      <header>
+        <h3>Recent Posts</h3>
+      </header>
+      <div class="posts-container">
+        
+
+        
+          
+        
+
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/gosyncpool/">GoSyncPool</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-03'>
+                September 3, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/">Posts</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-03'>
+                September 3, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/btree/">B Tree</a>
+              </h3>
+              
+              <time class="published" datetime='2020-08-30'>
+                August 30, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/blogupgrade/">Blog Upgrade</a>
+              </h3>
+              
+              <time class="published" datetime='2020-08-29'>
+                August 29, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/thread_pool_executor/">Thread Pool Executor 运行细节</a>
+              </h3>
+              
+              <time class="published" datetime='2020-08-25'>
+                August 25, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+      </div>
+
+      
+        <a href=
+          
+            /blog/
+          
+        class="button">View more posts</a>
+      
+    </div>
+  </section>
+
+  
+  
+  
+  
+  
+    <section id="categories">
+      <header>
+        <h3>
+          <a href="/categories/">Categories</a>
+        </h3>
+      </header>
+        
+          
+        
+
+        
+    </section>
+  
+  
+
+  
+  
+
+  
+  <section id="footer">
+    
+      <ul class="icons">
+        
+          
+    <li><a href="https://sdttttt.github.io/index.xml" type="application/rss+xml" target="_blank" title="RSS" class="fa fa-rss"></a></li>
+
+
+        
+        
+  <li><a href="//github.com/sdttttt" target="_blank" title="GitHub" class="fa fa-github"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="//telegram.me/sdzzzzz" target="_blank" title="telegram" class="fa fa-telegram"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="mailto:sdttttt@outlook.com" title="Email" class="fa fa-envelope"></a></li>
+
+
+      </ul>
+    
+    <p class="copyright">
+      
+        &copy; 2020
+        
+          SDTTTTT
+        
+      .
+      Powered by <a href="//gohugo.io" target="_blank">Hugo</a>
+    </p>
+  </section>
+</section>
+
+    </div>
+    <a id="back-to-top" href="#" class="fa fa-arrow-up fa-border fa-2x"></a>
+    
+
+    
+      
+    
+
+    
+      
+      
+      
+        <script src="//cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js"></script>
+        
+        
+        
+        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/r.min.js"></script>
+        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/yaml.min.js"></script>
+        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/css.min.js"></script>
+        <script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+      
+    
+    
+    
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.js"></script>
+      <script src="/js/util.js"></script>
+      <script src="/js/main.js"></script>
+      <script src="/js/backToTop.js"></script>
+    
+
+    
+      
+        
+      
+    
+
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async
+src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+  </body>
 </html>
+

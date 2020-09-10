@@ -1,118 +1,367 @@
 <!DOCTYPE html>
-<html lang="en"><head>
-    <meta charset="utf-8">
-    <meta name="theme-color" content="#000" />
-    <title>
-        
-            404 Page not found &middot; SDTTTTT SDTTTTT
-        
-    </title>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" />
+    <link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
 
-    
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
-        integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
-    
-    
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
-    
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
 
-    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
+    <style>
+     * {
+         -moz-box-sizing:border-box;
+         -webkit-box-sizing:border-box;
+         box-sizing:border-box;
+     }
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="">
-    
-    
-    <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
-    
+     html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+     abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp,
+     small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li,
+     fieldset, form, label, legend, caption, article, aside, canvas, details, figcaption, figure,  footer, header, hgroup,
+     menu, nav, section, summary, time, mark, audio, video {
+         margin:0;
+         padding:0;
+         border:0;
+         outline:0;
+         vertical-align:baseline;
+         background:transparent;
+     }
 
-    
-    <meta name="author" content="Sdttttt"></head>
-<body>
-        <div class="container"><div id="navbar" class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-scrollable">
-    <a href="/" class="pure-menu-heading">
-         
-            SDTTTTT 
-         
-    </a>
-    <ul class="pure-menu-list">
-        <li class="pure-menu-item">
-            <a href="/posts" class="pure-menu-link">
-                <i class="fa fa-archive"></i>
-                Articles
-            </a>
-        </li>
-        <li class="pure-menu-item">
-            <a href="/tags" class="pure-menu-link">
-                <i class="fas fa-comments"></i>
-                Categories
-            </a>
-        </li>
-        <li class="pure-menu-item">
-            <a href="/about" class="pure-menu-link">
-                <i class="fas fa-smile"></i>
-                About
-            </a>
-        </li>
-    </ul>
-    <ul class="pure-menu-list pull-right">
-        
-        <li class="pure-menu-item">
-            <a href="https://github.com/sdttttt" title="Github" class="pure-menu-link">
-                <i class="fab fa-github"></i>
-                <span class="hide">Github</span>
-            </a>
-        </li>
-        
-        
-        <li class="pure-menu-item">
-            <a href="http://twitter.com/shiina38092638" title="@pravin" class="pure-menu-link">
-                <i class="fab fa-twitter-square"></i>
-                <span class="hide">Twitter</span>
-            </a>
-        </li>
-        
-        
-        
-        
-        <li class="pure-menu-item">
-            <a href="https://www.facebook.com/sdzzzzz" title="Facebook" class="pure-menu-link">
-                <i class="fab fa-facebook"></i>
-                <span class="hide">Facebook</span>
-            </a>
-        </li>
-        
-        <li class="pure-menu-item">
-            <a href="/posts/index.xml" title="Atom Feed" class="pure-menu-link">
-                <i class="fas fa-rss-square"></i>
-                <span class="hide">RSS Feed</span>
-            </a>
-        </li>
-    </ul>
+     article, aside, details, figcaption, figure, footer, header, hgroup, nav, section {
+         display: block;
+     }
+
+     html {
+         font-size: 16px;
+         line-height: 24px;
+         width:100%;
+         height:100%;
+         -webkit-text-size-adjust: 100%;
+         -ms-text-size-adjust: 100%;
+         overflow-y:scroll;
+         overflow-x:hidden;
+     }
+
+     img {
+         vertical-align:middle;
+         max-width: 100%;
+         height: auto;
+         border: 0;
+         -ms-interpolation-mode: bicubic;
+     }
+
+     body {
+         min-height:100%;
+         -webkit-font-smoothing: subpixel-antialiased;
+     }
+
+     .clearfix {
+	       clear:both;
+	       zoom: 1;
+     }
+     .clearfix:before, .clearfix:after {
+         content: "\0020";
+         display: block;
+         height: 0;
+         visibility: hidden;
+     }
+     .clearfix:after {
+         clear: both;
+     }
+    </style>
+    <style>
+  .plain.error-page-wrapper {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color:#6355bc;
+    padding:0 5%;
+    position:relative;
+  }
+
+  .plain.error-page-wrapper .content-container {
+    -webkit-transition: left .5s ease-out, opacity .5s ease-out;
+    -moz-transition: left .5s ease-out, opacity .5s ease-out;
+    -ms-transition: left .5s ease-out, opacity .5s ease-out;
+    -o-transition: left .5s ease-out, opacity .5s ease-out;
+    transition: left .5s ease-out, opacity .5s ease-out;
+    max-width:400px;
+    position:relative;
+    left:-30px;
+    opacity:0;
+  }
+
+  .plain.error-page-wrapper .content-container.in {
+    left: 0px;
+    opacity:1;
+  }
+
+  .plain.error-page-wrapper .head-line {
+    transition: color .2s linear;
+    font-size:48px;
+    line-height:60px;
+    color:rgba(255,255,255,.2);
+    letter-spacing: -1px;
+    margin-bottom: 5px;
+  }
+  .plain.error-page-wrapper .subheader {
+    transition: color .2s linear;
+    font-size:36px;
+    line-height:46px;
+    color:#fff;
+  }
+  .plain.error-page-wrapper hr {
+    height:1px;
+    background-color: rgba(255,255,255,.2);
+    border:none;
+    width:250px;
+    margin:35px 0;
+  }
+  .plain.error-page-wrapper .context {
+    transition: color .2s linear;
+    font-size:18px;
+    line-height:27px;
+    color:#fff;
+  }
+  .plain.error-page-wrapper .context p {
+    margin:0;
+  }
+  .plain.error-page-wrapper .context p:nth-child(n+2) {
+    margin-top:12px;
+  }
+  .plain.error-page-wrapper .buttons-container {
+    margin-top: 45px;
+    overflow: hidden;
+  }
+  .plain.error-page-wrapper .buttons-container a {
+    transition: color .2s linear, border-color .2s linear;
+    font-size:14px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color:#fff;
+    border:2px solid white;
+    border-radius: 99px;
+    padding:8px 30px 9px;
+    display: inline-block;
+    float:left;
+  }
+  .plain.error-page-wrapper .buttons-container a:hover {
+    background-color:rgba(255,255,255,.05);
+  }
+  .plain.error-page-wrapper .buttons-container a:first-child {
+    margin-right:25px;
+  }
+
+  @media screen and (max-width: 485px) {
+    .plain.error-page-wrapper .header {
+      font-size:36px;
+     }
+    .plain.error-page-wrapper .subheader {
+      font-size:27px;
+      line-height:38px;
+     }
+    .plain.error-page-wrapper hr {
+      width:185px;
+      margin:25px 0;
+     }
+
+    .plain.error-page-wrapper .context {
+      font-size:16px;
+      line-height: 24px;
+     }
+    .plain.error-page-wrapper .buttons-container {
+      margin-top:35px;
+    }
+
+    .plain.error-page-wrapper .buttons-container a {
+      font-size:13px;
+      padding:8px 0 7px;
+      width:45%;
+      text-align: center;
+    }
+    .plain.error-page-wrapper .buttons-container a:first-child {
+      margin-right:10%;
+    }
+  }
+</style>
+    <style>
+
+    .background-color {
+      background-color: rgba(244, 244, 244, 1) !important;
+    }
+
+
+    .primary-text-color {
+      color: rgba(171, 171, 171, 1) !important;
+    }
+
+    .secondary-text-color {
+      color: rgba(0, 0, 0, 1) !important;
+    }
+
+    .sign-text-color {
+      color: #FFBA00 !important;
+    }
+
+    .sign-frame-color {
+      color: #343C3F;
+    }
+
+    .pane {
+      background-color: #FFFFFF !important;
+    }
+
+    .border-button {
+      color: rgba(46, 186, 174, 1) !important;
+      border-color: rgba(46, 186, 174, 1) !important;
+    }
+    .button {
+      background-color: rgba(46, 186, 174, 1) !important;
+      color: #FFFFFF !important;
+    }
+
+    .shadow {
+      box-shadow: 0 0 60px #000000;
+    }
+
+</style>
+  </head>
+  <body class="plain error-page-wrapper background-color background-image">
+    <div class="content-container">
+	<div class="head-line secondary-text-color">
+		404
+	</div>
+	<div class="subheader primary-text-color">
+		Oops, the page you're <br>
+		looking for does not exist.
+	</div>
+	<hr>
+	<div class="clearfix"></div>
+	<div class="context primary-text-color">
+		
+    <p>
+      You may want to head back to the homepage.<br />
+      If you think something is broken, report a problem.
+    </p>
+	</div>
+	<div class="buttons-container">
+		<a class="border-button" href="/">Go To Homepage</a>
+		<a class="border-button" href="mailto:sdttttt@outlook.com">Report A Problem</a>
+	</div>
 </div>
-<div class="pure-u-1">
-    <div class="pad">
-    </div>
-</div>
-<div class="pure-g">
-<center class="pure-u-1 pure-u-md-1 pure-u-sm-1">
-Page not found
-</center>
+
+    <script>
+     function ErrorPage(container, pageType, templateName) {
+       this.$container = $(container);
+       this.$contentContainer = this.$container.find(templateName == 'sign' ? '.sign-container' : '.content-container');
+       this.pageType = pageType;
+       this.templateName = templateName;
+     }
+
+     ErrorPage.prototype.centerContent = function () {
+       var containerHeight = this.$container.outerHeight()
+         , contentContainerHeight = this.$contentContainer.outerHeight()
+         , top = (containerHeight - contentContainerHeight) / 2
+         , offset = this.templateName == 'sign' ? -100 : 0;
+
+       this.$contentContainer.css('top', top + offset);
+     };
+
+     ErrorPage.prototype.initialize = function () {
+       var self = this;
+
+       this.centerContent();
+       this.$container.on('resize', function (e) {
+         e.preventDefault();
+         e.stopPropagation();
+         self.centerContent();
+       });
+
+       
+       if (this.templateName == 'plain') {
+         window.setTimeout(function () {
+           self.$contentContainer.addClass('in');
+         }, 500);
+       }
+
+       
+       if (this.templateName == 'sign') {
+         $('.sign-container').animate({textIndent : 0}, {
+           step : function (now) {
+             $(this).css({
+               transform : 'rotate(' + now + 'deg)',
+               'transform-origin' : 'top center'
+             });
+           },
+           duration : 1000,
+           easing : 'easeOutBounce'
+         });
+       }
+     };
 
 
-                
-            </div><div class="pure-g">
-	<footer class="pure-u-1 pure-u-md-1 pure-u-sm-1">
-		<p>This page and its contents are copyright &copy; 2020,
-			<a href="">Sdttttt</a>.</p>
-		<p><a href="https://github.com/pravin/hugo-theme-prav">Theme Prav</a> by <a href="https://cto.me.uk">Pravin
-				Paratey</a></p>
-	</footer>
+     ErrorPage.prototype.createTimeRangeTag = function(start, end) {
+       return (
+         '<time utime=' + start + ' simple_format="MMM DD, YYYY HH:mm">' + start + '</time> - <time utime=' + end + ' simple_format="MMM DD, YYYY HH:mm">' + end + '</time>.'
+       )
+     };
 
-	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
-		integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
-		crossorigin="anonymous"></script>
-</div></div></body>
+
+     ErrorPage.prototype.handleStatusFetchSuccess = function (pageType, data) {
+       if (pageType == '503') {
+         $('#replace-with-fetched-data').html(data.status.description);
+       } else {
+         if (!!data.scheduled_maintenances.length) {
+           var maint = data.scheduled_maintenances[0];
+           $('#replace-with-fetched-data').html(this.createTimeRangeTag(maint.scheduled_for, maint.scheduled_until));
+           $.fn.localizeTime();
+         }
+         else {
+           $('#replace-with-fetched-data').html('<em>(there are no active scheduled maintenances)</em>');
+         }
+       }
+     };
+
+
+     ErrorPage.prototype.handleStatusFetchFail = function (pageType) {
+       $('#replace-with-fetched-data').html('<em>(enter a valid StatusPage.io url)</em>');
+     };
+
+
+     ErrorPage.prototype.fetchStatus = function (pageUrl, pageType) {
+       
+       if (!pageUrl || !pageType || pageType == '404') return;
+
+       var url = ''
+         , self = this;
+
+       if (pageType == '503') {
+         url = pageUrl + '/api/v2/status.json';
+       }
+       else {
+         url = pageUrl + '/api/v2/scheduled-maintenances/active.json';
+       }
+
+       $.ajax({
+         type : "GET",
+         url : url,
+       }).success(function (data, status) {
+         
+         self.handleStatusFetchSuccess(pageType, data);
+       }).fail(function (xhr, msg) {
+         
+         self.handleStatusFetchFail(pageType);
+       });
+
+     };
+     var ep = new ErrorPage('body', "404", "plain");
+     ep.initialize();
+
+     
+     $(window).on('resize', function() {
+       $('body').trigger('resize')
+     });
+
+    </script>
+
+
+  </body>
 </html>

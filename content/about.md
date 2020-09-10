@@ -2,6 +2,7 @@
 title: About SDTTTTT
 language: Chinese
 date: 2020-03-04
+featured: "me.jpg"
 ---
 
 

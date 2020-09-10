@@ -1,121 +1,463 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-    <meta charset="utf-8">
-    <meta name="theme-color" content="#000" />
-    <title>
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script type="application/ld+json">
+    {
+        "@context" : "http://schema.org",
+        "@type" : "BlogPosting",
+        "mainEntityOfPage": {
+             "@type": "WebPage",
+             "@id": "https:\/\/sdttttt.github.io\/"
+        },
+        "articleSection" : "post",
+        "name" : "一致性哈希算法",
+        "headline" : "一致性哈希算法",
+        "description" : "第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.\n第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播\x26hellip;\x26hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。\n第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.\n算法背景 一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了 解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希 算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。\n但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 memcached 缓存数据库的人都知道, memcached 服务器端本身不提供分布式 Cache 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:\n  首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。\n  然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。\n  然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。\n  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化\t而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向\t的第一台服务器上的键会受到影响。\n性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。\t在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。",
+        "inLanguage" : "en",
+        "author" : "",
+        "creator" : "",
+        "publisher": "",
+        "accountablePerson" : "",
+        "copyrightHolder" : "",
+        "copyrightYear" : "2020",
+        "datePublished": "2020-04-27 10:05:10 \x2b0800 CST",
+        "dateModified" : "2020-04-27 10:05:10 \x2b0800 CST",
+        "url" : "https:\/\/sdttttt.github.io\/post\/consistent_hash_algorithm\/",
+        "wordCount" : "134",
+        "keywords" : [ "distrbuted system","Blog" ]
+    }
+    </script>
         
-            一致性哈希算法 &middot; SDTTTTT SDTTTTT
+            
+                <title>一致性哈希算法</title>
+            
         
-    </title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="generator" content="Hugo 0.70.0" />
+        
+
+
+        
+        
+            
+        
+
+        <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="一致性哈希算法"/>
+<meta name="twitter:description" content="第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
+第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播&hellip;&hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。
+第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.
+算法背景 一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了 解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希 算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。
+但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 memcached 缓存数据库的人都知道, memcached 服务器端本身不提供分布式 Cache 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:
+  首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
+  然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
+  然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
+  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化	而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向	的第一台服务器上的键会受到影响。
+性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。	在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。"/>
+
+        <meta property="og:title" content="一致性哈希算法" />
+<meta property="og:description" content="第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
+第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播&hellip;&hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。
+第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.
+算法背景 一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了 解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希 算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。
+但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 memcached 缓存数据库的人都知道, memcached 服务器端本身不提供分布式 Cache 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:
+  首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
+  然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
+  然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
+  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化	而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向	的第一台服务器上的键会受到影响。
+性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。	在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/post/consistent_hash_algorithm/" />
+<meta property="article:published_time" content="2020-04-27T10:05:10+08:00" />
+<meta property="article:modified_time" content="2020-04-27T10:05:10+08:00" />
+
+        <meta property="og:image" content="https://sdttttt.github.io//images/logo.png">
+        <meta property="og:image:type" content="image/png">
+        <meta property="og:image:width" content="512">
+        <meta property="og:image:height" content="512">
+        <meta itemprop="name" content="一致性哈希算法">
+<meta itemprop="description" content="第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
+第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播&hellip;&hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。
+第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.
+算法背景 一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了 解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希 算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。
+但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 memcached 缓存数据库的人都知道, memcached 服务器端本身不提供分布式 Cache 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:
+  首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
+  然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
+  然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
+  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化	而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向	的第一台服务器上的键会受到影响。
+性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。	在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。">
+<meta itemprop="datePublished" content="2020-04-27T10:05:10&#43;08:00" />
+<meta itemprop="dateModified" content="2020-04-27T10:05:10&#43;08:00" />
+<meta itemprop="wordCount" content="134">
+
+
+
+<meta itemprop="keywords" content="distrbuted system," />
+        
+
+        
+            
+        
+
+        
+        
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,800,900|Source+Sans+Pro:400,700">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.css">
+            <link rel="stylesheet" href="/css/main.css">
+            <link rel="stylesheet" href="/css/add-on.css">
+            <link rel="stylesheet" href="/css/academicons.min.css">
+        
+
+        
+            
+                
+            
+        
+
+
+  
+    
+    <link href='//cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css' rel='stylesheet' type='text/css' />
+  
+
+
+      
+    </head>
+    <body>
+
+      
+      <div id="wrapper">
 
     
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css"
-        integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     
+<header id="header">
     
-    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/grids-responsive-min.css">
-    
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300&family=Merriweather:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet">
-    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-
-    <link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/atom.xml" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="">
-    
-    
-    <meta name="description" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit.">
+      <h1><a href="/">post</a></h1>
     
 
+    <nav class="links">
+        <ul>
+            
+                <li>
+                    <a href="/">
+                            <i class="fa fa-home">&nbsp;</i>Home
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="/about/">
+                            <i class="fa fa-id-card-o">&nbsp;</i>About
+                    </a>
+                </li>
+            
+                <li>
+                    <a href="/tags">
+                            <i class="fa fa-sitemap">&nbsp;</i>Tags
+                    </a>
+                </li>
+            
+        </ul>
+    </nav>
+    <nav class="main">
+        <ul>
+            
+            <li id="share-nav" class="share-menu" style="display:none;">
+                <a class="fa-share-alt" href="#share-menu">Share</a>
+            </li>
+            
+            <li class="search">
+                <a class="fa-search" href="#search">Search</a>
+                <form id="search" method="get" action="//google.com/search">
+                    <input type="text" name="q" placeholder="Search" />
+                    <input type="hidden" name="as_sitesearch" value="https://sdttttt.github.io/">
+                </form>
+            </li>
+            <li class="menu">
+                <a class="fa-bars" href="#menu">Menu</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+
+<section id="menu">
+
     
-    <meta name="keywords" content="distrbuted system">
+        <section>
+            <form class="search" method="get" action="//google.com/search">
+                <input type="text" name="q" placeholder="Search" />
+                <input type="hidden" name="as_sitesearch" value="https://sdttttt.github.io/">
+            </form>
+        </section>
+
     
-    <meta name="author" content="Sdttttt"></head>
-<body>
-        <div class="container"><div id="navbar" class="pure-menu pure-menu-open pure-menu-horizontal pure-menu-scrollable">
-    <a href="/" class="pure-menu-heading">
-         
-            SDTTTTT 
-         
+        <section>
+            <ul class="links">
+                
+                    <li>
+                        <a href="/">
+                            <h3>
+                                <i class="fa fa-home">&nbsp;</i>Home
+                            </h3>
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/about/">
+                            <h3>
+                                <i class="fa fa-id-card-o">&nbsp;</i>About
+                            </h3>
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/tags">
+                            <h3>
+                                <i class="fa fa-sitemap">&nbsp;</i>Tags
+                            </h3>
+                        </a>
+                    </li>
+                
+            </ul>
+        </section>
+
+    
+        <section class="recent-posts">
+            <div class="mini-posts">
+                <header>
+                    <h3>Recent Posts</h3>
+                </header>
+                
+
+                
+                    
+                
+
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/gosyncpool/">GoSyncPool</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-03'>
+                                    September 3, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/">Posts</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-03'>
+                                    September 3, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/btree/">B Tree</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-08-30'>
+                                    August 30, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/blogupgrade/">Blog Upgrade</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-08-29'>
+                                    August 29, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/thread_pool_executor/">Thread Pool Executor 运行细节</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-08-25'>
+                                    August 25, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+
+                
+                    <a href=
+                        
+                            /blog/
+                        
+                        class="button">View more posts</a>
+                
+            </div>
+        </section>
+
+    
+        
+</section>
+
+    <section id="share-menu">
+    <section id="social-share-nav">
+        <ul class="links">
+            <header>
+                <h3>Share this post <i class="fa fa-smile-o"></i></h3>
+            </header>
+            
+
+
+
+<li>
+  <a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fconsistent_hash_algorithm%2f&amp;text=%e4%b8%80%e8%87%b4%e6%80%a7%e5%93%88%e5%b8%8c%e7%ae%97%e6%b3%95&amp;via=" target="_blank" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+    <p>Twitter</p>
     </a>
-    <ul class="pure-menu-list">
-        <li class="pure-menu-item">
-            <a href="/posts" class="pure-menu-link">
-                <i class="fa fa-archive"></i>
-                Articles
-            </a>
-        </li>
-        <li class="pure-menu-item">
-            <a href="/tags" class="pure-menu-link">
-                <i class="fas fa-comments"></i>
-                Categories
-            </a>
-        </li>
-        <li class="pure-menu-item">
-            <a href="/about" class="pure-menu-link">
-                <i class="fas fa-smile"></i>
-                About
-            </a>
-        </li>
-    </ul>
-    <ul class="pure-menu-list pull-right">
-        
-        <li class="pure-menu-item">
-            <a href="https://github.com/sdttttt" title="Github" class="pure-menu-link">
-                <i class="fab fa-github"></i>
-                <span class="hide">Github</span>
-            </a>
-        </li>
-        
-        
-        <li class="pure-menu-item">
-            <a href="http://twitter.com/shiina38092638" title="@pravin" class="pure-menu-link">
-                <i class="fab fa-twitter-square"></i>
-                <span class="hide">Twitter</span>
-            </a>
-        </li>
-        
-        
-        
-        
-        <li class="pure-menu-item">
-            <a href="https://www.facebook.com/sdzzzzz" title="Facebook" class="pure-menu-link">
-                <i class="fab fa-facebook"></i>
-                <span class="hide">Facebook</span>
-            </a>
-        </li>
-        
-        <li class="pure-menu-item">
-            <a href="/posts/index.xml" title="Atom Feed" class="pure-menu-link">
-                <i class="fas fa-rss-square"></i>
-                <span class="hide">RSS Feed</span>
-            </a>
-        </li>
-    </ul>
-</div>
-<div class="pure-u-1">
-    <div class="pad">
-    </div>
-</div>
-<div class="pure-g">
+</li>
 
 
-<div id="content" class="pure-u-1 pure-u-md-3-4 pure-u-sm-1">
-    <div class="pad">
-<div class="date">
-    <time pubdate="2020-04-27">April 27, 2020</time>
-    <span class="author">by </span>
-</div>
 
-<article>
-    <h1><a href="https://sdttttt.github.io/post/consistent_hash_algorithm/">一致性哈希算法</a></h1>
-    <div class="tags">
+
+
+
+
+
+<li>
+  <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fconsistent_hash_algorithm%2f" target="_blank" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+    <p>Facebook</p>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+  <a href="mailto:?subject=Check out this post by &amp;body=https%3a%2f%2fsdttttt.github.io%2fpost%2fconsistent_hash_algorithm%2f" target="_blank" class="share-btn email">
+    <i class="fa fa-envelope"></i>
+    <p>Email</p>
+  </a>
+</li>
+
+
+        </ul>
+    </section>
+</section>
+
+    
+    <div id="main">
         
         
-        <a href="/tags/distrbuted-system" class="pure-button">distrbuted system</a>
+        <article class="post">
+  <header>
+    <div class="title">
+        
+            <h1><a href="/post/consistent_hash_algorithm/">一致性哈希算法</a></h1>
+            
+        
         
     </div>
+    <div class="meta">
+        
+
+        <time class="published"
+            datetime='2020-04-27'>
+            April 27, 2020</time>
+        <span class="author"></span>
+        
+            <p>1 minute read</p>
+        
+        
+    </div>
+</header>
+
+
+  
+    <section id="social-share">
+      <ul class="icons">
+        
+
+
+
+<li>
+  <a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fconsistent_hash_algorithm%2f&amp;text=%e4%b8%80%e8%87%b4%e6%80%a7%e5%93%88%e5%b8%8c%e7%ae%97%e6%b3%95&amp;via=" target="_blank" class="share-btn twitter">
+    <i class="fa fa-twitter"></i>
+    <p>Twitter</p>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+<li>
+  <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fconsistent_hash_algorithm%2f" target="_blank" class="share-btn facebook">
+    <i class="fa fa-facebook"></i>
+    <p>Facebook</p>
+    </a>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<li>
+  <a href="mailto:?subject=Check out this post by &amp;body=https%3a%2f%2fsdttttt.github.io%2fpost%2fconsistent_hash_algorithm%2f" target="_blank" class="share-btn email">
+    <i class="fa fa-envelope"></i>
+    <p>Email</p>
+  </a>
+</li>
+
+
+      </ul>
+    </section>
+  
+
+  
+
+  <div id="content">
     <p>第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是<code>中央节点</code>成为了整个个分布式系统的<code>单点故障</code>.</p>
 <p>第二代分布式系统，节点之间通行采用的是<code>广播</code>，每个节点都向自己相连的<code>所有节点</code>进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行<code>广播</code>&hellip;&hellip;如此往复,直至找到所需文件。请求变多就意味着会产生<code>广播风暴</code>，这会严重占用带宽和系统资源。</p>
 <p>第三代分布式系统开始采用<code>DHT</code>(Distrbuted Hash Table)，也就是<code>一致性HASH算法</code>.</p>
@@ -162,167 +504,440 @@
 <p>为了解决这种数据倾斜问题，一致性哈希算法引入了虚拟节点机制，即对每一个服务节点计算<code>多个哈希</code>，每个计算结果位置都放置一个此<code>服务节点</code>，称为虚拟节点。具体做法可以在服务器 ip 或主机名的后面增加编号来实现。例如上面的情况，可以为每台服务器计算三个虚拟节点，于是可以分别计算 “Node A#1”、“Node A#2”、“Node A#3”、“Node B#1”、“Node B#2”、“Node B#3”的哈希值，于是形成六个虚拟节点：</p>
 <p>同时数据定位算法不变，只是多了一步虚拟节点到实际节点的映射，例如定位到“Node A#1”、“Node A#2”、“Node A#3”三个虚拟节点的数据均定位到 Node A 上。这样就解决了服务节点少时数据倾斜的问题。在实际应用中，通常将虚拟节点数设置为 32 甚至更大，因此即使很少的服务节点也能做到相对均匀的数据分布。</p>
 
+  </div>
+
+  <footer>
+    <ul class="stats">
+  <li class="categories">
+    <ul>
+        
+    </ul>
+  </li>
+  <li class="tags">
+    <ul>
+        
+            
+            
+                <i class="fa fa-tags"></i>
+                
+                
+                <li><a class="article-category-link" href="https://sdttttt.github.io/tags/distrbuted-system">distrbuted system</a></li>
+                
+            
+        
+    </ul>
+  </li>
+</ul>
+
+  </footer>
+
 </article>
-<br />
-<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script></div>
-</div>
+
+    <article class="post">
+        <script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
+    </article>
 
 
-                
-<div id="sidebar" class="pure-u-1 pure-u-md-1-4 pure-u-sm-1">
-    <div class="pad">
-        <a name="about"></a>
-        <h3>About Me</h3>
-        <div style="text-align: center;">
-            <img src="/me.png" alt="Sdttttt" class="pure-img" />
-            <p><em>突如其来的变故使得本就不富裕的晦气小伙雪上加霜.</em></p>
-        </div>
+<ul class="actions pagination">
+    
+        <li><a href="/post/file_upload/"
+                class="button big previous">File Upload</a></li>
+    
 
-        <h3>Latest Articles</h3>
-        <div class="pure-menu pure-menu-open">
-            <ul class="pure-menu-list">
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/gosyncpool/" class="pure-menu-link">GoSyncPool<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/btree/" class="pure-menu-link">B Tree<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/blogupgrade/" class="pure-menu-link">Blog Upgrade<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/thread_pool_executor/" class="pure-menu-link">Thread Pool Executor 运行细节<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/raft_impl/" class="pure-menu-link">Raft实现的思考<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/kanon/" class="pure-menu-link">Kanon<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/database_storage/" class="pure-menu-link">Database Storage<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/red-black-tree/" class="pure-menu-link">Red Black Tree<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/tree_rust/" class="pure-menu-link">Tree by Rust implement<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-                <li class="pure-menu-item">
-                    <a href="https://sdttttt.github.io/post/stack_rust/" class="pure-menu-link">Stack by Rust implement<br>
-                        <small></small>
-                    </a>
-                </li>
-                
-            </ul>
-        </div>
+    
+        <li><a href="/post/gfs/"
+                class="button big next">GFS</a></li>
+    
+</ul>
 
-        <h3>Categories</h3>
-        <div style="text-align:center" class="tags">
-            
-            
-            <a href="/tags/data-structure" class="pure-button"> data-structure
-                <small>(4)</small></a>
-            
-            
-            
-            <a href="/tags/penetration-test" class="pure-button"> penetration-test
-                <small>(3)</small></a>
-            
-            
-            
-            <a href="/tags/assembly" class="pure-button"> assembly
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/blog" class="pure-button"> blog
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/cicd" class="pure-button"> cicd
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/design" class="pure-button"> design
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/microservice" class="pure-button"> microservice
-                <small>(2)</small></a>
-            
-            
-            
-            <a href="/tags/rust" class="pure-button"> rust
-                <small>(2)</small></a>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        </div>
-    </div> 
-</div> 
 
-                
-            </div><div class="pure-g">
-	<footer class="pure-u-1 pure-u-md-1 pure-u-sm-1">
-		<p>This page and its contents are copyright &copy; 2020,
-			<a href="">Sdttttt</a>.</p>
-		<p><a href="https://github.com/pravin/hugo-theme-prav">Theme Prav</a> by <a href="https://cto.me.uk">Pravin
-				Paratey</a></p>
-	</footer>
+    </div>
+    
+<section id="sidebar">
 
-	<script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
-		integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
-		crossorigin="anonymous"></script>
-</div></div></body>
+  
+  <section id="intro">
+    
+    
+      
+        <a href='/' class="logo"><img src="/me.jpg" alt="Hugo Future Imperfect" /></a>
+      
+    
+    
+      <header>
+        <h2>SDTTTTT</h2>
+        <p></p>
+      </header>
+    
+    
+      <ul class="icons">
+        
+          
+    <li><a href="https://sdttttt.github.io/index.xml" type="application/rss+xml" target="_blank" title="RSS" class="fa fa-rss"></a></li>
+
+
+        
+        
+  <li><a href="//github.com/sdttttt" target="_blank" title="GitHub" class="fa fa-github"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="//telegram.me/sdzzzzz" target="_blank" title="telegram" class="fa fa-telegram"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="mailto:sdttttt@outlook.com" title="Email" class="fa fa-envelope"></a></li>
+
+
+      </ul>
+    
+  </section>
+
+  
+  <section class="recent-posts">
+    <div class="mini-posts">
+      <header>
+        <h3>Recent Posts</h3>
+      </header>
+      <div class="posts-container">
+        
+
+        
+          
+        
+
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/gosyncpool/">GoSyncPool</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-03'>
+                September 3, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/">Posts</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-03'>
+                September 3, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/btree/">B Tree</a>
+              </h3>
+              
+              <time class="published" datetime='2020-08-30'>
+                August 30, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/blogupgrade/">Blog Upgrade</a>
+              </h3>
+              
+              <time class="published" datetime='2020-08-29'>
+                August 29, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/thread_pool_executor/">Thread Pool Executor 运行细节</a>
+              </h3>
+              
+              <time class="published" datetime='2020-08-25'>
+                August 25, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+      </div>
+
+      
+        <a href=
+          
+            /blog/
+          
+        class="button">View more posts</a>
+      
+    </div>
+  </section>
+
+  
+  
+  
+  
+  
+    <section id="categories">
+      <header>
+        <h3>
+          <a href="/categories/">Categories</a>
+        </h3>
+      </header>
+        
+          
+        
+
+        
+    </section>
+  
+  
+
+  
+  
+
+  
+  <section id="footer">
+    
+      <ul class="icons">
+        
+          
+    <li><a href="https://sdttttt.github.io/index.xml" type="application/rss+xml" target="_blank" title="RSS" class="fa fa-rss"></a></li>
+
+
+        
+        
+  <li><a href="//github.com/sdttttt" target="_blank" title="GitHub" class="fa fa-github"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="//telegram.me/sdzzzzz" target="_blank" title="telegram" class="fa fa-telegram"></a></li>
+
+
+
+
+
+
+
+
+
+
+
+  <li><a href="mailto:sdttttt@outlook.com" title="Email" class="fa fa-envelope"></a></li>
+
+
+      </ul>
+    
+    <p class="copyright">
+      
+        &copy; 2020
+        
+          SDTTTTT
+        
+      .
+      Powered by <a href="//gohugo.io" target="_blank">Hugo</a>
+    </p>
+  </section>
+</section>
+
+    </div>
+    <a id="back-to-top" href="#" class="fa fa-arrow-up fa-border fa-2x"></a>
+    
+
+    
+      
+    
+
+    
+      
+      
+      
+        <script src="//cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js"></script>
+        
+        
+        
+        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/r.min.js"></script>
+        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/yaml.min.js"></script>
+        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/css.min.js"></script>
+        <script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
+      
+    
+    
+    
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.js"></script>
+      <script src="/js/util.js"></script>
+      <script src="/js/main.js"></script>
+      <script src="/js/backToTop.js"></script>
+    
+
+    
+      
+        
+      
+    
+
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+      <script src="//yihui.name/js/math-code.js"></script>
+<script async
+src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+  </body>
 </html>
+
