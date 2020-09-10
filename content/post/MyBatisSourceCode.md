@@ -1,7 +1,7 @@
 ---
 title: "MyBatis 源码分析"
 date: 2020-09-10T22:15:42+08:00
-description: ""
+description: "本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节."
 featured: "me.jpg"
 languages: Chinese
 tags: ["Java"]

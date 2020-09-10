@@ -13,7 +13,7 @@
         "articleSection" : "post",
         "name" : "MyBatis 源码分析",
         "headline" : "MyBatis 源码分析",
-        "description" : "其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.\nInit 现在开始正片.\n首先是 iBatis 的初始化工作.我们看下面的代码:\n\/\/ `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); \/\/ JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); \/\/ Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(\x26#34;development\x26#34;, transactionFactory, dataSource); \/\/ Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); \/\/ 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); \/\/ 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! \/\/ 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.\n\/\/ 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public \x26lt;T\x26gt; void addMapper(Class\x26lt;T\x26gt; type) { mapperRegistry.",
+        "description" : "本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节.",
         "inLanguage" : "en",
         "author" : "",
         "creator" : "",
@@ -44,23 +44,15 @@
             <meta name="author" content="sdttttt">
         
         
-            
+            <meta name="description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节.">
         
 
         <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="MyBatis 源码分析"/>
-<meta name="twitter:description" content="其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
-Init 现在开始正片.
-首先是 iBatis 的初始化工作.我们看下面的代码:
-// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&#34;development&#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
-// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &lt;T&gt; void addMapper(Class&lt;T&gt; type) { mapperRegistry."/>
+<meta name="twitter:description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节."/>
 
         <meta property="og:title" content="MyBatis 源码分析" />
-<meta property="og:description" content="其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
-Init 现在开始正片.
-首先是 iBatis 的初始化工作.我们看下面的代码:
-// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&#34;development&#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
-// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &lt;T&gt; void addMapper(Class&lt;T&gt; type) { mapperRegistry." />
+<meta property="og:description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://sdttttt.github.io/post/mybatissourcecode/" />
 <meta property="article:published_time" content="2020-09-10T22:15:42+08:00" />
@@ -71,11 +63,7 @@ Init 现在开始正片.
         <meta property="og:image:width" content="512">
         <meta property="og:image:height" content="512">
         <meta itemprop="name" content="MyBatis 源码分析">
-<meta itemprop="description" content="其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
-Init 现在开始正片.
-首先是 iBatis 的初始化工作.我们看下面的代码:
-// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&#34;development&#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
-// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &lt;T&gt; void addMapper(Class&lt;T&gt; type) { mapperRegistry.">
+<meta itemprop="description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节.">
 <meta itemprop="datePublished" content="2020-09-10T22:15:42&#43;08:00" />
 <meta itemprop="dateModified" content="2020-09-10T22:15:42&#43;08:00" />
 <meta itemprop="wordCount" content="313">
@@ -370,6 +358,8 @@ Init 现在开始正片.
             <h1><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h1>
             
         
+        
+            <p>本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节.</p>
         
     </div>
     <div class="meta">
