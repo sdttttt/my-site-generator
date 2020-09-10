@@ -3,6 +3,7 @@ title: "GoSyncPool"
 date: 2020-09-03T17:06:04+08:00
 languages: Chinese
 tags: ["Golang"]
+description: "sync.pool 一个Go底层的内存复用池."
 featured: "me.jpg"
 author: sdttttt
 draft: false
