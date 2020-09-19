@@ -1,26 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>GAL on SDTTTTT</title>
-    <link>https://sdttttt.github.io/tags/gal/</link>
-    <description>Recent content in GAL on SDTTTTT</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <lastBuildDate>Fri, 12 Jun 2020 17:09:04 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/tags/gal/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Kanon</title>
-      <link>https://sdttttt.github.io/post/kanon/</link>
-      <pubDate>Fri, 12 Jun 2020 17:09:04 +0800</pubDate>
-      
-      <guid>https://sdttttt.github.io/post/kanon/</guid>
-      <description>有一段时间没有玩过GALGAME了.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GAL on SDTTTTT</title><link>https://sdttttt.github.io/tags/gal/</link><description>Recent content in GAL on SDTTTTT</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 12 Jun 2020 17:09:04 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/gal/index.xml" rel="self" type="application/rss+xml"/><item><title>Kanon</title><link>https://sdttttt.github.io/post/kanon/</link><pubDate>Fri, 12 Jun 2020 17:09:04 +0800</pubDate><guid>https://sdttttt.github.io/post/kanon/</guid><description>有一段时间没有玩过GALGAME了.
 所以就去尝试玩了Kanon.
-总之就是, 非常后悔.</description>
-    </item>
-    
-  </channel>
-</rss>
+总之就是, 非常后悔.</description></item></channel></rss>

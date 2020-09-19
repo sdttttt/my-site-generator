@@ -1,448 +1,14 @@
-<!DOCTYPE HTML>
-
-<html>
-    <head>
-        <script type="application/ld+json">
-    {
-        "@context" : "http://schema.org",
-        "@type" : "BlogPosting",
-        "mainEntityOfPage": {
-             "@type": "WebPage",
-             "@id": "https:\/\/sdttttt.github.io\/"
-        },
-        "articleSection" : "post",
-        "name" : "Sql Injection Blind",
-        "headline" : "Sql Injection Blind",
-        "description" : "返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。\nDVWA SQL Injection blind 过关秘籍.\nLow if(isset( $_GET[ \u0026#39;Submit\u0026#39; ])) { \/\/ Get input $id = $_GET[ \u0026#39;id\u0026#39; ]; \/\/ Check database $getid = \u0026#34;SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;$id\u0026#39;;\u0026#34;; \/\/ 没有一点点防备 \/\/ 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) \/\/ SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;0\u0026#39; union select 1,2 # \u0026#39;; \/\/ User ID exists in the database. \u0026lt;存在注入漏洞\u0026gt; \/\/ SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;0\u0026#39; union select 1,if(length( database())=4,sleep(4),2) # \u0026#39;; $result = mysql_query( $getid ); \/\/ Removed \u0026#39;or die\u0026#39; to suppress mysql errors \/\/ Get results $num = @mysql_numrows( $result ); \/\/ The \u0026#39;@\u0026#39; character suppresses errors if( $num \u0026gt; 0 ) { \/\/ Feedback for end user echo \u0026#39;\u0026lt;pre\u0026gt;User ID exists in the database.",
-        "inLanguage" : "en",
-        "author" : "",
-        "creator" : "",
-        "publisher": "",
-        "accountablePerson" : "",
-        "copyrightHolder" : "",
-        "copyrightYear" : "2020",
-        "datePublished": "2020-04-10 11:11:22 \u002b0800 CST",
-        "dateModified" : "2020-04-10 11:11:22 \u002b0800 CST",
-        "url" : "https:\/\/sdttttt.github.io\/post\/sql_injection_blind\/",
-        "wordCount" : "543",
-        "keywords" : [ "penetration test","Blog" ]
-    }
-    </script>
-        
-            
-                <title>Sql Injection Blind</title>
-            
-        
-
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Hugo 0.74.3" />
-        
-
-
-        
-        
-            
-        
-
-        <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Sql Injection Blind"/>
-<meta name="twitter:description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+<!doctype html><html><head><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/sdttttt.github.io\/"},"articleSection":"post","name":"Sql Injection Blind","headline":"Sql Injection Blind","description":"返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。\nDVWA SQL Injection blind 过关秘籍.\nLow if(isset( $_GET[ \u0026#39;Submit\u0026#39; ])) { \/\/ Get input $id = $_GET[ \u0026#39;id\u0026#39; ]; \/\/ Check database $getid = \u0026#34;SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;$id\u0026#39;;\u0026#34;; \/\/ 没有一点点防备 \/\/ 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) \/\/ SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;0\u0026#39; union select 1,2 # \u0026#39;; \/\/ User ID exists in the database. \u0026lt;存在注入漏洞\u0026gt; \/\/ SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;0\u0026#39; union select 1,if(length( database())=4,sleep(4),2) # \u0026#39;; $result = mysql_query( $getid ); \/\/ Removed \u0026#39;or die\u0026#39; to suppress mysql errors \/\/ Get results $num = @mysql_numrows( $result ); \/\/ The \u0026#39;@\u0026#39; character suppresses errors if( $num \u0026gt; 0 ) { \/\/ Feedback for end user echo \u0026#39;\u0026lt;pre\u0026gt;User ID exists in the database.","inLanguage":"en","author":"","creator":"","publisher":"","accountablePerson":"","copyrightHolder":"","copyrightYear":"2020","datePublished":"2020-04-10 11:11:22 \u002b0800 \u002b0800","dateModified":"2020-04-10 11:11:22 \u002b0800 \u002b0800","url":"https:\/\/sdttttt.github.io\/post\/sql_injection_blind\/","wordCount":"543","keywords":["penetration test","Blog"]}</script><title>Sql Injection Blind</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=generator content="Hugo 0.74.3"><meta name=twitter:card content="summary"><meta name=twitter:title content="Sql Injection Blind"><meta name=twitter:description content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
 DVWA SQL Injection blind 过关秘籍.
-Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#39; ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;; // User ID exists in the database. &lt;存在注入漏洞&gt; // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;; $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors if( $num &gt; 0 ) { // Feedback for end user echo &#39;&lt;pre&gt;User ID exists in the database."/>
-
-        <meta property="og:title" content="Sql Injection Blind" />
-<meta property="og:description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+Low if(isset( $_GET[ 'Submit' ])) { // Get input $id = $_GET[ 'id' ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = '$id';&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = '0' union select 1,2 # '; // User ID exists in the database. <存在注入漏洞> // SELECT first_name, last_name FROM users WHERE user_id = '0' union select 1,if(length( database())=4,sleep(4),2) # '; $result = mysql_query( $getid ); // Removed 'or die' to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The '@' character suppresses errors if( $num > 0 ) { // Feedback for end user echo '<pre>User ID exists in the database."><meta property="og:title" content="Sql Injection Blind"><meta property="og:description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
 DVWA SQL Injection blind 过关秘籍.
-Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#39; ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;; // User ID exists in the database. &lt;存在注入漏洞&gt; // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;; $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors if( $num &gt; 0 ) { // Feedback for end user echo &#39;&lt;pre&gt;User ID exists in the database." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://sdttttt.github.io/post/sql_injection_blind/" />
-<meta property="article:published_time" content="2020-04-10T11:11:22+08:00" />
-<meta property="article:modified_time" content="2020-04-10T11:11:22+08:00" />
-
-        <meta property="og:image" content="https://sdttttt.github.io//images/logo.png">
-        <meta property="og:image:type" content="image/png">
-        <meta property="og:image:width" content="512">
-        <meta property="og:image:height" content="512">
-        <meta itemprop="name" content="Sql Injection Blind">
-<meta itemprop="description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+Low if(isset( $_GET[ 'Submit' ])) { // Get input $id = $_GET[ 'id' ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = '$id';&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = '0' union select 1,2 # '; // User ID exists in the database. <存在注入漏洞> // SELECT first_name, last_name FROM users WHERE user_id = '0' union select 1,if(length( database())=4,sleep(4),2) # '; $result = mysql_query( $getid ); // Removed 'or die' to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The '@' character suppresses errors if( $num > 0 ) { // Feedback for end user echo '<pre>User ID exists in the database."><meta property="og:type" content="article"><meta property="og:url" content="https://sdttttt.github.io/post/sql_injection_blind/"><meta property="article:published_time" content="2020-04-10T11:11:22+08:00"><meta property="article:modified_time" content="2020-04-10T11:11:22+08:00"><meta property="og:image" content="https://sdttttt.github.io//images/logo.png"><meta property="og:image:type" content="image/png"><meta property="og:image:width" content="512"><meta property="og:image:height" content="512"><meta itemprop=name content="Sql Injection Blind"><meta itemprop=description content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
 DVWA SQL Injection blind 过关秘籍.
-Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#39; ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;; // User ID exists in the database. &lt;存在注入漏洞&gt; // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;; $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors if( $num &gt; 0 ) { // Feedback for end user echo &#39;&lt;pre&gt;User ID exists in the database.">
-<meta itemprop="datePublished" content="2020-04-10T11:11:22+08:00" />
-<meta itemprop="dateModified" content="2020-04-10T11:11:22+08:00" />
-<meta itemprop="wordCount" content="543">
-
-
-
-<meta itemprop="keywords" content="penetration test," />
-
-        
-
-        
-            
-        
-
-        
-        
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css">
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,800,900|Source+Sans+Pro:400,700">
-            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.css">
-            <link rel="stylesheet" href="/css/main.css">
-            <link rel="stylesheet" href="/css/add-on.css">
-            <link rel="stylesheet" href="/css/academicons.min.css">
-        
-
-        
-            
-                
-            
-        
-
-
-  
-    
-    <link href='//cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css' rel='stylesheet' type='text/css' />
-  
-
-
-      
-    </head>
-    <body>
-
-      
-      <div id="wrapper">
-
-    
-    
-<header id="header">
-    
-      <h1><a href="/">post</a></h1>
-    
-
-    <nav class="links">
-        <ul>
-            
-                <li>
-                    <a href="/">
-                            <i class="fa fa-home">&nbsp;</i>Home
-                    </a>
-                </li>
-            
-                <li>
-                    <a href="/about">
-                            <i class="fa fa-id-card-o">&nbsp;</i>About
-                    </a>
-                </li>
-            
-                <li>
-                    <a href="/tags">
-                            <i class="fa fa-sitemap">&nbsp;</i>Tags
-                    </a>
-                </li>
-            
-        </ul>
-    </nav>
-    <nav class="main">
-        <ul>
-            
-            <li id="share-nav" class="share-menu" style="display:none;">
-                <a class="fa-share-alt" href="#share-menu">Share</a>
-            </li>
-            
-            <li class="search">
-                <a class="fa-search" href="#search">Search</a>
-                <form id="search" method="get" action="//google.com/search">
-                    <input type="text" name="q" placeholder="Search" />
-                    <input type="hidden" name="as_sitesearch" value="https://sdttttt.github.io/">
-                </form>
-            </li>
-            <li class="menu">
-                <a class="fa-bars" href="#menu">Menu</a>
-            </li>
-        </ul>
-    </nav>
-</header>
-
-
-<section id="menu">
-
-    
-        <section>
-            <form class="search" method="get" action="//google.com/search">
-                <input type="text" name="q" placeholder="Search" />
-                <input type="hidden" name="as_sitesearch" value="https://sdttttt.github.io/">
-            </form>
-        </section>
-
-    
-        <section>
-            <ul class="links">
-                
-                    <li>
-                        <a href="/">
-                            <h3>
-                                <i class="fa fa-home">&nbsp;</i>Home
-                            </h3>
-                        </a>
-                    </li>
-                
-                    <li>
-                        <a href="/about">
-                            <h3>
-                                <i class="fa fa-id-card-o">&nbsp;</i>About
-                            </h3>
-                        </a>
-                    </li>
-                
-                    <li>
-                        <a href="/tags">
-                            <h3>
-                                <i class="fa fa-sitemap">&nbsp;</i>Tags
-                            </h3>
-                        </a>
-                    </li>
-                
-            </ul>
-        </section>
-
-    
-        <section class="recent-posts">
-            <div class="mini-posts">
-                <header>
-                    <h3>Recent Posts</h3>
-                </header>
-                
-
-                
-                    
-                
-
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/">Posts</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-09-19'>
-                                    September 19, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/log-1/">日志(一)</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-09-19'>
-                                    September 19, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-09-10'>
-                                    September 10, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/gosyncpool/">GoSyncPool</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-09-03'>
-                                    September 3, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/btree/">B Tree</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-08-30'>
-                                    August 30, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-
-                
-                    <a href=
-                        
-                            /blog/
-                        
-                        class="button">View more posts</a>
-                
-            </div>
-        </section>
-
-    
-        
-</section>
-
-    <section id="share-menu">
-    <section id="social-share-nav">
-        <ul class="links">
-            <header>
-                <h3>Share this post <i class="fa fa-smile-o"></i></h3>
-            </header>
-            
-
-
-
-<li>
-  <a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f&amp;text=Sql%20Injection%20Blind&amp;via=" target="_blank" class="share-btn twitter">
-    <i class="fa fa-twitter"></i>
-    <p>Twitter</p>
-    </a>
-</li>
-
-
-
-
-
-
-
-
-<li>
-  <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f" target="_blank" class="share-btn facebook">
-    <i class="fa fa-facebook"></i>
-    <p>Facebook</p>
-    </a>
-</li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<li>
-  <a href="mailto:?subject=Check out this post by &amp;body=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f" target="_blank" class="share-btn email">
-    <i class="fa fa-envelope"></i>
-    <p>Email</p>
-  </a>
-</li>
-
-
-        </ul>
-    </section>
-</section>
-
-    
-    <div id="main">
-        
-        
-        <article class="post">
-  <header>
-    <div class="title">
-        
-            <h1><a href="/post/sql_injection_blind/">Sql Injection Blind</a></h1>
-            
-        
-        
-    </div>
-    <div class="meta">
-        
-
-        <time class="published"
-            datetime='2020-04-10'>
-            April 10, 2020</time>
-        <span class="author"></span>
-        
-            <p>3 minute read</p>
-        
-        
-    </div>
-</header>
-
-
-  
-    <section id="social-share">
-      <ul class="icons">
-        
-
-
-
-<li>
-  <a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f&amp;text=Sql%20Injection%20Blind&amp;via=" target="_blank" class="share-btn twitter">
-    <i class="fa fa-twitter"></i>
-    <p>Twitter</p>
-    </a>
-</li>
-
-
-
-
-
-
-
-
-<li>
-  <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f" target="_blank" class="share-btn facebook">
-    <i class="fa fa-facebook"></i>
-    <p>Facebook</p>
-    </a>
-</li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<li>
-  <a href="mailto:?subject=Check out this post by &amp;body=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f" target="_blank" class="share-btn email">
-    <i class="fa fa-envelope"></i>
-    <p>Email</p>
-  </a>
-</li>
-
-
-      </ul>
-    </section>
-  
-
-  
-
-  <div id="content">
-    <p>返回的结果集无法看到，只能通过一些页面显示或状态来判断。
-像瞎子一样。</p>
-<p>DVWA SQL Injection blind 过关秘籍.</p>
-<h3 id="low">Low</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if(isset( $_GET[ &#39;Submit&#39; ])) {
+Low if(isset( $_GET[ 'Submit' ])) { // Get input $id = $_GET[ 'id' ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = '$id';&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = '0' union select 1,2 # '; // User ID exists in the database. <存在注入漏洞> // SELECT first_name, last_name FROM users WHERE user_id = '0' union select 1,if(length( database())=4,sleep(4),2) # '; $result = mysql_query( $getid ); // Removed 'or die' to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The '@' character suppresses errors if( $num > 0 ) { // Feedback for end user echo '<pre>User ID exists in the database."><meta itemprop=datePublished content="2020-04-10T11:11:22+08:00"><meta itemprop=dateModified content="2020-04-10T11:11:22+08:00"><meta itemprop=wordCount content="543"><meta itemprop=keywords content="penetration test,"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atom-one-light.min.css><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Raleway:400,800,900|Source+Sans+Pro:400,700"><link rel=stylesheet href=https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.css><link rel=stylesheet href=/css/main.css><link rel=stylesheet href=/css/add-on.css><link rel=stylesheet href=/css/academicons.min.css><link href=//cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css rel=stylesheet type=text/css></head><body><div id=wrapper><header id=header><h1><a href=/>post</a></h1><nav class=links><ul><li><a href=/><i class="fa fa-home">&nbsp;</i>Home</a></li><li><a href=/about><i class="fa fa-id-card-o">&nbsp;</i>About</a></li><li><a href=/tags><i class="fa fa-sitemap">&nbsp;</i>Tags</a></li></ul></nav><nav class=main><ul><li id=share-nav class=share-menu style=display:none><a class=fa-share-alt href=#share-menu>Share</a></li><li class=search><a class=fa-search href=#search>Search</a><form id=search method=get action=//google.com/search><input type=text name=q placeholder=Search>
+<input type=hidden name=as_sitesearch value=https://sdttttt.github.io/></form></li><li class=menu><a class=fa-bars href=#menu>Menu</a></li></ul></nav></header><section id=menu><section><form class=search method=get action=//google.com/search><input type=text name=q placeholder=Search>
+<input type=hidden name=as_sitesearch value=https://sdttttt.github.io/></form></section><section><ul class=links><li><a href=/><h3><i class="fa fa-home">&nbsp;</i>Home</h3></a></li><li><a href=/about><h3><i class="fa fa-id-card-o">&nbsp;</i>About</h3></a></li><li><a href=/tags><h3><i class="fa fa-sitemap">&nbsp;</i>Tags</h3></a></li></ul></section><section class=recent-posts><div class=mini-posts><header><h3>Recent Posts</h3></header><article class=mini-post><header><h3><a href=/post/>Posts</a></h3><time class=published datetime=2020-09-19>September 19, 2020</time></header></article><article class=mini-post><header><h3><a href=/post/log-1/>日志(一)</a></h3><time class=published datetime=2020-09-19>September 19, 2020</time></header></article><article class=mini-post><header><h3><a href=/post/mybatissourcecode/>MyBatis 源码分析</a></h3><time class=published datetime=2020-09-10>September 10, 2020</time></header></article><article class=mini-post><header><h3><a href=/post/gosyncpool/>GoSyncPool</a></h3><time class=published datetime=2020-09-03>September 3, 2020</time></header></article><article class=mini-post><header><h3><a href=/post/btree/>B Tree</a></h3><time class=published datetime=2020-08-30>August 30, 2020</time></header></article><a href=/blog/ class=button>View more posts</a></div></section></section><section id=share-menu><section id=social-share-nav><ul class=links><header><h3>Share this post <i class="fa fa-smile-o"></i></h3></header><li><a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f&text=Sql%20Injection%20Blind&via=" target=_blank class="share-btn twitter"><i class="fa fa-twitter"></i><p>Twitter</p></a></li><li><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f" target=_blank class="share-btn facebook"><i class="fa fa-facebook"></i><p>Facebook</p></a></li><li><a href="mailto:?subject=Check out this post by &body=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f" target=_blank class="share-btn email"><i class="fa fa-envelope"></i><p>Email</p></a></li></ul></section></section><div id=main><article class=post><header><div class=title><h1><a href=/post/sql_injection_blind/>Sql Injection Blind</a></h1></div><div class=meta><time class=published datetime=2020-04-10>April 10, 2020</time>
+<span class=author></span><p>3 minute read</p></div></header><section id=social-share><ul class=icons><li><a href="//twitter.com/share?url=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f&text=Sql%20Injection%20Blind&via=" target=_blank class="share-btn twitter"><i class="fa fa-twitter"></i><p>Twitter</p></a></li><li><a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f" target=_blank class="share-btn facebook"><i class="fa fa-facebook"></i><p>Facebook</p></a></li><li><a href="mailto:?subject=Check out this post by &body=https%3a%2f%2fsdttttt.github.io%2fpost%2fsql_injection_blind%2f" target=_blank class="share-btn email"><i class="fa fa-envelope"></i><p>Email</p></a></li></ul></section><div id=content><p>返回的结果集无法看到，只能通过一些页面显示或状态来判断。
+像瞎子一样。</p><p>DVWA SQL Injection blind 过关秘籍.</p><h3 id=low>Low</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP>if(isset( $_GET[ &#39;Submit&#39; ])) {
     // Get input
     $id = $_GET[ &#39;id&#39; ];
 
@@ -451,7 +17,7 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
     // 没有一点点防备
     // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效)
     // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;;
-    // User ID exists in the database. &lt;<span style="color:#f92672">存在注入漏洞</span>&gt;
+    // User ID exists in the database. &lt;<span style=color:#f92672>存在注入漏洞</span>&gt;
     // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;;
 
     $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors
@@ -460,20 +26,19 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
     $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors
     if( $num &gt; 0 ) {
         // Feedback for end user
-        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID exists in the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        echo &#39;&lt;<span style=color:#f92672>pre</span>&gt;User ID exists in the database.&lt;/<span style=color:#f92672>pre</span>&gt;&#39;;
     }
     else {
         // User wasn&#39;t found, so the page wasn&#39;t!
         header( $_SERVER[ &#39;SERVER_PROTOCOL&#39; ] . &#39; 404 Not Found&#39; );
 
         // Feedback for end user
-        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID is MISSING from the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        echo &#39;&lt;<span style=color:#f92672>pre</span>&gt;User ID is MISSING from the database.&lt;/<span style=color:#f92672>pre</span>&gt;&#39;;
     }
 
     mysql_close();
 }
-</code></pre></div><h3 id="miedum">MIEDUM</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_POST[ &#39;Submit&#39; ]  ) ) {
+</code></pre></div><h3 id=miedum>MIEDUM</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP>if( isset( $_POST[ &#39;Submit&#39; ]  ) ) {
     // Get input
     $id = $_POST[ &#39;id&#39; ];
     $id = mysql_real_escape_string( $id );
@@ -491,17 +56,16 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
     $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors
     if( $num &gt; 0 ) {
         // Feedback for end user
-        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID exists in the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        echo &#39;&lt;<span style=color:#f92672>pre</span>&gt;User ID exists in the database.&lt;/<span style=color:#f92672>pre</span>&gt;&#39;;
     }
     else {
         // Feedback for end user
-        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID is MISSING from the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        echo &#39;&lt;<span style=color:#f92672>pre</span>&gt;User ID is MISSING from the database.&lt;/<span style=color:#f92672>pre</span>&gt;&#39;;
     }
 
     //mysql_close();
 }
-</code></pre></div><h3 id="high">High</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_SESSION[&#39;id&#39;])){
+</code></pre></div><h3 id=high>High</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP>if( isset( $_SESSION[&#39;id&#39;])){
     // Get input
     $id = $_SESSION[ &#39;id&#39; ];
 
@@ -510,18 +74,18 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
     // 没有新花样，只限制输出条目是无法拦住我们的
     // 尝试构造:
     // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length(database()) = 4, sleep(3), 2) # LIMIT 1;
-    $result = mysql_query( $query ) or die( &#39;&lt;<span style="color:#f92672">pre</span>&gt;Something went wrong.&lt;/<span style="color:#f92672">pre</span>&gt;&#39; );
+    $result = mysql_query( $query ) or die( &#39;&lt;<span style=color:#f92672>pre</span>&gt;Something went wrong.&lt;/<span style=color:#f92672>pre</span>&gt;&#39; );
 
     // Get results
     $num = mysql_numrows( $result );
     $i   = 0;
-    while( $i <span style="color:#960050;background-color:#1e0010">&lt;</span> $num ) {
+    while( $i <span style=color:#960050;background-color:#1e0010>&lt;</span> $num ) {
         // Get values
         $first = mysql_result( $result, $i, &#34;first_name&#34; );
         $last  = mysql_result( $result, $i, &#34;last_name&#34; );
 
         // Feedback for end user
-        echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;ID: {$id}&lt;<span style="color:#f92672">br</span> /&gt;First name: {$first}&lt;<span style="color:#f92672">br</span> /&gt;Surname: {$last}&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+        echo &#34;&lt;<span style=color:#f92672>pre</span>&gt;ID: {$id}&lt;<span style=color:#f92672>br</span> /&gt;First name: {$first}&lt;<span style=color:#f92672>br</span> /&gt;Surname: {$last}&lt;/<span style=color:#f92672>pre</span>&gt;&#34;;
 
         // Increase loop count
         $i++;
@@ -529,8 +93,7 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
 
     mysql_close();
 }
-</code></pre></div><h3 id="high-1">High</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_GET[ &#39;Submit&#39; ] ) ) {
+</code></pre></div><h3 id=high-1>High</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP>if( isset( $_GET[ &#39;Submit&#39; ] ) ) {
     // Check Anti-CSRF token
     checkToken( $_REQUEST[ &#39;user_token&#39; ], $_SESSION[ &#39;session_token&#39; ], &#39;index.php&#39; );
 
@@ -548,455 +111,21 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
         // Get results
         if( $data-&gt;rowCount() == 1 ) {
             // Feedback for end user
-            echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID exists in the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+            echo &#39;&lt;<span style=color:#f92672>pre</span>&gt;User ID exists in the database.&lt;/<span style=color:#f92672>pre</span>&gt;&#39;;
         }
         else {
             // User wasn&#39;t found, so the page wasn&#39;t!
             header( $_SERVER[ &#39;SERVER_PROTOCOL&#39; ] . &#39; 404 Not Found&#39; );
 
             // Feedback for end user
-            echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID is MISSING from the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+            echo &#39;&lt;<span style=color:#f92672>pre</span>&gt;User ID is MISSING from the database.&lt;/<span style=color:#f92672>pre</span>&gt;&#39;;
         }
     }
 }
 
 // Generate Anti-CSRF token
 generateSessionToken();
-</code></pre></div>
-  </div>
-
-  <footer>
-    <ul class="stats">
-  <li class="categories">
-    <ul>
-        
-    </ul>
-  </li>
-  <li class="tags">
-    <ul>
-        
-            
-            
-                <i class="fa fa-tags"></i>
-                
-                
-                <li><a class="article-category-link" href="https://sdttttt.github.io/tags/penetration-test">penetration test</a></li>
-                
-            
-        
-    </ul>
-  </li>
-</ul>
-
-  </footer>
-
-</article>
-
-    <article class="post">
-        <script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
-    </article>
-
-
-<ul class="actions pagination">
-    
-        <li><a href="/post/sql_injection/"
-                class="button big previous">SQL Injection</a></li>
-    
-
-    
-        <li><a href="/post/file_upload/"
-                class="button big next">File Upload</a></li>
-    
-</ul>
-
-
-    </div>
-    
-<section id="sidebar">
-
-  
-  <section id="intro">
-    
-    
-      
-        <a href='/' class="logo"><img src="/me.jpg" alt="Hugo Future Imperfect" /></a>
-      
-    
-    
-      <header>
-        <h2>SDTTTTT</h2>
-        <p></p>
-      </header>
-    
-    
-      <ul class="icons">
-        
-          
-    <li><a href="https://sdttttt.github.io/index.xml" type="application/rss+xml" target="_blank" title="RSS" class="fa fa-rss"></a></li>
-
-
-        
-        
-  <li><a href="//github.com/sdttttt" target="_blank" title="GitHub" class="fa fa-github"></a></li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <li><a href="//telegram.me/sdzzzzz" target="_blank" title="telegram" class="fa fa-telegram"></a></li>
-
-
-
-
-
-
-
-
-
-
-
-  <li><a href="mailto:sdttttt@outlook.com" title="Email" class="fa fa-envelope"></a></li>
-
-
-      </ul>
-    
-  </section>
-
-  
-  <section class="recent-posts">
-    <div class="mini-posts">
-      <header>
-        <h3>Recent Posts</h3>
-      </header>
-      <div class="posts-container">
-        
-
-        
-          
-        
-
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/">Posts</a>
-              </h3>
-              
-              <time class="published" datetime='2020-09-19'>
-                September 19, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/log-1/">日志(一)</a>
-              </h3>
-              
-              <time class="published" datetime='2020-09-19'>
-                September 19, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
-              </h3>
-              
-              <time class="published" datetime='2020-09-10'>
-                September 10, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/gosyncpool/">GoSyncPool</a>
-              </h3>
-              
-              <time class="published" datetime='2020-09-03'>
-                September 3, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/btree/">B Tree</a>
-              </h3>
-              
-              <time class="published" datetime='2020-08-30'>
-                August 30, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-      </div>
-
-      
-        <a href=
-          
-            /blog/
-          
-        class="button">View more posts</a>
-      
-    </div>
-  </section>
-
-  
-  
-  
-  
-  
-    <section id="categories">
-      <header>
-        <h3>
-          <a href="/categories/">Categories</a>
-        </h3>
-      </header>
-        
-          
-        
-
-        
-    </section>
-  
-  
-
-  
-  
-
-  
-  <section id="footer">
-    
-      <ul class="icons">
-        
-          
-    <li><a href="https://sdttttt.github.io/index.xml" type="application/rss+xml" target="_blank" title="RSS" class="fa fa-rss"></a></li>
-
-
-        
-        
-  <li><a href="//github.com/sdttttt" target="_blank" title="GitHub" class="fa fa-github"></a></li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <li><a href="//telegram.me/sdzzzzz" target="_blank" title="telegram" class="fa fa-telegram"></a></li>
-
-
-
-
-
-
-
-
-
-
-
-  <li><a href="mailto:sdttttt@outlook.com" title="Email" class="fa fa-envelope"></a></li>
-
-
-      </ul>
-    
-    <p class="copyright">
-      
-        &copy; 2020
-        
-          SDTTTTT
-        
-      .
-      Powered by <a href="//gohugo.io" target="_blank">Hugo</a>
-    </p>
-  </section>
-</section>
-
-    </div>
-    <a id="back-to-top" href="#" class="fa fa-arrow-up fa-border fa-2x"></a>
-    
-
-    
-      
-    
-
-    
-      
-      
-      
-        <script src="//cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js"></script>
-        
-        
-        
-        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/r.min.js"></script>
-        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/yaml.min.js"></script>
-        <script src="//cdn.bootcss.com/highlight.js/9.11.0/languages/css.min.js"></script>
-        <script>hljs.configure({languages: []}); hljs.initHighlightingOnLoad();</script>
-      
-    
-    
-    
-      <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.js"></script>
-      <script src="/js/util.js"></script>
-      <script src="/js/main.js"></script>
-      <script src="/js/backToTop.js"></script>
-    
-
-    
-      
-        
-      
-    
-
-    
-    <script>hljs.initHighlightingOnLoad();</script>
-      <script src="//yihui.name/js/math-code.js"></script>
-<script async
-src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
-
-  </body>
-</html>
-
+</code></pre></div></div><footer><ul class=stats><li class=categories><ul></ul></li><li class=tags><ul><i class="fa fa-tags"></i><li><a class=article-category-link href=https://sdttttt.github.io/tags/penetration-test>penetration test</a></li></ul></li></ul></footer></article><article class=post><script async src=https://comments.app/js/widget.js?3 data-comments-app-website=16l5H9Ux data-limit=5></script></article><ul class="actions pagination"><li><a href=/post/sql_injection/ class="button big previous">SQL Injection</a></li><li><a href=/post/file_upload/ class="button big next">File Upload</a></li></ul></div><section id=sidebar><section id=intro><a href=/ class=logo><img src=/me.jpg alt="Hugo Future Imperfect"></a><header><h2>SDTTTTT</h2><p></p></header><ul class=icons><li><a href=https://sdttttt.github.io/index.xml type=application/rss+xml target=_blank title=RSS class="fa fa-rss"></a></li><li><a href=//github.com/sdttttt target=_blank title=GitHub class="fa fa-github"></a></li><li><a href=//telegram.me/sdzzzzz target=_blank title=telegram class="fa fa-telegram"></a></li><li><a href=mailto:sdttttt@outlook.com title=Email class="fa fa-envelope"></a></li></ul></section><section class=recent-posts><div class=mini-posts><header><h3>Recent Posts</h3></header><div class=posts-container><article class=mini-post><header><h3><a href=/post/>Posts</a></h3><time class=published datetime=2020-09-19>September 19, 2020</time></header></article><article class=mini-post><header><h3><a href=/post/log-1/>日志(一)</a></h3><time class=published datetime=2020-09-19>September 19, 2020</time></header></article><article class=mini-post><header><h3><a href=/post/mybatissourcecode/>MyBatis 源码分析</a></h3><time class=published datetime=2020-09-10>September 10, 2020</time></header></article><article class=mini-post><header><h3><a href=/post/gosyncpool/>GoSyncPool</a></h3><time class=published datetime=2020-09-03>September 3, 2020</time></header></article><article class=mini-post><header><h3><a href=/post/btree/>B Tree</a></h3><time class=published datetime=2020-08-30>August 30, 2020</time></header></article></div><a href=/blog/ class=button>View more posts</a></div></section><section id=categories><header><h3><a href=/categories/>Categories</a></h3></header></section><section id=footer><ul class=icons><li><a href=https://sdttttt.github.io/index.xml type=application/rss+xml target=_blank title=RSS class="fa fa-rss"></a></li><li><a href=//github.com/sdttttt target=_blank title=GitHub class="fa fa-github"></a></li><li><a href=//telegram.me/sdzzzzz target=_blank title=telegram class="fa fa-telegram"></a></li><li><a href=mailto:sdttttt@outlook.com title=Email class="fa fa-envelope"></a></li></ul><p class=copyright>&copy; 2020
+SDTTTTT
+.
+Powered by <a href=//gohugo.io target=_blank>Hugo</a></p></section></section></div><a id=back-to-top href=# class="fa fa-arrow-up fa-border fa-2x"></a><script src=//cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js></script><script src=//cdn.bootcss.com/highlight.js/9.11.0/languages/r.min.js></script><script src=//cdn.bootcss.com/highlight.js/9.11.0/languages/yaml.min.js></script><script src=//cdn.bootcss.com/highlight.js/9.11.0/languages/css.min.js></script><script>hljs.configure({languages:[]});hljs.initHighlightingOnLoad();</script><script src=https://code.jquery.com/jquery-3.2.1.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/skel/3.0.1/skel.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.1.25/jquery.fancybox.min.js></script><script src=/js/util.js></script><script src=/js/main.js></script><script src=/js/backToTop.js></script><script>hljs.initHighlightingOnLoad();</script><script src=//yihui.name/js/math-code.js></script><script async src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script></body></html>
