@@ -21,8 +21,8 @@
         "accountablePerson" : "",
         "copyrightHolder" : "",
         "copyrightYear" : "2020",
-        "datePublished": "2020-06-02 19:51:50 \x2b0800 CST",
-        "dateModified" : "2020-06-02 19:51:50 \x2b0800 CST",
+        "datePublished": "2020-06-02 19:51:50 \u002b0800 CST",
+        "dateModified" : "2020-06-02 19:51:50 \u002b0800 CST",
         "url" : "https:\/\/sdttttt.github.io\/post\/database_storage\/",
         "wordCount" : "50",
         "keywords" : [ "Blog" ]
@@ -36,7 +36,7 @@
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Hugo 0.70.0" />
+        <meta name="generator" content="Hugo 0.74.3" />
         
 
 
@@ -103,13 +103,14 @@
 如果Tuple被删除,我们也只需要删除固定的Solt就行. 空出来的空间碎片,可以由数据库的空间整理功能去完成. 维护每个Tuple的成本也比较小.只需要改变Solt就可以.
  最后讲一个Demo来演示数据库的工作过程.
 假如我想要找一个叫A的人,我会先去查找索引. 从索引里我知道A的Page是123, Solt是2. 我去找管理Pages的人,让他把Page123的指针给我, 然后拿着Page的指针,找到Solt2中的偏移地址,找到了A这个人.">
-<meta itemprop="datePublished" content="2020-06-02T19:51:50&#43;08:00" />
-<meta itemprop="dateModified" content="2020-06-02T19:51:50&#43;08:00" />
+<meta itemprop="datePublished" content="2020-06-02T19:51:50+08:00" />
+<meta itemprop="dateModified" content="2020-06-02T19:51:50+08:00" />
 <meta itemprop="wordCount" content="50">
 
 
 
 <meta itemprop="keywords" content="" />
+
         
 
         
@@ -255,11 +256,11 @@
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
+                                <h3><a href="/post/">Posts</a></h3>
                                 
                                 <time class="published" datetime=
-                                    '2020-09-10'>
-                                    September 10, 2020</time>
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
                             </header>
                             
 
@@ -267,7 +268,19 @@
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/">Posts</a></h3>
+                                <h3><a href="/post/find-work-1/">日志(一)</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
                                 
                                 <time class="published" datetime=
                                     '2020-09-10'>
@@ -296,18 +309,6 @@
                                 <time class="published" datetime=
                                     '2020-08-30'>
                                     August 30, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/blogupgrade/">Blog Upgrade</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-08-29'>
-                                    August 29, 2020</time>
                             </header>
                             
 
@@ -497,7 +498,7 @@ Header中会包含一些Page的元数据,以及被存储数据的偏移值.</p>
 </ul>
 <p>在这个结构中Header后面紧接这SoltArray, 而Tuple是从Page的尾部开始存储的.
 每个Page存储的Tuple的个数是固定的.</p>
-<p>如果Tuple被删除,我们也只需要删除固定的Solt就行. 
+<p>如果Tuple被删除,我们也只需要删除固定的Solt就行.
 空出来的空间碎片,可以由数据库的空间整理功能去完成.
 维护每个Tuple的成本也比较小.只需要改变Solt就可以.</p>
 <hr>
@@ -676,11 +677,11 @@ Header中会包含一些Page的元数据,以及被存储数据的偏移值.</p>
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
+                <a href="/post/">Posts</a>
               </h3>
               
-              <time class="published" datetime='2020-09-10'>
-                September 10, 2020
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
               </time>
             </header>
             
@@ -690,7 +691,21 @@ Header中会包含一些Page的元数据,以及被存储数据的偏移值.</p>
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/">Posts</a>
+                <a href="/post/find-work-1/">日志(一)</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
               </h3>
               
               <time class="published" datetime='2020-09-10'>
@@ -723,20 +738,6 @@ Header中会包含一些Page的元数据,以及被存储数据的偏移值.</p>
               
               <time class="published" datetime='2020-08-30'>
                 August 30, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/blogupgrade/">Blog Upgrade</a>
-              </h3>
-              
-              <time class="published" datetime='2020-08-29'>
-                August 29, 2020
               </time>
             </header>
             

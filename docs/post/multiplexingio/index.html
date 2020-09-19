@@ -13,7 +13,7 @@
         "articleSection" : "post",
         "name" : "MultiplexingIO",
         "headline" : "MultiplexingIO",
-        "description" : "其实“I\/O多路复用”这个坑爹翻译可能是这个概念在中文里面如此难理解的原因。所谓的I\/O多路 复用在英文中其实叫 I\/O multiplexing. 如果你搜索multiplexing啥意思,基本上都会出这个图:\n于是大部分人都直接联想到\x26quot;一根网线,多个sock复用\x26rdquo; 这个概念,包括上面的几个回答, 其实不 管你用多进程还是I\/O多路复用, 网线都只有一根好伐。多个Sock复用一根网线这个功能是在内核 \x2b驱动层实现的.\n重要的事情再说一遍: I\/O multiplexing 这里面的 multiplexing 指的其实是在单个线程通过记 录跟踪每一个Sock(I\/O流)的状态(对应空管塔里面的Fight progress strip槽)来同时管理多个I\/O 流. 发明它的原因,是尽量多的提高服务器的吞吐能力。\n是不是听起来好拗口,看个图就懂了.\n在同一个线程里面, 通过拨开关的方式,来同时传输多个I\/O流, (学过EE的人现在可以站出来义正 严辞说这个叫“时分复用”了)。\n什么,你还没有搞懂 “一个请求到来了,nginx使用epoll接收请求的过程是怎样的”, 多看看这个 图就了解了。提醒下,ngnix会有很多链接进来, epoll会把他们都监视起来,然后像拨开关一样, 谁有数据就拨向谁,然后调用相应的代码处理。\n 了解这个基本的概念以后,其他的就很好解释了。\nselect, poll, epoll 都是I\/O多路复用的具体的实现,之所以有这三个鬼存在,其实是他们出现是有 先后顺序的。\nI\/O多路复用这个概念被提出来以后, select是第一个实现 (1983 左右在BSD里面实现的)。\nselect 被实现以后,很快就暴露出了很多问题。\n select 会修改传入的参数数组,这个对于一个需要调用很多次的函数,是非常不友好的。 select 如果任何一个sock(I\/O stream)出现了数据,select 仅仅会返回,但是并不会告诉你是那 个sock上有数据,于是你只能自己一个一个的找,10几个sock可能还好,要是几万的sock每次 select 不是线程安全的,如果你把一个sock加入到select, 然后突然另外一个线程发现,尼玛,这 个sock不用,要收回。对不起,这个select 不支持的,如果你丧心病狂的竟然关掉这个sock, select的标准行为是。。呃。。不可预测的, 这个可是写在文档中的哦.   “If a file descriptor being monitored by select() is closed in another thread, the result is unspecified.",
+        "description" : "其实“I\/O多路复用”这个坑爹翻译可能是这个概念在中文里面如此难理解的原因。所谓的I\/O多路 复用在英文中其实叫 I\/O multiplexing. 如果你搜索multiplexing啥意思,基本上都会出这个图:\n于是大部分人都直接联想到\u0026quot;一根网线,多个sock复用\u0026rdquo; 这个概念,包括上面的几个回答, 其实不 管你用多进程还是I\/O多路复用, 网线都只有一根好伐。多个Sock复用一根网线这个功能是在内核 \u002b驱动层实现的.\n重要的事情再说一遍: I\/O multiplexing 这里面的 multiplexing 指的其实是在单个线程通过记 录跟踪每一个Sock(I\/O流)的状态(对应空管塔里面的Fight progress strip槽)来同时管理多个I\/O 流. 发明它的原因,是尽量多的提高服务器的吞吐能力。\n是不是听起来好拗口,看个图就懂了.\n在同一个线程里面, 通过拨开关的方式,来同时传输多个I\/O流, (学过EE的人现在可以站出来义正 严辞说这个叫“时分复用”了)。\n什么,你还没有搞懂 “一个请求到来了,nginx使用epoll接收请求的过程是怎样的”, 多看看这个 图就了解了。提醒下,ngnix会有很多链接进来, epoll会把他们都监视起来,然后像拨开关一样, 谁有数据就拨向谁,然后调用相应的代码处理。\n 了解这个基本的概念以后,其他的就很好解释了。\nselect, poll, epoll 都是I\/O多路复用的具体的实现,之所以有这三个鬼存在,其实是他们出现是有 先后顺序的。\nI\/O多路复用这个概念被提出来以后, select是第一个实现 (1983 左右在BSD里面实现的)。\nselect 被实现以后,很快就暴露出了很多问题。\n select 会修改传入的参数数组,这个对于一个需要调用很多次的函数,是非常不友好的。 select 如果任何一个sock(I\/O stream)出现了数据,select 仅仅会返回,但是并不会告诉你是那 个sock上有数据,于是你只能自己一个一个的找,10几个sock可能还好,要是几万的sock每次 select 不是线程安全的,如果你把一个sock加入到select, 然后突然另外一个线程发现,尼玛,这 个sock不用,要收回。对不起,这个select 不支持的,如果你丧心病狂的竟然关掉这个sock, select的标准行为是。。呃。。不可预测的, 这个可是写在文档中的哦.   “If a file descriptor being monitored by select() is closed in another thread, the result is unspecified.",
         "inLanguage" : "en",
         "author" : "",
         "creator" : "",
@@ -21,8 +21,8 @@
         "accountablePerson" : "",
         "copyrightHolder" : "",
         "copyrightYear" : "2020",
-        "datePublished": "2020-04-06 12:42:26 \x2b0800 CST",
-        "dateModified" : "2020-04-06 12:42:26 \x2b0800 CST",
+        "datePublished": "2020-04-06 12:42:26 \u002b0800 CST",
+        "dateModified" : "2020-04-06 12:42:26 \u002b0800 CST",
         "url" : "https:\/\/sdttttt.github.io\/post\/multiplexingio\/",
         "wordCount" : "112",
         "keywords" : [ "unix","Blog" ]
@@ -36,7 +36,7 @@
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Hugo 0.70.0" />
+        <meta name="generator" content="Hugo 0.74.3" />
         
 
 
@@ -92,13 +92,14 @@ select, poll, epoll 都是I/O多路复用的具体的实现,之所以有这三�
 I/O多路复用这个概念被提出来以后, select是第一个实现 (1983 左右在BSD里面实现的)。
 select 被实现以后,很快就暴露出了很多问题。
  select 会修改传入的参数数组,这个对于一个需要调用很多次的函数,是非常不友好的。 select 如果任何一个sock(I/O stream)出现了数据,select 仅仅会返回,但是并不会告诉你是那 个sock上有数据,于是你只能自己一个一个的找,10几个sock可能还好,要是几万的sock每次 select 不是线程安全的,如果你把一个sock加入到select, 然后突然另外一个线程发现,尼玛,这 个sock不用,要收回。对不起,这个select 不支持的,如果你丧心病狂的竟然关掉这个sock, select的标准行为是。。呃。。不可预测的, 这个可是写在文档中的哦.   “If a file descriptor being monitored by select() is closed in another thread, the result is unspecified.">
-<meta itemprop="datePublished" content="2020-04-06T12:42:26&#43;08:00" />
-<meta itemprop="dateModified" content="2020-04-06T12:42:26&#43;08:00" />
+<meta itemprop="datePublished" content="2020-04-06T12:42:26+08:00" />
+<meta itemprop="dateModified" content="2020-04-06T12:42:26+08:00" />
 <meta itemprop="wordCount" content="112">
 
 
 
 <meta itemprop="keywords" content="unix," />
+
         
 
         
@@ -244,11 +245,11 @@ select 被实现以后,很快就暴露出了很多问题。
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
+                                <h3><a href="/post/">Posts</a></h3>
                                 
                                 <time class="published" datetime=
-                                    '2020-09-10'>
-                                    September 10, 2020</time>
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
                             </header>
                             
 
@@ -256,7 +257,19 @@ select 被实现以后,很快就暴露出了很多问题。
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/">Posts</a></h3>
+                                <h3><a href="/post/find-work-1/">日志(一)</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
                                 
                                 <time class="published" datetime=
                                     '2020-09-10'>
@@ -285,18 +298,6 @@ select 被实现以后,很快就暴露出了很多问题。
                                 <time class="published" datetime=
                                     '2020-08-30'>
                                     August 30, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/blogupgrade/">Blog Upgrade</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-08-29'>
-                                    August 29, 2020</time>
                             </header>
                             
 
@@ -694,11 +695,11 @@ unspecified.”</p>
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
+                <a href="/post/">Posts</a>
               </h3>
               
-              <time class="published" datetime='2020-09-10'>
-                September 10, 2020
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
               </time>
             </header>
             
@@ -708,7 +709,21 @@ unspecified.”</p>
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/">Posts</a>
+                <a href="/post/find-work-1/">日志(一)</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
               </h3>
               
               <time class="published" datetime='2020-09-10'>
@@ -741,20 +756,6 @@ unspecified.”</p>
               
               <time class="published" datetime='2020-08-30'>
                 August 30, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/blogupgrade/">Blog Upgrade</a>
-              </h3>
-              
-              <time class="published" datetime='2020-08-29'>
-                August 29, 2020
               </time>
             </header>
             

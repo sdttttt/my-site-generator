@@ -6,10 +6,24 @@
     <description>Recent content in Posts on SDTTTTT</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 10 Sep 2020 22:15:42 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 19 Sep 2020 11:06:17 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>日志(一)</title>
+      <link>https://sdttttt.github.io/post/find-work-1/</link>
+      <pubDate>Sat, 19 Sep 2020 11:06:17 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/find-work-1/</guid>
+      <description>目前还是个5月份刚毕业的应届生, 今年还是撞到了疫情这个时间口上, 工作真是相当的难找, 6月到7月的样子, 我去尝试去考驾照, 目前还在科目二这边卡着, 中间有空也是各种找单位去面试.
+比较幸运, 我在8月初的时候收到了来自安恒信息的面试通知, 他们是一家上市公司, 规模也不小, 我也是被别人内推才有这个面试资格的, 面试一共三轮, 前两轮技术面试, 最后一轮综合面试, 第一轮技术面试大概就是问了我一些JVM原理, 以及编码思路, 还有一些我比较擅长的分布式存储的问题. 第一轮过的呢也还算惊险. 第二轮是在几天后, 问的内容基本上是一些JDK源码, 数据结构, 还有一些框架问题.我回答的还算是流畅, 也算是过了.可惜,最后一轮面试之前,因为安恒不招收985,211以外的应届生, 所以我被淘汰了.
+后面每天在晚上投简历, 大概在一个月后, 又有新的面试来了, 一家叫做郦鸣科技的公司, 面试官问的都是一些业务处理逻辑, 身为应届生的我也是吃了亏, 因为我根本没有实际的工作经验. 不过我还是以试用生的身份进去了.
+新人入职第一天就是先把公司项目的代码过一边, 看了他们公司的代码之后, 说实话, 我非常失望, 复杂的对象关系结构, 长冗的控制器函数, 以及空空如也的test文件夹, 我不知道他们的项目能维护多长时间, 可能是我的想法太极端了, 大学时的我就开始受到马丁福勒的软件设计思想的影响, 对维护性差的代码变得敏感起来. 我边读他们的代码, 边重构着. 就这样过了一个星期.
+在这周里, 我还收到了来自电信和一家电子交易公司的面试通知, 我很高兴, 因为我对现在的工作并不感到满足, 在周五, 我请了假, 去面试, 电信这边很顺利, 面试官和我说, 他喜欢我的开源项目, 并且对我的CICD技术感兴趣, 而且他也不关心我的学历, 我真的很高兴.不过在录用之前,面试官说得先和上级汇报, 因为录不录用不是他能决定的.
+下午, 我去了那家电子交易公司面试, 不过应届生在他们公司面试之前得先做试卷, 内容是关于Java的, 我有点吃惊, 不过我也发现了, 对于一些java代码的运行细节我还了解的不够清楚, 在这里又发现了自己的缺点, 我感到很满足. 试卷完成后, 就是面谈了, 面试官看起来接近30岁, 他先问了我的开源项目的问题, 接着是一些Java基础的问题, 最后又考了考我的业务能力, 他出了一个秒杀题, 我回答的并不算好, 应该只答对了一半.</description>
+    </item>
     
     <item>
       <title>MyBatis 源码分析</title>
@@ -198,8 +212,8 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
   首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
   然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
   然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
-  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化	而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向	的第一台服务器上的键会受到影响。
-性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。	在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。</description>
+  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化 而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向 的第一台服务器上的键会受到影响。
+性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。 在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。</description>
     </item>
     
     <item>
@@ -258,10 +272,10 @@ To be continued&amp;hellip;</description>
       <guid>https://sdttttt.github.io/post/sssp/</guid>
       <description>如今的CPU都有提供栈机制，8086也不例外。
 8086提供的最基本的两个指令就是push and pop.
-push ax ;将寄存器ax中的数据送入栈顶pop ax ;将栈顶的数据送入ax我们知道CS:IP寄存器存放了下一条指令的段地址和偏移地址，那么CPU是如何知道栈顶在哪呐？ 显然也有两个寄存器专门存放栈顶的地址，那就是SS:SP寄存器，SS = 段地址， SP = 偏移地址
+push ax ;将寄存器ax中的数据送入栈顶 pop ax ;将栈顶的数据送入ax 我们知道CS:IP寄存器存放了下一条指令的段地址和偏移地址，那么CPU是如何知道栈顶在哪呐？ 显然也有两个寄存器专门存放栈顶的地址，那就是SS:SP寄存器，SS = 段地址， SP = 偏移地址
 任意时刻，SS:SP都指向栈顶元素。push和pop指令执行时CPU将从SS和SP中获得栈顶的地址。
 push 有2步:
- SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置.  10000H |_______||_______||_______||_______||_______||_______||_______||_______||_______| |_______| 1000EH |__23___| &amp;lt;= SS:SP1000FH |__01___|10000H |_______||_______||_______||_______||_______||_______||_______||_______||_______| &amp;lt;= SS:SP: 换个位置|_______| 1000EH |__23___| 1000FH |__01___|10000H |_______||_______||_______||_______||_______||_______||_______||_______| ;来自ax寄存器的数据|__54___| &amp;lt;= SS:SP: 换个位置|__11___| 1000EH |__23___| 1000FH |__01___| 假设 10000H -&amp;gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？</description>
+ SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置.  10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| 1000EH |__23___| &amp;lt;= SS:SP 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| &amp;lt;= SS:SP: 换个位置 |_______| 1000EH |__23___| 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| ;来自ax寄存器的数据 |__54___| &amp;lt;= SS:SP: 换个位置 |__11___| 1000EH |__23___| 1000FH |__01___|  假设 10000H -&amp;gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？</description>
     </item>
     
     <item>
@@ -370,7 +384,7 @@ https://github.com/sdttttt/go-tds
  好！开始吧！
 小提示：阅读源码时请保持清醒。
 首先是按照Kratos tool 生产的工程目录。
-├── CHANGELOG.md ├── OWNERS├── README.md├── api # api目录为对外保留的proto文件及生成的pb.go文件│ ├── api.bm.go│ ├── api.pb.go # 通过go generate生成的pb.go文件│ ├── api.proto│ └── client.go├── cmd│ └── main.go # cmd目录为main所在├── configs # configs为配置文件目录│ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true│ ├── db.toml # db相关配置│ ├── grpc.toml # grpc相关配置│ ├── http.toml # http相关配置│ ├── memcache.</description>
+├── CHANGELOG.md ├── OWNERS ├── README.md ├── api # api目录为对外保留的proto文件及生成的pb.go文件 │ ├── api.bm.go │ ├── api.pb.go # 通过go generate生成的pb.go文件 │ ├── api.proto │ └── client.go ├── cmd │ └── main.go # cmd目录为main所在 ├── configs # configs为配置文件目录 │ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true │ ├── db.toml # db相关配置 │ ├── grpc.toml # grpc相关配置 │ ├── http.toml # http相关配置 │ ├── memcache.</description>
     </item>
     
     <item>
@@ -451,7 +465,7 @@ Development Note 花了很长时间去吧Rails和一些大前端的框架合二�
  Bootstrap Configuration  # =&amp;gt; 首先在 Gemfile 中加入 gem &amp;#39;bootstrap&amp;#39;, &amp;#39;~&amp;gt; 4.3.1&amp;#39; gem &amp;#39;jquery-rails&amp;#39; 之后将app\assets\stylesheets\application.css 改为 scss
 删掉所有的东西包括注释
 加入@import &amp;ldquo;bootstrap&amp;rdquo;;
- Ruby Note Todo Error running &#39;requirements_debian_libs_install g++ gcc autoconf automake bison libc6-dev libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev make pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline-dev libssl-dev&#39;,please read /home/sdttttt/.</description>
+ Ruby Note Todo Error running &#39;requirements_debian_libs_install g++ gcc autoconf automake bison libc6-dev libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev make pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline-dev libssl-dev&#39;, please read /home/sdttttt/.</description>
     </item>
     
     <item>

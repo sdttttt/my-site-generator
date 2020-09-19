@@ -13,7 +13,7 @@
         "articleSection" : "post",
         "name" : "Sql Injection Blind",
         "headline" : "Sql Injection Blind",
-        "description" : "返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。\nDVWA SQL Injection blind 过关秘籍.\nLow if(isset( $_GET[ \x26#39;Submit\x26#39; ])) { \/\/ Get input $id = $_GET[ \x26#39;id\x26#39; ]; \/\/ Check database $getid = \x26#34;SELECT first_name, last_name FROM users WHERE user_id = \x26#39;$id\x26#39;;\x26#34;; \/\/ 没有一点点防备 \/\/ 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) \/\/ SELECT first_name, last_name FROM users WHERE user_id = \x26#39;0\x26#39; union select 1,2 # \x26#39;; \/\/ User ID exists in the database. \x26lt;存在注入漏洞\x26gt; \/\/ SELECT first_name, last_name FROM users WHERE user_id = \x26#39;0\x26#39; union select 1,if(length( database())=4,sleep(4),2) # \x26#39;; $result = mysql_query( $getid ); \/\/ Removed \x26#39;or die\x26#39; to suppress mysql errors \/\/ Get results $num = @mysql_numrows( $result ); \/\/ The \x26#39;@\x26#39; character suppresses errors if( $num \x26gt; 0 ) { \/\/ Feedback for end user echo \x26#39;\x26lt;pre\x26gt;User ID exists in the database.",
+        "description" : "返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。\nDVWA SQL Injection blind 过关秘籍.\nLow if(isset( $_GET[ \u0026#39;Submit\u0026#39; ])) { \/\/ Get input $id = $_GET[ \u0026#39;id\u0026#39; ]; \/\/ Check database $getid = \u0026#34;SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;$id\u0026#39;;\u0026#34;; \/\/ 没有一点点防备 \/\/ 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) \/\/ SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;0\u0026#39; union select 1,2 # \u0026#39;; \/\/ User ID exists in the database. \u0026lt;存在注入漏洞\u0026gt; \/\/ SELECT first_name, last_name FROM users WHERE user_id = \u0026#39;0\u0026#39; union select 1,if(length( database())=4,sleep(4),2) # \u0026#39;; $result = mysql_query( $getid ); \/\/ Removed \u0026#39;or die\u0026#39; to suppress mysql errors \/\/ Get results $num = @mysql_numrows( $result ); \/\/ The \u0026#39;@\u0026#39; character suppresses errors if( $num \u0026gt; 0 ) { \/\/ Feedback for end user echo \u0026#39;\u0026lt;pre\u0026gt;User ID exists in the database.",
         "inLanguage" : "en",
         "author" : "",
         "creator" : "",
@@ -21,8 +21,8 @@
         "accountablePerson" : "",
         "copyrightHolder" : "",
         "copyrightYear" : "2020",
-        "datePublished": "2020-04-10 11:11:22 \x2b0800 CST",
-        "dateModified" : "2020-04-10 11:11:22 \x2b0800 CST",
+        "datePublished": "2020-04-10 11:11:22 \u002b0800 CST",
+        "dateModified" : "2020-04-10 11:11:22 \u002b0800 CST",
         "url" : "https:\/\/sdttttt.github.io\/post\/sql_injection_blind\/",
         "wordCount" : "543",
         "keywords" : [ "penetration test","Blog" ]
@@ -36,7 +36,7 @@
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Hugo 0.70.0" />
+        <meta name="generator" content="Hugo 0.74.3" />
         
 
 
@@ -68,13 +68,14 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
 <meta itemprop="description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
 DVWA SQL Injection blind 过关秘籍.
 Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#39; ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;; // User ID exists in the database. &lt;存在注入漏洞&gt; // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;; $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors if( $num &gt; 0 ) { // Feedback for end user echo &#39;&lt;pre&gt;User ID exists in the database.">
-<meta itemprop="datePublished" content="2020-04-10T11:11:22&#43;08:00" />
-<meta itemprop="dateModified" content="2020-04-10T11:11:22&#43;08:00" />
+<meta itemprop="datePublished" content="2020-04-10T11:11:22+08:00" />
+<meta itemprop="dateModified" content="2020-04-10T11:11:22+08:00" />
 <meta itemprop="wordCount" content="543">
 
 
 
 <meta itemprop="keywords" content="penetration test," />
+
         
 
         
@@ -220,11 +221,11 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
+                                <h3><a href="/post/">Posts</a></h3>
                                 
                                 <time class="published" datetime=
-                                    '2020-09-10'>
-                                    September 10, 2020</time>
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
                             </header>
                             
 
@@ -232,7 +233,19 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/">Posts</a></h3>
+                                <h3><a href="/post/find-work-1/">日志(一)</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
                                 
                                 <time class="published" datetime=
                                     '2020-09-10'>
@@ -261,18 +274,6 @@ Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#3
                                 <time class="published" datetime=
                                     '2020-08-30'>
                                     August 30, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/blogupgrade/">Blog Upgrade</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-08-29'>
-                                    August 29, 2020</time>
                             </header>
                             
 
@@ -740,11 +741,11 @@ generateSessionToken();
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
+                <a href="/post/">Posts</a>
               </h3>
               
-              <time class="published" datetime='2020-09-10'>
-                September 10, 2020
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
               </time>
             </header>
             
@@ -754,7 +755,21 @@ generateSessionToken();
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/">Posts</a>
+                <a href="/post/find-work-1/">日志(一)</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
               </h3>
               
               <time class="published" datetime='2020-09-10'>
@@ -787,20 +802,6 @@ generateSessionToken();
               
               <time class="published" datetime='2020-08-30'>
                 August 30, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/blogupgrade/">Blog Upgrade</a>
-              </h3>
-              
-              <time class="published" datetime='2020-08-29'>
-                August 29, 2020
               </time>
             </header>
             

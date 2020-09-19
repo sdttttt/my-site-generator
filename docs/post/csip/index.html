@@ -13,7 +13,7 @@
         "articleSection" : "post",
         "name" : "CSIP鸡你太美存器",
         "headline" : "CSIP鸡你太美存器",
-        "description" : "之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。\nCS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 \x2b N 处读取指令并进行。\n也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.\n执行流程:\n 初始状态: CS = 2000H, IP = 0000H CS:IP 内容送入地址加法器，2000H × 16 \x2b 0000H = 20000H 地址加法器计算出物理地址20000H后将结果送入输入输出电路. 输入输出电路将物理地址20000H送到地址总线。 内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU. 输入输出电路将机器指令X送入指令缓冲器。 寄存器IP的值自动增加。 以此类推\x26hellip;   当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。\n修改CS:IP mov指令能帮我们将值送入寄存器。但是，它不能用于修改CS:IP，原因很简单8086出于设计考量不允许。 能修改CS:IP的指令统称为转移指令（以后我们深入研究）,现在我学习第一个可以修改CS:IP寄存器的指令，jmp.\n若想同时修改CS:IP寄存器,可以用jmp 段地址, 偏移地址的指令来完成。\njmp 2AE3:3 ;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令 如果只想修改IP寄存器, 可以用jmp 寄存器的指令来完成.\njmp ax 类似, mov IP, ax",
+        "description" : "之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。\nCS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 \u002b N 处读取指令并进行。\n也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.\n执行流程:\n 初始状态: CS = 2000H, IP = 0000H CS:IP 内容送入地址加法器，2000H × 16 \u002b 0000H = 20000H 地址加法器计算出物理地址20000H后将结果送入输入输出电路. 输入输出电路将物理地址20000H送到地址总线。 内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU. 输入输出电路将机器指令X送入指令缓冲器。 寄存器IP的值自动增加。 以此类推\u0026hellip;   当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。\n修改CS:IP mov指令能帮我们将值送入寄存器。但是，它不能用于修改CS:IP，原因很简单8086出于设计考量不允许。 能修改CS:IP的指令统称为转移指令（以后我们深入研究）,现在我学习第一个可以修改CS:IP寄存器的指令，jmp.\n若想同时修改CS:IP寄存器,可以用jmp 段地址, 偏移地址的指令来完成。\njmp 2AE3:3 ;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令 如果只想修改IP寄存器, 可以用jmp 寄存器的指令来完成.\njmp ax 类似, mov IP, ax",
         "inLanguage" : "en",
         "author" : "",
         "creator" : "",
@@ -21,8 +21,8 @@
         "accountablePerson" : "",
         "copyrightHolder" : "",
         "copyrightYear" : "2020",
-        "datePublished": "2020-04-06 15:35:44 \x2b0800 CST",
-        "dateModified" : "2020-04-06 15:35:44 \x2b0800 CST",
+        "datePublished": "2020-04-06 15:35:44 \u002b0800 CST",
+        "dateModified" : "2020-04-06 15:35:44 \u002b0800 CST",
         "url" : "https:\/\/sdttttt.github.io\/post\/csip\/",
         "wordCount" : "72",
         "keywords" : [ "assembly","Blog" ]
@@ -36,7 +36,7 @@
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Hugo 0.70.0" />
+        <meta name="generator" content="Hugo 0.74.3" />
         
 
 
@@ -86,13 +86,14 @@ CS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086C
 若想同时修改CS:IP寄存器,可以用jmp 段地址, 偏移地址的指令来完成。
 jmp 2AE3:3 ;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令 如果只想修改IP寄存器, 可以用jmp 寄存器的指令来完成.
 jmp ax 类似, mov IP, ax">
-<meta itemprop="datePublished" content="2020-04-06T15:35:44&#43;08:00" />
-<meta itemprop="dateModified" content="2020-04-06T15:35:44&#43;08:00" />
+<meta itemprop="datePublished" content="2020-04-06T15:35:44+08:00" />
+<meta itemprop="dateModified" content="2020-04-06T15:35:44+08:00" />
 <meta itemprop="wordCount" content="72">
 
 
 
 <meta itemprop="keywords" content="assembly," />
+
         
 
         
@@ -238,11 +239,11 @@ jmp ax 类似, mov IP, ax">
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
+                                <h3><a href="/post/">Posts</a></h3>
                                 
                                 <time class="published" datetime=
-                                    '2020-09-10'>
-                                    September 10, 2020</time>
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
                             </header>
                             
 
@@ -250,7 +251,19 @@ jmp ax 类似, mov IP, ax">
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/">Posts</a></h3>
+                                <h3><a href="/post/find-work-1/">日志(一)</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
                                 
                                 <time class="published" datetime=
                                     '2020-09-10'>
@@ -279,18 +292,6 @@ jmp ax 类似, mov IP, ax">
                                 <time class="published" datetime=
                                     '2020-08-30'>
                                     August 30, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/blogupgrade/">Blog Upgrade</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-08-29'>
-                                    August 29, 2020</time>
                             </header>
                             
 
@@ -659,11 +660,11 @@ jmp ax 类似, mov IP, ax">
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
+                <a href="/post/">Posts</a>
               </h3>
               
-              <time class="published" datetime='2020-09-10'>
-                September 10, 2020
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
               </time>
             </header>
             
@@ -673,7 +674,21 @@ jmp ax 类似, mov IP, ax">
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/">Posts</a>
+                <a href="/post/find-work-1/">日志(一)</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
               </h3>
               
               <time class="published" datetime='2020-09-10'>
@@ -706,20 +721,6 @@ jmp ax 类似, mov IP, ax">
               
               <time class="published" datetime='2020-08-30'>
                 August 30, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/blogupgrade/">Blog Upgrade</a>
-              </h3>
-              
-              <time class="published" datetime='2020-08-29'>
-                August 29, 2020
               </time>
             </header>
             

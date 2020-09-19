@@ -21,8 +21,8 @@
         "accountablePerson" : "",
         "copyrightHolder" : "",
         "copyrightYear" : "2020",
-        "datePublished": "2020-05-09 13:00:00 \x2b0000 UTC",
-        "dateModified" : "2020-05-09 13:00:00 \x2b0000 UTC",
+        "datePublished": "2020-05-09 13:00:00 \u002b0000 UTC",
+        "dateModified" : "2020-05-09 13:00:00 \u002b0000 UTC",
         "url" : "https:\/\/sdttttt.github.io\/post\/gfs\/",
         "wordCount" : "28",
         "keywords" : [ "Blog" ]
@@ -36,7 +36,7 @@
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Hugo 0.70.0" />
+        <meta name="generator" content="Hugo 0.74.3" />
         
 
 
@@ -82,13 +82,14 @@ GFS (Google File System) 是Google为了管理海量数据而开发的一个分�
 GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一张表中。
 下面简单的解释一下读操作的交互。
  Client指定的文件名和字节偏移转换成文件的一个块索引（Chunk Index）。 给Master发送一个包含文件名和块索引的请求。 master回应对应的Chunk Handle(存储数据服务器以Chunk Handle标识Chunk)和副本的位置（多个副本）。 Client以文件名和块索引为键缓存这些信息。（handle和副本的位置） Client向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了Chunk Handle和块内的一个字节区间。 除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。  ">
-<meta itemprop="datePublished" content="2020-05-09T13:00:00&#43;00:00" />
-<meta itemprop="dateModified" content="2020-05-09T13:00:00&#43;00:00" />
+<meta itemprop="datePublished" content="2020-05-09T13:00:00+00:00" />
+<meta itemprop="dateModified" content="2020-05-09T13:00:00+00:00" />
 <meta itemprop="wordCount" content="28">
 
 
 
 <meta itemprop="keywords" content="" />
+
         
 
         
@@ -234,11 +235,11 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
+                                <h3><a href="/post/">Posts</a></h3>
                                 
                                 <time class="published" datetime=
-                                    '2020-09-10'>
-                                    September 10, 2020</time>
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
                             </header>
                             
 
@@ -246,7 +247,19 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
                 
                         <article class="mini-post">
                             <header>
-                                <h3><a href="/post/">Posts</a></h3>
+                                <h3><a href="/post/find-work-1/">日志(一)</a></h3>
+                                
+                                <time class="published" datetime=
+                                    '2020-09-19'>
+                                    September 19, 2020</time>
+                            </header>
+                            
+
+                        </article>
+                
+                        <article class="mini-post">
+                            <header>
+                                <h3><a href="/post/mybatissourcecode/">MyBatis 源码分析</a></h3>
                                 
                                 <time class="published" datetime=
                                     '2020-09-10'>
@@ -275,18 +288,6 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
                                 <time class="published" datetime=
                                     '2020-08-30'>
                                     August 30, 2020</time>
-                            </header>
-                            
-
-                        </article>
-                
-                        <article class="mini-post">
-                            <header>
-                                <h3><a href="/post/blogupgrade/">Blog Upgrade</a></h3>
-                                
-                                <time class="published" datetime=
-                                    '2020-08-29'>
-                                    August 29, 2020</time>
                             </header>
                             
 
@@ -635,11 +636,11 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
+                <a href="/post/">Posts</a>
               </h3>
               
-              <time class="published" datetime='2020-09-10'>
-                September 10, 2020
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
               </time>
             </header>
             
@@ -649,7 +650,21 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
           <article class="mini-post">
             <header>
               <h3>
-                <a href="/post/">Posts</a>
+                <a href="/post/find-work-1/">日志(一)</a>
+              </h3>
+              
+              <time class="published" datetime='2020-09-19'>
+                September 19, 2020
+              </time>
+            </header>
+            
+
+          </article>
+        
+          <article class="mini-post">
+            <header>
+              <h3>
+                <a href="/post/mybatissourcecode/">MyBatis 源码分析</a>
               </h3>
               
               <time class="published" datetime='2020-09-10'>
@@ -682,20 +697,6 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
               
               <time class="published" datetime='2020-08-30'>
                 August 30, 2020
-              </time>
-            </header>
-            
-
-          </article>
-        
-          <article class="mini-post">
-            <header>
-              <h3>
-                <a href="/post/blogupgrade/">Blog Upgrade</a>
-              </h3>
-              
-              <time class="published" datetime='2020-08-29'>
-                August 29, 2020
               </time>
             </header>
             
