@@ -1,4 +1,4 @@
-IMGTIME := $(shell date "+%G%m%d_%H%M%S")
+IMGTIME := $(shell date --rfc-3339="ns")
 
 
 quick-sync:
