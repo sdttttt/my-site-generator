@@ -12,11 +12,11 @@
 
 文章目录在content下, 您可以删出他们.
 
-个性化的说明在`config.toml`文件中, 你能看到好几份开头为config,后缀名为toml,但是他们的中缀不同, 这是因为他们对应不同的theme, 每个theme的`config.toml`都是不一样的.
+如果您想要更换主题, 请修改`config.toml`中的内容,以及将主题放入`themes`文件夹.
 
 值得注意的是我在我的博客中使用了`Telegram Comment`作为评论系统.
-在fork后如果您想要删除它, 请删除`themes/future/layouts/post/comments.html`中插入comments的JS代码.
-如果您想要继续使用, 请在 **https://comments.app/** 处生成属于你自己的评论脚本.然后更换`themes/future/layouts/post/comments.html`中的代码.
+在fork后, 请删除`themes/future/layouts/post/comments.html`中插入comments的JS代码.
+如果您想要继续使用, 请在 **https://comments.app/** 处生成属于你自己的评论脚本.然后更换上述的代码片段.
 
 配置是简单的, 我不喜欢复杂的东西.
 
