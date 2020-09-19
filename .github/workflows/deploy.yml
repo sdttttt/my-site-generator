@@ -34,3 +34,10 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
+
+      - name: Telegram Noitfy
+        uses: appleboy/telegram-action@master
+        with:
+          to: sdzzzzz
+          token: ${{ secrets.TG_TOKEN }}
+          args: The ${{ github.event_name }} event triggered first step.
