@@ -1,4 +1,14 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SDTTTTT</title><link>https://sdttttt.github.io/</link><description>Recent content on SDTTTTT</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 20 Sep 2020 13:20:06 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>About Gcr</title><link>https://sdttttt.github.io/post/about-gcr/</link><pubDate>Sun, 20 Sep 2020 13:20:06 +0800</pubDate><guid>https://sdttttt.github.io/post/about-gcr/</guid><description>十多天前, 我创建了GCR这个项目, 原因比较纯粹, 我是个命令行工具爱好者, 我认为命令行能带来更好的工作效率以及收益, 我平时编码, 也是遵守Git提交规范的, 使用Node.js平台上的git-cz工具来格式化我的提交信息, 不过由于它属于Node.js这个平台, 不可避免, 你需要安装Node.js的runtime环境.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SDTTTTT</title><link>https://sdttttt.github.io/</link><description>Recent content on SDTTTTT</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 21 Sep 2020 11:29:51 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Sraft (一)</title><link>https://sdttttt.github.io/post/log-2/</link><pubDate>Mon, 21 Sep 2020 11:29:51 +0800</pubDate><guid>https://sdttttt.github.io/post/log-2/</guid><description>今天开始算是正式编写Sraft这个库, 开发的原因有两个:
+我需要通过这次开发来熟悉Raft这个协议.(以后面试或者和人攀谈也更有底气) 我的微服务框架的服务中心需要一个能达成分布式一致性的功能. 语言采用的是Go, 目前的编程模型大概也完成了, 下面我来介绍:
+本人喜欢简单并且高效的设计, 对于设计复杂难以实现的东西会感到不适(脑子不够用),
+Raft Kernel 整个编程模型会有比较多的模块, 整体采用的是微核架构, Raft Kernel会协调各个模块之间的工作.
+模块之间的通信由Raft Kernel来完成. 通信方式采用Channel异步非阻塞的形式.
+Exchange Network 外部通信从这里进入, 由Exchange Network将通信内容封装为事件, 发送给Raft Kernel.
+或者Raft Kernel传递事件给Exchange Network, 再由Exchange Network执行外部通信.
+State Machine Raft协议的核心实现, 状态机会在Leader, Follower, Candidate三种角色之间自动切换, 每一角色处理的事件都是一样的, 但是具体过程是不一样的. (这个部分的密度会比较大)
+Data Log Synchronizer 负责同步数据的模块, 采用的是日志提交形式.
+以上的我目前已经构思出的编程模型, 但是为暂定. 实际的编写模型肯定会有少许修改.
+PROJECT: github.com/sdttttt/sraft</description></item><item><title>About Gcr</title><link>https://sdttttt.github.io/post/about-gcr/</link><pubDate>Sun, 20 Sep 2020 13:20:06 +0800</pubDate><guid>https://sdttttt.github.io/post/about-gcr/</guid><description>十多天前, 我创建了GCR这个项目, 原因比较纯粹, 我是个命令行工具爱好者, 我认为命令行能带来更好的工作效率以及收益, 我平时编码, 也是遵守Git提交规范的, 使用Node.js平台上的git-cz工具来格式化我的提交信息, 不过由于它属于Node.js这个平台, 不可避免, 你需要安装Node.js的runtime环境.
 我想要一种更加方面快速的工具, 所以我建立了GCR这个项目, 它是使用Rust编写的, 不需要安装任何环境, 比起Node, 它会更快, 而且保留了跨平台的特性. 在GCR中我还会加入一些比较个性化的元素. GCR看起来可能会是一个更好用的Git?.
 这个项目可能还需要几个星期的时间, 请期待吧.</description></item><item><title>FAQ</title><link>https://sdttttt.github.io/post/faq/</link><pubDate>Sat, 19 Sep 2020 20:15:53 +0800</pubDate><guid>https://sdttttt.github.io/post/faq/</guid><description>以前一些小白经常问我的问题.
 Q: 我想自己建立一个网站, 我应该使用什么技术?
