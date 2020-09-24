@@ -1,6 +1,29 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Rails on SDTTTTT's Smelly fish Rotten shrimp 📓</title><link>https://sdttttt.github.io/blog/rails/</link><description>Recent content in Rails on SDTTTTT's Smelly fish Rotten shrimp 📓</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Copyright © 2020, SDTTTTT.</copyright><atom:link href="https://sdttttt.github.io/blog/rails/index.xml" rel="self" type="application/rss+xml"/><item><title>Rails Development</title><link>https://sdttttt.github.io/rails-development/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/rails-development/</guid><description>Webpacker Rails 6版本开始依赖Webpacker，在运行之前必须先安装Webpacker这玩意。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rails on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+    <link>https://sdttttt.github.io/blog/rails/</link>
+    <description>Recent content in Rails on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    
+	<atom:link href="https://sdttttt.github.io/blog/rails/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Rails Development</title>
+      <link>https://sdttttt.github.io/rails-development/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://sdttttt.github.io/rails-development/</guid>
+      <description>Webpacker Rails 6版本开始依赖Webpacker，在运行之前必须先安装Webpacker这玩意。
 rails webpacker:install 如果需要安装前端框架，请使用yarn来安装，这样部署的时候能享受到webpacker打包便利。
 production Rails 6 启动时需要一串Key作为加密的salt，key不能随意生成。 生成key时，请删除config下的credentials.enc.yml 和 master.key 文件。 然后运行
 rails credentials:edit 然后Rails访问静态资源，需要使用webpacker打包编译后的资产。 运行
 rails assets:precompile Rails 6 在生产环境下认为你使用 Apache 和 Nginx 缓存编译后的静态资产。如果你不使用他们，需要
-# config/environments/production.rb config.public_file_server.enabled = true 记住，打包之后的js以及css统一叫application.js/css 在view页面引用时需要引用application这个名字。其他的会报错</description></item></channel></rss>
+# config/environments/production.rb config.public_file_server.enabled = true 记住，打包之后的js以及css统一叫application.js/css 在view页面引用时需要引用application这个名字。其他的会报错</description>
+    </item>
+    
+  </channel>
+</rss>

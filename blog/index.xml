@@ -1,205 +1,549 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on SDTTTTT's Smelly fish Rotten shrimp 📓</title><link>https://sdttttt.github.io/blog/</link><description>Recent content in Blogs on SDTTTTT's Smelly fish Rotten shrimp 📓</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Copyright © 2020, SDTTTTT.</copyright><lastBuildDate>Tue, 22 Sep 2020 12:08:44 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>sraft (二)</title><link>https://sdttttt.github.io/sraft-%E4%BA%8C/</link><pubDate>Tue, 22 Sep 2020 12:08:44 +0800</pubDate><guid>https://sdttttt.github.io/sraft-%E4%BA%8C/</guid><description>昨天草草的完成了通信协议适配器, 至少能做到自由切换协议, 纵看整个编程模型还是有缺陷, StateMachine的内部结构比我想的要复杂的多, 多个状态实现的切换,以及对一些内部事件的触发. StateMachine模块的密度和其他模块完全不同. 反而RaftKernel存在的意义却减小了.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Blogs on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+    <link>https://sdttttt.github.io/blog/</link>
+    <description>Recent content in Blogs on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    <lastBuildDate>Tue, 22 Sep 2020 12:08:44 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>sraft (二)</title>
+      <link>https://sdttttt.github.io/sraft-%E4%BA%8C/</link>
+      <pubDate>Tue, 22 Sep 2020 12:08:44 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/sraft-%E4%BA%8C/</guid>
+      <description>昨天草草的完成了通信协议适配器, 至少能做到自由切换协议, 纵看整个编程模型还是有缺陷, StateMachine的内部结构比我想的要复杂的多, 多个状态实现的切换,以及对一些内部事件的触发. StateMachine模块的密度和其他模块完全不同. 反而RaftKernel存在的意义却减小了.
 经过昨天晚上和今早的考虑, 我决定将StateMachine作为一个Slot,接入到RaftKernel中去, RaftKernel现在同时也是状态机本身, Slot是可变的, 可以有Leader, Follower, Candidate三种插槽,每个Slot都有不同的扩展字段, 比如Leader会需要登记每个Node的同步日志的深度以及状态. 并且每个Slot都有自己的事件处理实现.
-没想到第一天开发结束就会遇到麻烦, 看来sraft以后的苦难还不少&amp;hellip;</description></item><item><title>Sraft (一)</title><link>https://sdttttt.github.io/sraft-%E4%B8%80/</link><pubDate>Mon, 21 Sep 2020 11:29:51 +0800</pubDate><guid>https://sdttttt.github.io/sraft-%E4%B8%80/</guid><description>今天开始算是正式编写Sraft这个库, 开发的原因有两个:
-我需要通过这次开发来熟悉Raft这个协议.(以后面试或者和人攀谈也更有底气) 我的微服务框架的服务中心需要一个能达成分布式一致性的功能. 语言采用的是Go, 目前的编程模型大概也完成了, 下面我来介绍:
-本人喜欢简单并且高效的设计, 对于设计复杂难以实现的东西会感到不适(脑子不够用),
-Raft Kernel 整个编程模型会有比较多的模块, 整体采用的是微核架构, Raft Kernel会协调各个模块之间的工作.
+没想到第一天开发结束就会遇到麻烦, 看来sraft以后的苦难还不少&amp;hellip;</description>
+    </item>
+    
+    <item>
+      <title>Sraft (一)</title>
+      <link>https://sdttttt.github.io/sraft-%E4%B8%80/</link>
+      <pubDate>Mon, 21 Sep 2020 11:29:51 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/sraft-%E4%B8%80/</guid>
+      <description>今天开始算是正式编写Sraft这个库, 开发的原因有两个:
+ 我需要通过这次开发来熟悉Raft这个协议.(以后面试或者和人攀谈也更有底气) 我的微服务框架的服务中心需要一个能达成分布式一致性的功能.  语言采用的是Go, 目前的编程模型大概也完成了, 下面我来介绍:
+ 本人喜欢简单并且高效的设计, 对于设计复杂难以实现的东西会感到不适(脑子不够用),
+ Raft Kernel 整个编程模型会有比较多的模块, 整体采用的是微核架构, Raft Kernel会协调各个模块之间的工作.
 模块之间的通信由Raft Kernel来完成. 通信方式采用Channel异步非阻塞的形式.
 Exchange Network 外部通信从这里进入, 由Exchange Network将通信内容封装为事件, 发送给Raft Kernel.
 或者Raft Kernel传递事件给Exchange Network, 再由Exchange Network执行外部通信.
 State Machine Raft协议的核心实现, 状态机会在Leader, Follower, Candidate三种角色之间自动切换, 每一角色处理的事件都是一样的, 但是具体过程是不一样的. (这个部分的密度会比较大)
 Data Log Synchronizer 负责同步数据的模块, 采用的是日志提交形式.
-以上的我目前已经构思出的编程模型, 但是为暂定. 实际的编写模型肯定会有少许修改.
-PROJECT: github.com/sdttttt/sraft</description></item><item><title>About Gcr</title><link>https://sdttttt.github.io/about-gcr/</link><pubDate>Sun, 20 Sep 2020 13:20:06 +0800</pubDate><guid>https://sdttttt.github.io/about-gcr/</guid><description>十多天前, 我创建了GCR这个项目, 原因比较纯粹, 我是个命令行工具爱好者, 我认为命令行能带来更好的工作效率以及收益, 我平时编码, 也是遵守Git提交规范的, 使用Node.js平台上的git-cz工具来格式化我的提交信息, 不过由于它属于Node.js这个平台, 不可避免, 你需要安装Node.js的runtime环境.
+ 以上的我目前已经构思出的编程模型, 但是为暂定. 实际的编写模型肯定会有少许修改.
+PROJECT: github.com/sdttttt/sraft</description>
+    </item>
+    
+    <item>
+      <title>About Gcr</title>
+      <link>https://sdttttt.github.io/about-gcr/</link>
+      <pubDate>Sun, 20 Sep 2020 13:20:06 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/about-gcr/</guid>
+      <description>十多天前, 我创建了GCR这个项目, 原因比较纯粹, 我是个命令行工具爱好者, 我认为命令行能带来更好的工作效率以及收益, 我平时编码, 也是遵守Git提交规范的, 使用Node.js平台上的git-cz工具来格式化我的提交信息, 不过由于它属于Node.js这个平台, 不可避免, 你需要安装Node.js的runtime环境.
 我想要一种更加方面快速的工具, 所以我建立了GCR这个项目, 它是使用Rust编写的, 不需要安装任何环境, 比起Node, 它会更快, 而且保留了跨平台的特性. 在GCR中我还会加入一些比较个性化的元素. GCR看起来可能会是一个更好用的Git?.
-这个项目可能还需要几个星期的时间, 请期待吧.</description></item><item><title>FAQ</title><link>https://sdttttt.github.io/faq/</link><pubDate>Sat, 19 Sep 2020 20:15:53 +0800</pubDate><guid>https://sdttttt.github.io/faq/</guid><description>以前一些小白经常问我的问题.
+这个项目可能还需要几个星期的时间, 请期待吧.</description>
+    </item>
+    
+    <item>
+      <title>FAQ</title>
+      <link>https://sdttttt.github.io/faq/</link>
+      <pubDate>Sat, 19 Sep 2020 20:15:53 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/faq/</guid>
+      <description>以前一些小白经常问我的问题.
 Q: 我想自己建立一个网站, 我应该使用什么技术?
 A: Ruby on Rails.
-ROR是一款老牌的WEBMVC框架, 到现在有10多年的历史了. 在中国, ROR使用的并不多, 这并不能说明它不优秀, ROR拥有非常多的功能模块, 几乎没有ROR做不到的. 论开发效率,ROR绝对能满足你, Ruby这个语言, 如果你有去学过, 会发现他的语法非常的随意. 自己造一个语法Ruby都能支持, 我认为, Ruby是在所有语言中开发体验最好的语言. 良好的开发体验加上优秀的开发效率, ROR是值得你去使用的.
-Q: 我想写一点小工具, 我应该用什么语言?
-A: Python.</description></item><item><title>日志(一)</title><link>https://sdttttt.github.io/%E6%97%A5%E5%BF%97%E4%B8%80/</link><pubDate>Sat, 19 Sep 2020 11:06:17 +0800</pubDate><guid>https://sdttttt.github.io/%E6%97%A5%E5%BF%97%E4%B8%80/</guid><description>目前还是个5月份刚毕业的应届生, 今年还是撞到了疫情这个时间口上, 工作真是相当的难找, 6月到7月的样子, 我去尝试去考驾照, 目前还在科目二这边卡着, 中间有空也是各种找单位去面试.
+ ROR是一款老牌的WEBMVC框架, 到现在有10多年的历史了. 在中国, ROR使用的并不多, 这并不能说明它不优秀, ROR拥有非常多的功能模块, 几乎没有ROR做不到的. 论开发效率,ROR绝对能满足你, Ruby这个语言, 如果你有去学过, 会发现他的语法非常的随意. 自己造一个语法Ruby都能支持, 我认为, Ruby是在所有语言中开发体验最好的语言. 良好的开发体验加上优秀的开发效率, ROR是值得你去使用的.
+ Q: 我想写一点小工具, 我应该用什么语言?
+A: Python.</description>
+    </item>
+    
+    <item>
+      <title>日志(一)</title>
+      <link>https://sdttttt.github.io/%E6%97%A5%E5%BF%97%E4%B8%80/</link>
+      <pubDate>Sat, 19 Sep 2020 11:06:17 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/%E6%97%A5%E5%BF%97%E4%B8%80/</guid>
+      <description>目前还是个5月份刚毕业的应届生, 今年还是撞到了疫情这个时间口上, 工作真是相当的难找, 6月到7月的样子, 我去尝试去考驾照, 目前还在科目二这边卡着, 中间有空也是各种找单位去面试.
 比较幸运, 我在8月初的时候收到了来自安恒信息的面试通知, 他们是一家上市公司, 规模也不小, 我也是被别人内推才有这个面试资格的, 面试一共三轮, 前两轮技术面试, 最后一轮综合面试, 第一轮技术面试大概就是问了我一些JVM原理, 以及编码思路, 还有一些我比较擅长的分布式存储的问题. 第一轮过的呢也还算惊险. 第二轮是在几天后, 问的内容基本上是一些JDK源码, 数据结构, 还有一些框架问题.我回答的还算是流畅, 也算是过了.可惜,最后一轮面试之前,因为安恒不招收985,211以外的应届生, 所以我被淘汰了.
 后面每天在晚上投简历, 大概在一个月后, 又有新的面试来了, 一家叫做郦鸣科技的公司, 面试官问的都是一些业务处理逻辑, 身为应届生的我也是吃了亏, 因为我根本没有实际的工作经验. 不过我还是以试用生的身份进去了.
 新人入职第一天就是先把公司项目的代码过一边, 看了他们公司的代码之后, 说实话, 我非常失望, 复杂的对象关系结构, 长冗的控制器函数, 以及空空如也的test文件夹, 我不知道他们的项目能维护多长时间, 可能是我的想法太极端了, 大学时的我就开始受到马丁福勒的软件设计思想的影响, 对维护性差的代码变得敏感起来. 我边读他们的代码, 边重构着. 就这样过了一个星期.
 在这周里, 我还收到了来自电信和一家电子交易公司的面试通知, 我很高兴, 因为我对现在的工作并不感到满足, 在周五, 我请了假, 去面试, 电信这边很顺利, 面试官和我说, 他喜欢我的开源项目, 并且对我的CICD技术感兴趣, 而且他也不关心我的学历, 我真的很高兴.不过在录用之前,面试官说得先和上级汇报, 因为录不录用不是他能决定的.
-下午, 我去了那家电子交易公司面试, 不过应届生在他们公司面试之前得先做试卷, 内容是关于Java的, 我有点吃惊, 不过我也发现了, 对于一些java代码的运行细节我还了解的不够清楚, 在这里又发现了自己的缺点, 我感到很满足. 试卷完成后, 就是面谈了, 面试官看起来接近30岁, 他先问了我的开源项目的问题, 接着是一些Java基础的问题, 最后又考了考我的业务能力, 他出了一个秒杀题, 我回答的并不算好, 应该只答对了一半.</description></item><item><title>MyBatis 源码分析</title><link>https://sdttttt.github.io/mybatis-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link><pubDate>Thu, 10 Sep 2020 22:15:42 +0800</pubDate><guid>https://sdttttt.github.io/mybatis-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid><description>其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
+下午, 我去了那家电子交易公司面试, 不过应届生在他们公司面试之前得先做试卷, 内容是关于Java的, 我有点吃惊, 不过我也发现了, 对于一些java代码的运行细节我还了解的不够清楚, 在这里又发现了自己的缺点, 我感到很满足. 试卷完成后, 就是面谈了, 面试官看起来接近30岁, 他先问了我的开源项目的问题, 接着是一些Java基础的问题, 最后又考了考我的业务能力, 他出了一个秒杀题, 我回答的并不算好, 应该只答对了一半.</description>
+    </item>
+    
+    <item>
+      <title>MyBatis 源码分析</title>
+      <link>https://sdttttt.github.io/mybatis-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
+      <pubDate>Thu, 10 Sep 2020 22:15:42 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/mybatis-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
+      <description>其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
 Init 现在开始正片.
 首先是 iBatis 的初始化工作.我们看下面的代码:
 // `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&amp;#34;development&amp;#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
-// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行 public &amp;lt;T&amp;gt; void addMapper(Class&amp;lt;T&amp;gt; type) { mapperRegistry.</description></item><item><title>GoSyncPool</title><link>https://sdttttt.github.io/gosyncpool/</link><pubDate>Thu, 03 Sep 2020 17:06:04 +0800</pubDate><guid>https://sdttttt.github.io/gosyncpool/</guid><description>今天在看Sentinel-golang源码的时候发现sentinel在内部使用了sync.Pool该结构体.看到Sync和Pool的我第一反应想到应该是线程池之类的东西.在实际看过原理之后发现并不是这样的.
-sync.Pool 的目的是为了利用对象的复用来减小GC压力.但是开销比较高.要斟酌使用.
+// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &amp;lt;T&amp;gt; void addMapper(Class&amp;lt;T&amp;gt; type) { mapperRegistry.</description>
+    </item>
+    
+    <item>
+      <title>GoSyncPool</title>
+      <link>https://sdttttt.github.io/gosyncpool/</link>
+      <pubDate>Thu, 03 Sep 2020 17:06:04 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/gosyncpool/</guid>
+      <description>今天在看Sentinel-golang源码的时候发现sentinel在内部使用了sync.Pool该结构体.看到Sync和Pool的我第一反应想到应该是线程池之类的东西.在实际看过原理之后发现并不是这样的.
+ sync.Pool 的目的是为了利用对象的复用来减小GC压力.但是开销比较高.要斟酌使用.
 Pool和golang的GMP协程模型的关系比较大. sync.Pool对每一个P(系统线程)都分配了一个本地池.
 本地池中有2个属性，分别是private和share。 private只能被当前P访问，share可以被不同的P访问.
 在执行Get or Put的时候.会对应当前执行P的本地池.
-Get 尝试从本地P对应的那个本地池中获取一个对象值, 并从本地池冲删除该值。 如果获取失败，那么从共享池中获取, 并从共享队列中删除该值。 如果获取失败，那么从其他P的共享池中偷一个过来，并删除共享池中的该值(p.getSlow())。 如果仍然失败，那么直接通过New()分配一个返回值，注意这个分配的值不会被放入池中。New()返回用户注册的New函数的值，如果用户未注册New，那么返回nil。 Put 如果放入的值为空，直接return. 检查当前goroutine的是否设置对象池私有值，如果没有则将x赋值给其私有成员，并将x设置为nil。 如果当前goroutine私有值已经被设置，那么将该值追加到共享列表。</description></item><item><title>B Tree</title><link>https://sdttttt.github.io/b-tree/</link><pubDate>Sun, 30 Aug 2020 20:41:54 +0800</pubDate><guid>https://sdttttt.github.io/b-tree/</guid><description>这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B+树.
+Get  尝试从本地P对应的那个本地池中获取一个对象值, 并从本地池冲删除该值。 如果获取失败，那么从共享池中获取, 并从共享队列中删除该值。 如果获取失败，那么从其他P的共享池中偷一个过来，并删除共享池中的该值(p.getSlow())。 如果仍然失败，那么直接通过New()分配一个返回值，注意这个分配的值不会被放入池中。New()返回用户注册的New函数的值，如果用户未注册New，那么返回nil。  Put  如果放入的值为空，直接return. 检查当前goroutine的是否设置对象池私有值，如果没有则将x赋值给其私有成员，并将x设置为nil。 如果当前goroutine私有值已经被设置，那么将该值追加到共享列表。  </description>
+    </item>
+    
+    <item>
+      <title>B Tree</title>
+      <link>https://sdttttt.github.io/b-tree/</link>
+      <pubDate>Sun, 30 Aug 2020 20:41:54 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/b-tree/</guid>
+      <description>这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B+树.
 试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
 数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
 哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.
 二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.
 B Tree B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量+1.
 在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.
-Rules 排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.
-子节点数：非叶节点的子节点数&amp;gt;1，且&amp;lt;=M ，且M&amp;gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；
-关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);
-所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;
-Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&amp;gt;B&amp;gt;A):
+Rules   排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.
+  子节点数：非叶节点的子节点数&amp;gt;1，且&amp;lt;=M ，且M&amp;gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；
+  关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);
+  所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;
+  Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&amp;gt;B&amp;gt;A):
 如上图我要从上图中找到E字母，查找流程如下:
-获取根节点的关键字进行比较，当前根节点关键字为M，E&amp;lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；
-拿到关键字D和G，D&amp;lt;E&amp;lt;G 所以直接找到D和G中间的节点；
-拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null).</description></item><item><title>Blog Upgrade</title><link>https://sdttttt.github.io/blog-upgrade/</link><pubDate>Sat, 29 Aug 2020 18:07:48 +0800</pubDate><guid>https://sdttttt.github.io/blog-upgrade/</guid><description>这几天修改了这个Blog的主题, 加载速度应该是更快了, 而且优化了整个项目的自动部署. 取消了双仓库的部署策略, 在部署任务的执行上也用上了异步.
-现在每次修改完成后的生成以及部署的速度比以前快了大概40%左右.但是访问Github Page的速度还是一如既往的的满.</description></item><item><title>Thread Pool Executor 运行细节</title><link>https://sdttttt.github.io/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/</link><pubDate>Tue, 25 Aug 2020 17:29:15 +0800</pubDate><guid>https://sdttttt.github.io/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/</guid><description>先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.
+  获取根节点的关键字进行比较，当前根节点关键字为M，E&amp;lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；
+  拿到关键字D和G，D&amp;lt;E&amp;lt;G 所以直接找到D和G中间的节点；
+  拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null).</description>
+    </item>
+    
+    <item>
+      <title>Blog Upgrade</title>
+      <link>https://sdttttt.github.io/blog-upgrade/</link>
+      <pubDate>Sat, 29 Aug 2020 18:07:48 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog-upgrade/</guid>
+      <description>这几天修改了这个Blog的主题, 加载速度应该是更快了, 而且优化了整个项目的自动部署. 取消了双仓库的部署策略, 在部署任务的执行上也用上了异步.
+现在每次修改完成后的生成以及部署的速度比以前快了大概40%左右.但是访问Github Page的速度还是一如既往的的满.</description>
+    </item>
+    
+    <item>
+      <title>Thread Pool Executor 运行细节</title>
+      <link>https://sdttttt.github.io/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/</link>
+      <pubDate>Tue, 25 Aug 2020 17:29:15 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/</guid>
+      <description>先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.
 ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:
-public ThreadPoolExecutor(int corePoolSize, // 核心线程数量 int maximumPoolSize, // 最大线程数量 long keepAliveTime, // 存活时间 TimeUnit unit, // 时间单位 BlockingQueue&amp;lt;Runnable&amp;gt; workQueue // 来个列队 ) { this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler); } 提交任务时的运行如下:
-如果正在运行的线程数 &amp;lt; coreSize，马上创建线程执行该task，不排队等待； 如果正在运行的线程数 &amp;gt;= coreSize，把该task放入阻塞队列； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;lt; maximumPoolSize，创建新的线程执行该task； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。 从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。</description></item><item><title>Raft实现的思考</title><link>https://sdttttt.github.io/raft%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%80%9D%E8%80%83/</link><pubDate>Thu, 25 Jun 2020 19:02:23 +0800</pubDate><guid>https://sdttttt.github.io/raft%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%80%9D%E8%80%83/</guid><description>比较Raft算法和Paxos算法之后,确实能感受到Raft算法更加接近正常人的思维逻辑, Paxos反而比较专业?
+public ThreadPoolExecutor(int corePoolSize, // 核心线程数量  int maximumPoolSize, // 最大线程数量  long keepAliveTime, // 存活时间  TimeUnit unit, // 时间单位  BlockingQueue&amp;lt;Runnable&amp;gt; workQueue // 来个列队  ) { this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler); } 提交任务时的运行如下:
+ 如果正在运行的线程数 &amp;lt; coreSize，马上创建线程执行该task，不排队等待； 如果正在运行的线程数 &amp;gt;= coreSize，把该task放入阻塞队列； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;lt; maximumPoolSize，创建新的线程执行该task； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。 从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。  </description>
+    </item>
+    
+    <item>
+      <title>Raft实现的思考</title>
+      <link>https://sdttttt.github.io/raft%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%80%9D%E8%80%83/</link>
+      <pubDate>Thu, 25 Jun 2020 19:02:23 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/raft%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%80%9D%E8%80%83/</guid>
+      <description>比较Raft算法和Paxos算法之后,确实能感受到Raft算法更加接近正常人的思维逻辑, Paxos反而比较专业?
 本文会说一些Raft算法实现上的一些考量, 我目前还没有正式开始开发Raft的实现. 文中所有的内容仅供参考.
 Raft最基础分为三种状态: Leader, Follower, Candidate. 整个Raft主体即是一个状态机.
 每个RaftNode都需要处理外部的事件.所以我们可以采用事件驱动模型.
 整体我们可以拆分为三个部分:
-RaftProcessor: 处理事件的处理器. EventDispatcher: 负责接收外部任务,发送给Raft本体, 或者接收Raft本体发来的事件,向外发布. LogSynchronizer: 同步LogBuffer中的日志到Raft本体. 三个部分可以使用Channel来到达互相通信.</description></item><item><title>Kanon</title><link>https://sdttttt.github.io/kanon/</link><pubDate>Fri, 12 Jun 2020 17:09:04 +0800</pubDate><guid>https://sdttttt.github.io/kanon/</guid><description>有一段时间没有玩过GALGAME了.
+ RaftProcessor: 处理事件的处理器. EventDispatcher: 负责接收外部任务,发送给Raft本体, 或者接收Raft本体发来的事件,向外发布. LogSynchronizer: 同步LogBuffer中的日志到Raft本体.  三个部分可以使用Channel来到达互相通信.</description>
+    </item>
+    
+    <item>
+      <title>Kanon</title>
+      <link>https://sdttttt.github.io/kanon/</link>
+      <pubDate>Fri, 12 Jun 2020 17:09:04 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/kanon/</guid>
+      <description>有一段时间没有玩过GALGAME了.
 所以就去尝试玩了Kanon.
-总之就是, 非常后悔.</description></item><item><title>Database Storage</title><link>https://sdttttt.github.io/database-storage/</link><pubDate>Tue, 02 Jun 2020 19:51:50 +0800</pubDate><guid>https://sdttttt.github.io/database-storage/</guid><description>CMU Database System 15-445/645 储存 Part 1
+总之就是, 非常后悔.</description>
+    </item>
+    
+    <item>
+      <title>Database Storage</title>
+      <link>https://sdttttt.github.io/database-storage/</link>
+      <pubDate>Tue, 02 Jun 2020 19:51:50 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/database-storage/</guid>
+      <description>CMU Database System 15-445/645 储存 Part 1
 数据库存储的数据在 FS(File System) 中是以 块(Block) 的方式表示的.
 实际上你很可能已经见到过了,在MySQL中的数据库就是以一切Block文件的方式存储的.
 这篇文章会告诉你目前常见的数据库存储方式.
-最开始用Tuple Storage来尝试改善数据库的存储结构.
+ 最开始用Tuple Storage来尝试改善数据库的存储结构.
 它的工作原理比较简单, 每一个Page维护一个Header, Header中会包含一些Page的元数据,以及被存储数据的偏移值.
 每当插入一个Tuple,我们就会Update Header中的偏移值.
 这个设计中存在比较大的问题, 如果我们删除了底下Tuple,就不得不移动所有Tuple. 如果不移动数据, 那我们也要花费高昂的代价去维护Header中Page的meta数据.
-目前最常见的就是Slotted Pages的方式去存储数据. 在不同数据库中的实现细节可能不同,但是从高级层面来讲,大多数数据库系统, 用的都是这种方式去存储数据.
+ 目前最常见的就是Slotted Pages的方式去存储数据. 在不同数据库中的实现细节可能不同,但是从高级层面来讲,大多数数据库系统, 用的都是这种方式去存储数据.
 每个Page中有三个部分:
-Header: 保存最基本的matedata, 还包含一些checksum和访问时间之类的. SlotArray: 将每一个特定的Slot映射到对应Tuple的偏移值上. TupleArray: 储存每一个Tuple. 在这个结构中Header后面紧接这SoltArray, 而Tuple是从Page的尾部开始存储的. 每个Page存储的Tuple的个数是固定的.
+ Header: 保存最基本的matedata, 还包含一些checksum和访问时间之类的. SlotArray: 将每一个特定的Slot映射到对应Tuple的偏移值上. TupleArray: 储存每一个Tuple.  在这个结构中Header后面紧接这SoltArray, 而Tuple是从Page的尾部开始存储的. 每个Page存储的Tuple的个数是固定的.
 如果Tuple被删除,我们也只需要删除固定的Solt就行. 空出来的空间碎片,可以由数据库的空间整理功能去完成. 维护每个Tuple的成本也比较小.只需要改变Solt就可以.
-最后讲一个Demo来演示数据库的工作过程.
-假如我想要找一个叫A的人,我会先去查找索引. 从索引里我知道A的Page是123, Solt是2. 我去找管理Pages的人,让他把Page123的指针给我, 然后拿着Page的指针,找到Solt2中的偏移地址,找到了A这个人.</description></item><item><title>Red Black Tree</title><link>https://sdttttt.github.io/red-black-tree/</link><pubDate>Mon, 25 May 2020 19:27:28 +0800</pubDate><guid>https://sdttttt.github.io/red-black-tree/</guid><description>半年前在研究HashMap的时候已经学习过红黑树的规则原理了. 不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的) 这次就把这个数据结构做一个了断.
-性质 性质1：每个节点要么是黑色，要么是红色。 性质2：根节点是黑色。 性质3：每个叶子节点（NIL）是黑色。 性质4：每个红色结点的两个子结点一定都是黑色。 性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。 满足这5个性质就能保证红黑树是平衡的.
+ 最后讲一个Demo来演示数据库的工作过程.
+假如我想要找一个叫A的人,我会先去查找索引. 从索引里我知道A的Page是123, Solt是2. 我去找管理Pages的人,让他把Page123的指针给我, 然后拿着Page的指针,找到Solt2中的偏移地址,找到了A这个人.</description>
+    </item>
+    
+    <item>
+      <title>Red Black Tree</title>
+      <link>https://sdttttt.github.io/red-black-tree/</link>
+      <pubDate>Mon, 25 May 2020 19:27:28 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/red-black-tree/</guid>
+      <description>半年前在研究HashMap的时候已经学习过红黑树的规则原理了. 不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的) 这次就把这个数据结构做一个了断.
+性质  性质1：每个节点要么是黑色，要么是红色。 性质2：根节点是黑色。 性质3：每个叶子节点（NIL）是黑色。 性质4：每个红色结点的两个子结点一定都是黑色。 性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。  满足这5个性质就能保证红黑树是平衡的.
 Insert 插入的节点默认是红色的.因为这样可以最大限度满足红黑树的5个性质.
 请试想一下.如果插入的节点是红色:
-性质1可以满足. 性质2可以满足. 性质3可以满足(插入红色节点后自动衍生出2个黑色的NIL节点). 性质4可能没法满足(新插入的节点的父节点也是红色). 性质5可能没法满足(父节点是黑色时就不行). 然后是红黑树节点的左右旋.
+ 性质1可以满足. 性质2可以满足. 性质3可以满足(插入红色节点后自动衍生出2个黑色的NIL节点). 性质4可能没法满足(新插入的节点的父节点也是红色). 性质5可能没法满足(父节点是黑色时就不行).  然后是红黑树节点的左右旋.
 看懂没? 节点的旋转大概就是这样。
 然后就是要分插入的情况了.
-第一种：根节点为空。这种情况，将node的颜色改为黑色即可.
-第二种: node的父节点为黑色。这种情况不需要做修改.
-第三种: node的父节点为红色 (根据性质3，N的祖父节点必为黑色). 这种情况和变换规则都比较多.下面细说&amp;hellip;
-node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树. node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋) node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。 Delete 这个以后再说.
-Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的。</description></item><item><title>Tree by Rust implement</title><link>https://sdttttt.github.io/tree-by-rust-implement/</link><pubDate>Wed, 20 May 2020 19:14:33 +0800</pubDate><guid>https://sdttttt.github.io/tree-by-rust-implement/</guid><description/></item><item><title>Stack by Rust implement</title><link>https://sdttttt.github.io/stack-by-rust-implement/</link><pubDate>Wed, 20 May 2020 19:01:23 +0800</pubDate><guid>https://sdttttt.github.io/stack-by-rust-implement/</guid><description/></item><item><title>GFS</title><link>https://sdttttt.github.io/gfs/</link><pubDate>Sat, 09 May 2020 13:00:00 +0000</pubDate><guid>https://sdttttt.github.io/gfs/</guid><description>这是 MIT 6.824 课程GFS部分的一些总结.
+  第一种：根节点为空。这种情况，将node的颜色改为黑色即可.
+  第二种: node的父节点为黑色。这种情况不需要做修改.
+  第三种: node的父节点为红色 (根据性质3，N的祖父节点必为黑色). 这种情况和变换规则都比较多.下面细说&amp;hellip;
+ node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树.   node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋)   node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。    Delete 这个以后再说.
+Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的。</description>
+    </item>
+    
+    <item>
+      <title>Tree by Rust implement</title>
+      <link>https://sdttttt.github.io/tree-by-rust-implement/</link>
+      <pubDate>Wed, 20 May 2020 19:14:33 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/tree-by-rust-implement/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Stack by Rust implement</title>
+      <link>https://sdttttt.github.io/stack-by-rust-implement/</link>
+      <pubDate>Wed, 20 May 2020 19:01:23 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/stack-by-rust-implement/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GFS</title>
+      <link>https://sdttttt.github.io/gfs/</link>
+      <pubDate>Sat, 09 May 2020 13:00:00 +0000</pubDate>
+      
+      <guid>https://sdttttt.github.io/gfs/</guid>
+      <description>这是 MIT 6.824 课程GFS部分的一些总结.
 GFS (Google File System) 是Google为了管理海量数据而开发的一个分布式文件系统.
 直接进入正题.
 在GFS中文件是以Chunk的形式存储。所谓的Chunk是一个储存块。一个Chunk的大小为64MB.一个文件会分为多个Chunk.储存在不同的服务器里。当然也会有2-3份Chunk的拷贝。
 GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一张表中。
 下面简单的解释一下读操作的交互。
-Client指定的文件名和字节偏移转换成文件的一个块索引（Chunk Index）。 给Master发送一个包含文件名和块索引的请求。 master回应对应的Chunk Handle(存储数据服务器以Chunk Handle标识Chunk)和副本的位置（多个副本）。 Client以文件名和块索引为键缓存这些信息。（handle和副本的位置） Client向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了Chunk Handle和块内的一个字节区间。 除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。</description></item><item><title>一致性哈希算法</title><link>https://sdttttt.github.io/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</link><pubDate>Mon, 27 Apr 2020 10:05:10 +0800</pubDate><guid>https://sdttttt.github.io/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</guid><description>第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
+ Client指定的文件名和字节偏移转换成文件的一个块索引（Chunk Index）。 给Master发送一个包含文件名和块索引的请求。 master回应对应的Chunk Handle(存储数据服务器以Chunk Handle标识Chunk)和副本的位置（多个副本）。 Client以文件名和块索引为键缓存这些信息。（handle和副本的位置） Client向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了Chunk Handle和块内的一个字节区间。 除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。  </description>
+    </item>
+    
+    <item>
+      <title>一致性哈希算法</title>
+      <link>https://sdttttt.github.io/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 27 Apr 2020 10:05:10 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</guid>
+      <description>第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
 第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播&amp;hellip;&amp;hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。
 第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.
 算法背景 一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了 解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希 算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。
 但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 memcached 缓存数据库的人都知道, memcached 服务器端本身不提供分布式 Cache 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:
-首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
-然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
-然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
-从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化 而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向 的第一台服务器上的键会受到影响。
-性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。 在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。</description></item><item><title>File Upload</title><link>https://sdttttt.github.io/file-upload/</link><pubDate>Sun, 12 Apr 2020 10:46:06 +0800</pubDate><guid>https://sdttttt.github.io/file-upload/</guid><description>DVWA File upload 过关秘籍.
-LOW if( isset( $_POST[ &amp;#39;Upload&amp;#39; ] ) ) { // Where are we going to be writing to? $target_path = DVWA_WEB_PAGE_TO_ROOT . &amp;#34;hackable/uploads/&amp;#34;; $target_path .= basename( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;name&amp;#39; ] ); // Can we move the file to the upload folder? // 完全没做过滤. // 上传一个PHP文件也是可以的. if( !move_uploaded_file( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;tmp_name&amp;#39; ], $target_path ) ) { // No echo &amp;#39;&amp;lt;pre&amp;gt;Your image was not uploaded.&amp;lt;/pre&amp;gt;&amp;#39;; } else { // Yes!</description></item><item><title>Sql Injection Blind</title><link>https://sdttttt.github.io/sql-injection-blind/</link><pubDate>Fri, 10 Apr 2020 11:11:22 +0800</pubDate><guid>https://sdttttt.github.io/sql-injection-blind/</guid><description>返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+  首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
+  然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
+  然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
+  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化 而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向 的第一台服务器上的键会受到影响。
+性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。 在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。</description>
+    </item>
+    
+    <item>
+      <title>File Upload</title>
+      <link>https://sdttttt.github.io/file-upload/</link>
+      <pubDate>Sun, 12 Apr 2020 10:46:06 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/file-upload/</guid>
+      <description>DVWA File upload 过关秘籍.
+LOW if( isset( $_POST[ &amp;#39;Upload&amp;#39; ] ) ) { // Where are we going to be writing to? $target_path = DVWA_WEB_PAGE_TO_ROOT . &amp;#34;hackable/uploads/&amp;#34;; $target_path .= basename( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;name&amp;#39; ] ); // Can we move the file to the upload folder? // 完全没做过滤. // 上传一个PHP文件也是可以的. if( !move_uploaded_file( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;tmp_name&amp;#39; ], $target_path ) ) { // No echo &amp;#39;&amp;lt;pre&amp;gt;Your image was not uploaded.&amp;lt;/pre&amp;gt;&amp;#39;; } else { // Yes!</description>
+    </item>
+    
+    <item>
+      <title>Sql Injection Blind</title>
+      <link>https://sdttttt.github.io/sql-injection-blind/</link>
+      <pubDate>Fri, 10 Apr 2020 11:11:22 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/sql-injection-blind/</guid>
+      <description>返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
 DVWA SQL Injection blind 过关秘籍.
-Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input $id = $_GET[ &amp;#39;id&amp;#39; ]; // Check database $getid = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,2 # &amp;#39;; // User ID exists in the database. &amp;lt;存在注入漏洞&amp;gt; // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,if(length( database())=4,sleep(4),2) # &amp;#39;; $result = mysql_query( $getid ); // Removed &amp;#39;or die&amp;#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &amp;#39;@&amp;#39; character suppresses errors if( $num &amp;gt; 0 ) { // Feedback for end user echo &amp;#39;&amp;lt;pre&amp;gt;User ID exists in the database.</description></item><item><title>SQL Injection</title><link>https://sdttttt.github.io/sql-injection/</link><pubDate>Fri, 10 Apr 2020 10:54:47 +0800</pubDate><guid>https://sdttttt.github.io/sql-injection/</guid><description>DVWA SQL Injection 过关秘籍.
-LOW if( isset( $_REQUEST[ &amp;#39;Submit&amp;#39; ] ) ) { // Get input $id = $_REQUEST[ &amp;#39;id&amp;#39; ]; // Check database $query = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 并没有做什么注入防护 // 尝试构造： // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=1; // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=2; // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; or 1=1; $result = mysql_query( $query ) or die( &amp;#39;&amp;lt;pre&amp;gt;&amp;#39; .</description></item><item><title>The Framework a good design?</title><link>https://sdttttt.github.io/the-framework-a-good-design/</link><pubDate>Mon, 06 Apr 2020 23:34:30 +0800</pubDate><guid>https://sdttttt.github.io/the-framework-a-good-design/</guid><description>我第一次听到框架这个概念已经是在大学的时候了，当时我的老师和我提起。 一开始我非常不习惯在我不熟悉的上下文中编写程序的感觉。只能用四个字来形容寸步难行。
+Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input $id = $_GET[ &amp;#39;id&amp;#39; ]; // Check database $getid = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,2 # &amp;#39;; // User ID exists in the database. &amp;lt;存在注入漏洞&amp;gt; // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,if(length( database())=4,sleep(4),2) # &amp;#39;; $result = mysql_query( $getid ); // Removed &amp;#39;or die&amp;#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &amp;#39;@&amp;#39; character suppresses errors if( $num &amp;gt; 0 ) { // Feedback for end user echo &amp;#39;&amp;lt;pre&amp;gt;User ID exists in the database.</description>
+    </item>
+    
+    <item>
+      <title>SQL Injection</title>
+      <link>https://sdttttt.github.io/sql-injection/</link>
+      <pubDate>Fri, 10 Apr 2020 10:54:47 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/sql-injection/</guid>
+      <description>DVWA SQL Injection 过关秘籍.
+LOW if( isset( $_REQUEST[ &amp;#39;Submit&amp;#39; ] ) ) { // Get input $id = $_REQUEST[ &amp;#39;id&amp;#39; ]; // Check database $query = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 并没有做什么注入防护 // 尝试构造： // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=1; // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=2; // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; or 1=1; $result = mysql_query( $query ) or die( &amp;#39;&amp;lt;pre&amp;gt;&amp;#39; .</description>
+    </item>
+    
+    <item>
+      <title>The Framework a good design?</title>
+      <link>https://sdttttt.github.io/the-framework-a-good-design/</link>
+      <pubDate>Mon, 06 Apr 2020 23:34:30 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/the-framework-a-good-design/</guid>
+      <description>我第一次听到框架这个概念已经是在大学的时候了，当时我的老师和我提起。 一开始我非常不习惯在我不熟悉的上下文中编写程序的感觉。只能用四个字来形容寸步难行。
 过了一段时间后，当你熟悉里这个框架提前为你所做的一切的时候，一切只能用四个字来形容素巴拉细（美妙）。
 后来，我接触了各种形形色色的框架，从PHP到Java.
 最让我惊叹的莫过于SpringBoot, 它几乎为你准备好了你所需要的一切，如果你需要其他的，也能非常容易的引入进来， 任何框架以及库都能和Spring完美的结合在一起。Spring的可扩展性是我见过所有框架中最棒的！（它的核心理念就是IOC），不得不赞叹Spring是应用层的完美产物。（Spring无法被其他语言模仿和Java的万物对象的理念有很大关系）
-曾经的软件工程师没有这样的待遇，他们往往是从头构建起他们的应用。 这使得成为软件工程师这一职业难以企及。
+ 曾经的软件工程师没有这样的待遇，他们往往是从头构建起他们的应用。 这使得成为软件工程师这一职业难以企及。
 由于如今软件行业的变化，软件工程师们已经不能仅仅只在底层工作了，应用层的发展也突飞猛进。 各种软件架构的出现应接不暇。
 框架最初是为了解决重复而复杂的工作而诞生出来的产物。 帮助我们不必再写重复的代码，只需要关心业务逻辑。
 框架可以说是为了应用层的软件工程师而设计的。他们往往不会关心更细粒度的工作。他们只追求稳定的应用和企业架构。
-To be continued&amp;hellip;</description></item><item><title>SS:SP鸡你太美存器</title><link>https://sdttttt.github.io/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</link><pubDate>Mon, 06 Apr 2020 16:38:01 +0800</pubDate><guid>https://sdttttt.github.io/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</guid><description>如今的CPU都有提供栈机制，8086也不例外。
+To be continued&amp;hellip;</description>
+    </item>
+    
+    <item>
+      <title>SS:SP鸡你太美存器</title>
+      <link>https://sdttttt.github.io/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</link>
+      <pubDate>Mon, 06 Apr 2020 16:38:01 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</guid>
+      <description>如今的CPU都有提供栈机制，8086也不例外。
 8086提供的最基本的两个指令就是push and pop.
 push ax ;将寄存器ax中的数据送入栈顶 pop ax ;将栈顶的数据送入ax 我们知道CS:IP寄存器存放了下一条指令的段地址和偏移地址，那么CPU是如何知道栈顶在哪呐？ 显然也有两个寄存器专门存放栈顶的地址，那就是SS:SP寄存器，SS = 段地址， SP = 偏移地址
 任意时刻，SS:SP都指向栈顶元素。push和pop指令执行时CPU将从SS和SP中获得栈顶的地址。
 push 有2步:
-SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置. 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| 1000EH |__23___| &amp;lt;= SS:SP 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| &amp;lt;= SS:SP: 换个位置 |_______| 1000EH |__23___| 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| ;来自ax寄存器的数据 |__54___| &amp;lt;= SS:SP: 换个位置 |__11___| 1000EH |__23___| 1000FH |__01___| 假设 10000H -&amp;gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？</description></item><item><title>CSIP鸡你太美存器</title><link>https://sdttttt.github.io/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</link><pubDate>Mon, 06 Apr 2020 15:35:44 +0800</pubDate><guid>https://sdttttt.github.io/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</guid><description>之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
+ SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置.  10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| 1000EH |__23___| &amp;lt;= SS:SP 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| &amp;lt;= SS:SP: 换个位置 |_______| 1000EH |__23___| 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| ;来自ax寄存器的数据 |__54___| &amp;lt;= SS:SP: 换个位置 |__11___| 1000EH |__23___| 1000FH |__01___|  假设 10000H -&amp;gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？</description>
+    </item>
+    
+    <item>
+      <title>CSIP鸡你太美存器</title>
+      <link>https://sdttttt.github.io/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</link>
+      <pubDate>Mon, 06 Apr 2020 15:35:44 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</guid>
+      <description>之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
 CS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 + N 处读取指令并进行。
 也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.
 执行流程:
-初始状态: CS = 2000H, IP = 0000H CS:IP 内容送入地址加法器，2000H × 16 + 0000H = 20000H 地址加法器计算出物理地址20000H后将结果送入输入输出电路. 输入输出电路将物理地址20000H送到地址总线。 内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU. 输入输出电路将机器指令X送入指令缓冲器。 寄存器IP的值自动增加。 以此类推&amp;hellip; 当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。
+ 初始状态: CS = 2000H, IP = 0000H CS:IP 内容送入地址加法器，2000H × 16 + 0000H = 20000H 地址加法器计算出物理地址20000H后将结果送入输入输出电路. 输入输出电路将物理地址20000H送到地址总线。 内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU. 输入输出电路将机器指令X送入指令缓冲器。 寄存器IP的值自动增加。 以此类推&amp;hellip;   当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。
 修改CS:IP mov指令能帮我们将值送入寄存器。但是，它不能用于修改CS:IP，原因很简单8086出于设计考量不允许。 能修改CS:IP的指令统称为转移指令（以后我们深入研究）,现在我学习第一个可以修改CS:IP寄存器的指令，jmp.
 若想同时修改CS:IP寄存器,可以用jmp 段地址, 偏移地址的指令来完成。
 jmp 2AE3:3 ;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令 如果只想修改IP寄存器, 可以用jmp 寄存器的指令来完成.
-jmp ax 类似, mov IP, ax</description></item><item><title>MultiplexingIO</title><link>https://sdttttt.github.io/multiplexingio/</link><pubDate>Mon, 06 Apr 2020 12:42:26 +0800</pubDate><guid>https://sdttttt.github.io/multiplexingio/</guid><description>其实“I/O多路复用”这个坑爹翻译可能是这个概念在中文里面如此难理解的原因。所谓的I/O多路 复用在英文中其实叫 I/O multiplexing. 如果你搜索multiplexing啥意思,基本上都会出这个图:
+jmp ax 类似, mov IP, ax</description>
+    </item>
+    
+    <item>
+      <title>MultiplexingIO</title>
+      <link>https://sdttttt.github.io/multiplexingio/</link>
+      <pubDate>Mon, 06 Apr 2020 12:42:26 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/multiplexingio/</guid>
+      <description>其实“I/O多路复用”这个坑爹翻译可能是这个概念在中文里面如此难理解的原因。所谓的I/O多路 复用在英文中其实叫 I/O multiplexing. 如果你搜索multiplexing啥意思,基本上都会出这个图:
 于是大部分人都直接联想到&amp;quot;一根网线,多个sock复用&amp;rdquo; 这个概念,包括上面的几个回答, 其实不 管你用多进程还是I/O多路复用, 网线都只有一根好伐。多个Sock复用一根网线这个功能是在内核 +驱动层实现的.
 重要的事情再说一遍: I/O multiplexing 这里面的 multiplexing 指的其实是在单个线程通过记 录跟踪每一个Sock(I/O流)的状态(对应空管塔里面的Fight progress strip槽)来同时管理多个I/O 流. 发明它的原因,是尽量多的提高服务器的吞吐能力。
 是不是听起来好拗口,看个图就懂了.
 在同一个线程里面, 通过拨开关的方式,来同时传输多个I/O流, (学过EE的人现在可以站出来义正 严辞说这个叫“时分复用”了)。
 什么,你还没有搞懂 “一个请求到来了,nginx使用epoll接收请求的过程是怎样的”, 多看看这个 图就了解了。提醒下,ngnix会有很多链接进来, epoll会把他们都监视起来,然后像拨开关一样, 谁有数据就拨向谁,然后调用相应的代码处理。
-了解这个基本的概念以后,其他的就很好解释了。
+ 了解这个基本的概念以后,其他的就很好解释了。
 select, poll, epoll 都是I/O多路复用的具体的实现,之所以有这三个鬼存在,其实是他们出现是有 先后顺序的。
 I/O多路复用这个概念被提出来以后, select是第一个实现 (1983 左右在BSD里面实现的)。
 select 被实现以后,很快就暴露出了很多问题。
-select 会修改传入的参数数组,这个对于一个需要调用很多次的函数,是非常不友好的。 select 如果任何一个sock(I/O stream)出现了数据,select 仅仅会返回,但是并不会告诉你是那 个sock上有数据,于是你只能自己一个一个的找,10几个sock可能还好,要是几万的sock每次 select 不是线程安全的,如果你把一个sock加入到select, 然后突然另外一个线程发现,尼玛,这 个sock不用,要收回。对不起,这个select 不支持的,如果你丧心病狂的竟然关掉这个sock, select的标准行为是。。呃。。不可预测的, 这个可是写在文档中的哦. “If a file descriptor being monitored by select() is closed in another thread, the result is unspecified.</description></item><item><title>领域逻辑的组织模式</title><link>https://sdttttt.github.io/%E9%A2%86%E5%9F%9F%E9%80%BB%E8%BE%91%E7%9A%84%E7%BB%84%E7%BB%87%E6%A8%A1%E5%BC%8F/</link><pubDate>Fri, 03 Apr 2020 20:58:28 +0800</pubDate><guid>https://sdttttt.github.io/%E9%A2%86%E5%9F%9F%E9%80%BB%E8%BE%91%E7%9A%84%E7%BB%84%E7%BB%87%E6%A8%A1%E5%BC%8F/</guid><description>目前领域逻辑的组织模式分为三种，“事务脚本”，“领域模型” 以及 “表模块”。
+ select 会修改传入的参数数组,这个对于一个需要调用很多次的函数,是非常不友好的。 select 如果任何一个sock(I/O stream)出现了数据,select 仅仅会返回,但是并不会告诉你是那 个sock上有数据,于是你只能自己一个一个的找,10几个sock可能还好,要是几万的sock每次 select 不是线程安全的,如果你把一个sock加入到select, 然后突然另外一个线程发现,尼玛,这 个sock不用,要收回。对不起,这个select 不支持的,如果你丧心病狂的竟然关掉这个sock, select的标准行为是。。呃。。不可预测的, 这个可是写在文档中的哦.   “If a file descriptor being monitored by select() is closed in another thread, the result is unspecified.</description>
+    </item>
+    
+    <item>
+      <title>领域逻辑的组织模式</title>
+      <link>https://sdttttt.github.io/%E9%A2%86%E5%9F%9F%E9%80%BB%E8%BE%91%E7%9A%84%E7%BB%84%E7%BB%87%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Fri, 03 Apr 2020 20:58:28 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/%E9%A2%86%E5%9F%9F%E9%80%BB%E8%BE%91%E7%9A%84%E7%BB%84%E7%BB%87%E6%A8%A1%E5%BC%8F/</guid>
+      <description>目前领域逻辑的组织模式分为三种，“事务脚本”，“领域模型” 以及 “表模块”。
 事务脚本类似于面向过程编程，事务脚本有以下优点：
-它是一种大多数软件工程师都能理解的简单过程模型。 它能和一个行数据入口或表数据入口简单的数据源很好的协作。 非常容易设定事务的边界。 一个组数据源操作便是一个独立的事务脚本。 当然事务脚本也存在很大的缺陷，当领域逻辑开始变得复杂时，这些缺点就开始暴露出来。 当几个事务要执行类似的逻辑时，通常几个脚本中会含有某些相同的代码。 通过将这些代码提取出来，来形成公共的子例程，来消除这种情况。 但是，很多时候消除副本会变得棘手，而检测副本则更困难，倒是消除副本后的程序反而比以前还要杂乱无章，难以维护。
+ 它是一种大多数软件工程师都能理解的简单过程模型。 它能和一个行数据入口或表数据入口简单的数据源很好的协作。 非常容易设定事务的边界。  一个组数据源操作便是一个独立的事务脚本。 当然事务脚本也存在很大的缺陷，当领域逻辑开始变得复杂时，这些缺点就开始暴露出来。 当几个事务要执行类似的逻辑时，通常几个脚本中会含有某些相同的代码。 通过将这些代码提取出来，来形成公共的子例程，来消除这种情况。 但是，很多时候消除副本会变得棘手，而检测副本则更困难，倒是消除副本后的程序反而比以前还要杂乱无章，难以维护。
 复杂的领域逻辑，必然要引入对象，解决前面描述问题的面向对象方法就是领域模型。 一个内容管理系统会有用户，文章等类，进行鉴权，以及写入等逻辑均置于领域模型中。 因此，发布对象调用一次写入方法。 可能还会有其他例程来完成一些读取功能，但它其实都是调用领域模型中已有打方法实现的。
-领域模型的控制不再是由一个过程来控制用户某一个动作的逻辑，而是由每个对象都承担一部分相关逻辑。
-领域模型的开销来自于数据源的复杂度和使用上的复杂性，刚刚接触领域模型的人会需要时间来适应这种思维方式。一旦习惯了，你就会很爽！ 另一方面你需要将数据源映射到领域模型上，数据源越是复杂，领域模型的效果就越是显著。
+ 领域模型的控制不再是由一个过程来控制用户某一个动作的逻辑，而是由每个对象都承担一部分相关逻辑。
+ 领域模型的开销来自于数据源的复杂度和使用上的复杂性，刚刚接触领域模型的人会需要时间来适应这种思维方式。一旦习惯了，你就会很爽！ 另一方面你需要将数据源映射到领域模型上，数据源越是复杂，领域模型的效果就越是显著。
 上为事务脚本
 上为领域模型
 第三中为领域逻辑的组织模式为表模块，它处于事务脚本和领域模型的一个中间地带。 和领域模型最大的区别就是在表模块中一个表只对应一个实例，而领域模型一行数据便能对应一个实例。
 表模块的优点在于可以很容易的和软件架构中已经存在的部分衔接，很多GUI应用都是假定将其与SQL查询结果的记录集结果协同工作的。表模块就工作在记录集之上。你可以很容易的使用。
 抉择 别问，问就，直接使用领域模型。
 接下来我稍微介绍一下目前各个框架/库在领域逻辑的组织模式上的选择（只列出我用）：
-PHP
-PHP 原生 &amp;lt;事务脚本&amp;gt; ThinkPHP &amp;lt;领域模型&amp;gt; Laravel &amp;lt;领域模型&amp;gt; YII &amp;lt;领域模型&amp;gt; Java
-java.sql.* &amp;lt;事务脚本&amp;gt; MyBatis &amp;lt;表模块&amp;gt; JPA &amp;lt;领域模型&amp;gt; Go
-gorm &amp;lt;表模块 | 领域模型&amp;gt; （这个比较神奇） 现在用表模块的人普遍比较多，我曾遇到好几个J2EE工程师都并不喜欢JPA的思维模式。</description></item><item><title>About the Blog</title><link>https://sdttttt.github.io/about-the-blog/</link><pubDate>Fri, 03 Apr 2020 15:36:02 +0800</pubDate><guid>https://sdttttt.github.io/about-the-blog/</guid><description>blog里的文章并非全部原创，有一部分是经过修改后整理出要点，集中一起写到这里面。也包涵了一些我对整个软件行业的想法。
-这个blog是用Hugo构建的，Theme使用的是rocinante,live2D的纸片人是我自己加的.(不是主题里自带的).
+  PHP
+ PHP 原生 &amp;lt;事务脚本&amp;gt; ThinkPHP &amp;lt;领域模型&amp;gt; Laravel &amp;lt;领域模型&amp;gt; YII &amp;lt;领域模型&amp;gt;    Java
+ java.sql.* &amp;lt;事务脚本&amp;gt; MyBatis &amp;lt;表模块&amp;gt; JPA &amp;lt;领域模型&amp;gt;    Go
+ gorm &amp;lt;表模块 | 领域模型&amp;gt; （这个比较神奇）    现在用表模块的人普遍比较多，我曾遇到好几个J2EE工程师都并不喜欢JPA的思维模式。</description>
+    </item>
+    
+    <item>
+      <title>About the Blog</title>
+      <link>https://sdttttt.github.io/about-the-blog/</link>
+      <pubDate>Fri, 03 Apr 2020 15:36:02 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/about-the-blog/</guid>
+      <description>blog里的文章并非全部原创，有一部分是经过修改后整理出要点，集中一起写到这里面。也包涵了一些我对整个软件行业的想法。
+ 这个blog是用Hugo构建的，Theme使用的是rocinante,live2D的纸片人是我自己加的.(不是主题里自带的).
 我之前还使用过Vuepress做为静态网站生成器，不过自定义程度很低，也不是很复合我的审美。（我希望是旁边不要出现目录栏）
 后面我就转战Hugo,优点：用Go编写，生成快。生态圈也比较良好。我第一个使用的Theme是book，不得不说，配置复杂，我就马上丢弃了，后面又使用了Ezhi，由于我不是很喜欢红色，就又扔了。
 然后就使用了现在这个Theme，还是比较满意的，很极简。后面也加了utteranc做为评论模块，选择utteranc的理由很简单，最初Hugo是自带Disqus做为评论模块的，但是无奈这个Disqus在国外，而且还是被墙的！
-后来暂时搁了一段时间，才找到utteranc，优点就是结合Github issues无需翻墙，使用的UI也是Github的（Github使用的UI是Bootstrap库），而且零配置，授权一下App，改一下JS的tag马上就可以用。</description></item><item><title>只需要服务中心</title><link>https://sdttttt.github.io/%E5%8F%AA%E9%9C%80%E8%A6%81%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83/</link><pubDate>Thu, 02 Apr 2020 15:58:01 +0800</pubDate><guid>https://sdttttt.github.io/%E5%8F%AA%E9%9C%80%E8%A6%81%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83/</guid><description>目前，市面上以及出现了各种各样的适用于微服务(下面简称ms)的注册中心，配合其使用的还有各种ms框架，例如Alibaba的Dubbo。
+后来暂时搁了一段时间，才找到utteranc，优点就是结合Github issues无需翻墙，使用的UI也是Github的（Github使用的UI是Bootstrap库），而且零配置，授权一下App，改一下JS的tag马上就可以用。</description>
+    </item>
+    
+    <item>
+      <title>只需要服务中心</title>
+      <link>https://sdttttt.github.io/%E5%8F%AA%E9%9C%80%E8%A6%81%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83/</link>
+      <pubDate>Thu, 02 Apr 2020 15:58:01 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/%E5%8F%AA%E9%9C%80%E8%A6%81%E6%9C%8D%E5%8A%A1%E4%B8%AD%E5%BF%83/</guid>
+      <description>目前，市面上以及出现了各种各样的适用于微服务(下面简称ms)的注册中心，配合其使用的还有各种ms框架，例如Alibaba的Dubbo。
 微服务能通过分解服务粒度，然后针对特定服务进行性能扩展，来达到高性能的目的。
 其中服务中心负责服务的注册和生命周期管理，Dubbo之类的微服务框架则对服务的注册, 负载均衡，服务鉴权, 服务调用等一系列操作做封装，供用户调用.
 使得用户不用去关心微服务的实现细节。
-我的想法相反，或许能让服务中心做更多的事。
+ 我的想法相反，或许能让服务中心做更多的事。
 我们可以从头，去设计一个服务中心：
-只管理服务名和服务地址。 消费端索取服务时，则由服务中心来做负载均衡和一些额外的工作，直接给出服务提供方地址。 其他的功能可以按照现有的服务注册中心来设计。
+ 只管理服务名和服务地址。 消费端索取服务时，则由服务中心来做负载均衡和一些额外的工作，直接给出服务提供方地址。  其他的功能可以按照现有的服务注册中心来设计。
 关于微服务的调用，则由服务注册中心提供一个微服务库，来供我们调用，或者由用户自己实现。这个架构下，就不需要Dubbo之类的RPC框架。
 优点：模块减少，开发可能会成本减少。
 缺点：需要服务中心来提供微服务调用库。（而且服务中心处理的东西变多了，不知道性能会有多少影响）
 目前小生已经搞了一个类似这中服务注册中心的Demo，可以参考。
 https://github.com/sdttttt/go-tds
-（这只是一个我突发的灵感罢了，其实挺荒唐的。）</description></item><item><title>Kratos 初始化流程源码解析</title><link>https://sdttttt.github.io/kratos-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</link><pubDate>Tue, 31 Mar 2020 20:17:28 +0800</pubDate><guid>https://sdttttt.github.io/kratos-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</guid><description>Kratos 是bilibili开源的一套Go微服务框架，包含大量微服务相关框架及工具。
-名字来源于:《战神》游戏以希腊神话为背景，讲述由凡人成为战神的奎托斯（Kratos）成为战神并展开弑神屠杀的冒险历程。
-好！开始吧！
+（这只是一个我突发的灵感罢了，其实挺荒唐的。）</description>
+    </item>
+    
+    <item>
+      <title>Kratos 初始化流程源码解析</title>
+      <link>https://sdttttt.github.io/kratos-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Tue, 31 Mar 2020 20:17:28 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/kratos-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</guid>
+      <description>Kratos 是bilibili开源的一套Go微服务框架，包含大量微服务相关框架及工具。
+ 名字来源于:《战神》游戏以希腊神话为背景，讲述由凡人成为战神的奎托斯（Kratos）成为战神并展开弑神屠杀的冒险历程。
+ 好！开始吧！
 小提示：阅读源码时请保持清醒。
 首先是按照Kratos tool 生产的工程目录。
-├── CHANGELOG.md ├── OWNERS ├── README.md ├── api # api目录为对外保留的proto文件及生成的pb.go文件 │ ├── api.bm.go │ ├── api.pb.go # 通过go generate生成的pb.go文件 │ ├── api.proto │ └── client.go ├── cmd │ └── main.go # cmd目录为main所在 ├── configs # configs为配置文件目录 │ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true │ ├── db.toml # db相关配置 │ ├── grpc.toml # grpc相关配置 │ ├── http.toml # http相关配置 │ ├── memcache.</description></item><item><title>Protubuf 原理</title><link>https://sdttttt.github.io/protubuf-%E5%8E%9F%E7%90%86/</link><pubDate>Mon, 30 Mar 2020 03:05:12 +0800</pubDate><guid>https://sdttttt.github.io/protubuf-%E5%8E%9F%E7%90%86/</guid><description>protobuf的message中有很多字段,每个字段的格式为: 修饰符 字段类型 字段名 = 域号; 在序列化时,protobuf按照TLV的格式序列化每一个字段,T即Tag,也叫Key;V是该字段对应的值v 省略。 序列化后的Value是按原样保存到字符串或者文件中,Key按照一定的转换条件保存起来,序列化后的 message中字段后面的域号与字段类型来转换。转换公式如下:
-(field_number &amp;laquo; 3) | wire_type
-wire_type与类型的对应关系表:
-wire_type meaning 0 Vaint int32、int64、uint32、uint64、sint32、sint64、bool、enum 1 64-bit fixed、sfixed64、double 2 Length-delimi string、bytes、embedded、messages、packed repeated fields 3 Start group Groups(deprecated) 4 End group Groups(deprecated) 5 32-bit fixed32、sfixed32、float 　As you can see, each field in the message definition has a unique numbered tag.</description></item><item><title>Github Actions</title><link>https://sdttttt.github.io/github-actions/</link><pubDate>Wed, 11 Mar 2020 00:50:00 +0800</pubDate><guid>https://sdttttt.github.io/github-actions/</guid><description>Github Actions 上传 Releases name: release # https://help.github.com/en/articles/workflow-syntax-for-github-actions#on on: push: tags: - &amp;#39;*&amp;#39; jobs: build: runs-on: ubuntu-latest steps: - uses: actions/checkout@v1 - name: &amp;#34;find env&amp;#34; run: | set | grep GITHUB_ | grep -v GITHUB_TOKEN zip -r pkg.zip *.md - uses: xresloader/upload-to-github-release@v1 env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} with: file: &amp;#34;*.md;*.zip&amp;#34; tags: true draft: false prerelease: true overwrite: true verbose: true</description></item><item><title>Appveyor</title><link>https://sdttttt.github.io/appveyor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/appveyor/</guid><description>Appveyor 也是一款线上 CICD 工具。
+├── CHANGELOG.md ├── OWNERS ├── README.md ├── api # api目录为对外保留的proto文件及生成的pb.go文件 │ ├── api.bm.go │ ├── api.pb.go # 通过go generate生成的pb.go文件 │ ├── api.proto │ └── client.go ├── cmd │ └── main.go # cmd目录为main所在 ├── configs # configs为配置文件目录 │ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true │ ├── db.toml # db相关配置 │ ├── grpc.toml # grpc相关配置 │ ├── http.toml # http相关配置 │ ├── memcache.</description>
+    </item>
+    
+    <item>
+      <title>Protubuf 原理</title>
+      <link>https://sdttttt.github.io/protubuf-%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Mon, 30 Mar 2020 03:05:12 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/protubuf-%E5%8E%9F%E7%90%86/</guid>
+      <description>protobuf的message中有很多字段,每个字段的格式为: 修饰符 字段类型 字段名 = 域号; 在序列化时,protobuf按照TLV的格式序列化每一个字段,T即Tag,也叫Key;V是该字段对应的值v 省略。 序列化后的Value是按原样保存到字符串或者文件中,Key按照一定的转换条件保存起来,序列化后的 message中字段后面的域号与字段类型来转换。转换公式如下:
+ (field_number &amp;laquo; 3) | wire_type
+ wire_type与类型的对应关系表:
+   wire_type meaning      0 Vaint int32、int64、uint32、uint64、sint32、sint64、bool、enum   1 64-bit fixed、sfixed64、double   2 Length-delimi string、bytes、embedded、messages、packed repeated fields   3 Start group Groups(deprecated)   4 End group Groups(deprecated)   5 32-bit fixed32、sfixed32、float     　As you can see, each field in the message definition has a unique numbered tag.</description>
+    </item>
+    
+    <item>
+      <title>Github Actions</title>
+      <link>https://sdttttt.github.io/github-actions/</link>
+      <pubDate>Wed, 11 Mar 2020 00:50:00 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/github-actions/</guid>
+      <description>Github Actions 上传 Releases name: release # https://help.github.com/en/articles/workflow-syntax-for-github-actions#on on: push: tags: - &amp;#39;*&amp;#39; jobs: build: runs-on: ubuntu-latest steps: - uses: actions/checkout@v1 - name: &amp;#34;find env&amp;#34; run: | set | grep GITHUB_ | grep -v GITHUB_TOKEN zip -r pkg.zip *.md - uses: xresloader/upload-to-github-release@v1 env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} with: file: &amp;#34;*.md;*.zip&amp;#34; tags: true draft: false prerelease: true overwrite: true verbose: true </description>
+    </item>
+    
+    <item>
+      <title>Appveyor</title>
+      <link>https://sdttttt.github.io/appveyor/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://sdttttt.github.io/appveyor/</guid>
+      <description>Appveyor 也是一款线上 CICD 工具。
 Support Contexts:
-Windows (Default) Ubuntu MacOS Support Languages:
-Node.js io.js Xamarin Python Ruby C++ Go Ruby version: 1.0.{build}-{branch} skip_commits: files: - &amp;#39;azure-pipelines.yml&amp;#39; - &amp;#39;README.md&amp;#39; install: - set PATH=C:\Ruby26-x64\bin;%PATH% - bundle install build: off before_test: - ruby -v - gem -v - bundle -v test_script: - rails db:migrate RAILS_ENV=test Appveyor.yml Reference # Notes: # - Minimal appveyor.yml file is an empty file. All sections are optional.</description></item><item><title>Azure Pipelines</title><link>https://sdttttt.github.io/azure-pipelines/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/azure-pipelines/</guid><description>Azure Pipelines是一种云服务，可用于自动构建和测试您的代码项目并将其提供给其他用户。它几乎适用于任何语言或项目类型。
+ Windows (Default) Ubuntu MacOS  Support Languages:
+ Node.js io.js Xamarin Python Ruby C++ Go  Ruby version: 1.0.{build}-{branch} skip_commits: files: - &amp;#39;azure-pipelines.yml&amp;#39; - &amp;#39;README.md&amp;#39; install: - set PATH=C:\Ruby26-x64\bin;%PATH% - bundle install build: off before_test: - ruby -v - gem -v - bundle -v test_script: - rails db:migrate RAILS_ENV=test Appveyor.yml Reference # Notes: # - Minimal appveyor.yml file is an empty file. All sections are optional.</description>
+    </item>
+    
+    <item>
+      <title>Azure Pipelines</title>
+      <link>https://sdttttt.github.io/azure-pipelines/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://sdttttt.github.io/azure-pipelines/</guid>
+      <description>Azure Pipelines是一种云服务，可用于自动构建和测试您的代码项目并将其提供给其他用户。它几乎适用于任何语言或项目类型。
 Azure Pipelines将持续集成（CI）和持续交付（CD）相结合，以持续不断地测试和构建您的代码并将其交付给任何目标。
 Azure Pipelines 支持非常多的语言。
 Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使用私人项目，则每月可以免费运行多达1800分钟（30小时）的管道作业。了解有关基于并行作业定价的更多信息。
 是不是非常的棒呢 o(////▽////)q
 请遵循以下基本步骤：
-配置Azure Pipelines以使用您的Git存储库。 编辑azure-pipelines.yml文件以定义构建。 将您的代码推送到版本控制存储库。此操作将启动默认触发器以构建和部署，然后监视结果。 Ruby # Ruby # Package your Ruby project. # Add steps that install rails, analyze code, save build artifacts, deploy, and more: # https://docs.microsoft.com/azure/devops/pipelines/languages/ruby trigger: branches: # 只有以下分支提交才会触发CICD include: - master - sdtttttt - CICD - depend* paths: # 只有以下文件提交时不触发CICD exclude: - README.md - appveyor.yml pool: vmImage: &amp;#39;ubuntu-18.04&amp;#39; steps: - task: UseRubyVersion@0 inputs: # 天杀的，微软提供的Ubuntu 镜像已经不支持 Ruby2.</description></item><item><title>Rails Development</title><link>https://sdttttt.github.io/rails-development/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/rails-development/</guid><description>Webpacker Rails 6版本开始依赖Webpacker，在运行之前必须先安装Webpacker这玩意。
+ 配置Azure Pipelines以使用您的Git存储库。 编辑azure-pipelines.yml文件以定义构建。 将您的代码推送到版本控制存储库。此操作将启动默认触发器以构建和部署，然后监视结果。  Ruby # Ruby # Package your Ruby project. # Add steps that install rails, analyze code, save build artifacts, deploy, and more: # https://docs.microsoft.com/azure/devops/pipelines/languages/ruby trigger: branches: # 只有以下分支提交才会触发CICD include: - master - sdtttttt - CICD - depend* paths: # 只有以下文件提交时不触发CICD exclude: - README.md - appveyor.yml pool: vmImage: &amp;#39;ubuntu-18.04&amp;#39; steps: - task: UseRubyVersion@0 inputs: # 天杀的，微软提供的Ubuntu 镜像已经不支持 Ruby2.</description>
+    </item>
+    
+    <item>
+      <title>Rails Development</title>
+      <link>https://sdttttt.github.io/rails-development/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://sdttttt.github.io/rails-development/</guid>
+      <description>Webpacker Rails 6版本开始依赖Webpacker，在运行之前必须先安装Webpacker这玩意。
 rails webpacker:install 如果需要安装前端框架，请使用yarn来安装，这样部署的时候能享受到webpacker打包便利。
 production Rails 6 启动时需要一串Key作为加密的salt，key不能随意生成。 生成key时，请删除config下的credentials.enc.yml 和 master.key 文件。 然后运行
 rails credentials:edit 然后Rails访问静态资源，需要使用webpacker打包编译后的资产。 运行
 rails assets:precompile Rails 6 在生产环境下认为你使用 Apache 和 Nginx 缓存编译后的静态资产。如果你不使用他们，需要
-# config/environments/production.rb config.public_file_server.enabled = true 记住，打包之后的js以及css统一叫application.js/css 在view页面引用时需要引用application这个名字。其他的会报错</description></item><item><title>Rails ENV</title><link>https://sdttttt.github.io/rails-env/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/rails-env/</guid><description>Rails ENV 环境配置参考 Ruby China 社区的 Wiki
+# config/environments/production.rb config.public_file_server.enabled = true 记住，打包之后的js以及css统一叫application.js/css 在view页面引用时需要引用application这个名字。其他的会报错</description>
+    </item>
+    
+    <item>
+      <title>Rails ENV</title>
+      <link>https://sdttttt.github.io/rails-env/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://sdttttt.github.io/rails-env/</guid>
+      <description>Rails ENV 环境配置参考 Ruby China 社区的 Wiki
 Windows 10 在 Windowns 10 的环境下和Linux上差不多，不过不需要RVM
-首先在Ruby官方网站下载好安装包 之后使用RubyChina提供的Source替换Gem的Source 之后使用Gem下载 Bundler 和 Rails 创建Rails项目运行即可 有一个软件叫做 RailsInstaller可以直接帮你省下1和3步也就是直接帮你安装好了Ruby和Rails还有Gem，bundler。 但是🙅我目前使用的Railsinstaller有点问题。他的Ruby版本是2.3，rails版本是5，rails5依赖的是 &amp;gt;= 2.4版本的ruby，这就有问题了。我也没接着用这个软件了。
+ 首先在Ruby官方网站下载好安装包 之后使用RubyChina提供的Source替换Gem的Source 之后使用Gem下载 Bundler 和 Rails 创建Rails项目运行即可  有一个软件叫做 RailsInstaller可以直接帮你省下1和3步也就是直接帮你安装好了Ruby和Rails还有Gem，bundler。 但是🙅我目前使用的Railsinstaller有点问题。他的Ruby版本是2.3，rails版本是5，rails5依赖的是 &amp;gt;= 2.4版本的ruby，这就有问题了。我也没接着用这个软件了。
 在rails6中加入了Webpacker的打包工具，运行之前需要先安装webpacker不然会报错。 $ rails webpacker:install注意在上面可能会有点问题，Gem创建Rails项目的时候会下载各种依赖，这些依赖有可能会在Windows的环境上出现问题，比如我遇到的 SQLite3,所以Ruby最好还是不要在Windowns上运行。
 还有Rails 是要依赖 Yarn和 nodejs 最好是10版本以上
 Development Note 花了很长时间去吧Rails和一些大前端的框架合二为一，最后以失败而告终。 Rails终究是个全栈式的Web框架，老老实实用简单的就行。
-Bootstrap Configuration # =&amp;gt; 首先在 Gemfile 中加入 gem &amp;#39;bootstrap&amp;#39;, &amp;#39;~&amp;gt; 4.3.1&amp;#39; gem &amp;#39;jquery-rails&amp;#39; 之后将app\assets\stylesheets\application.css改为 scss
+ Bootstrap Configuration  # =&amp;gt; 首先在 Gemfile 中加入 gem &amp;#39;bootstrap&amp;#39;, &amp;#39;~&amp;gt; 4.3.1&amp;#39; gem &amp;#39;jquery-rails&amp;#39; 之后将app\assets\stylesheets\application.css改为 scss
 删掉所有的东西包括注释
-加入@import &amp;ldquo;bootstrap&amp;rdquo;; Ruby Note Todo Error running 'requirements_debian_libs_install g++ gcc autoconf automake bison libc6-dev libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev make pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline-dev libssl-dev', please read /home/sdttttt/.</description></item><item><title>Socks5</title><link>https://sdttttt.github.io/socks5/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/socks5/</guid><description>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&amp;quot;SOCKetS&amp;quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
+加入@import &amp;ldquo;bootstrap&amp;rdquo;; Ruby Note Todo Error running &#39;requirements_debian_libs_install g++ gcc autoconf automake bison libc6-dev libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev make pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline-dev libssl-dev&#39;, please read /home/sdttttt/.</description>
+    </item>
+    
+    <item>
+      <title>Socks5</title>
+      <link>https://sdttttt.github.io/socks5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://sdttttt.github.io/socks5/</guid>
+      <description>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&amp;quot;SOCKetS&amp;quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
 SOCKS5 协议可以分为三个部分：
-(1) 协议版本及认证方式 (2) 根据认证方式执行对应的认证 (3) 请求信息 （1）协议版本及认证方式 创建与 SOCKS5 服务器的 TCP 连接后客户端需要先发送请求来协议版本及认证方式，
-VER NMETHODS METHODS 1 1 1-255 VER 是 SOCKS 版本，这里应该是 0x05；
-NMETHODS 是 METHODS 部分的长度；
-METHODS 是客户端支持的认证方式列表，每个方法占 1 字节。当前的定义是：
-0x00 不需要认证 0x01 GSSAPI 0x02 用户名、密码认证 0x03 - 0x7F 由 IANA 分配（保留） 0x80 - 0xFE 为私人方法保留 0xFF 无可接受的方法 服务器回复客户端可用方法：</description></item><item><title>固定搭配</title><link>https://sdttttt.github.io/%E5%9B%BA%E5%AE%9A%E6%90%AD%E9%85%8D/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/%E5%9B%BA%E5%AE%9A%E6%90%AD%E9%85%8D/</guid><description>接不定式（而不接动名词）作宾语的24个常用动词 afford to do sth. 负担得起做某事
+ (1) 协议版本及认证方式 (2) 根据认证方式执行对应的认证 (3) 请求信息  （1）协议版本及认证方式 创建与 SOCKS5 服务器的 TCP 连接后客户端需要先发送请求来协议版本及认证方式，
+   VER NMETHODS METHODS     1 1 1-255      VER 是 SOCKS 版本，这里应该是 0x05；
+  NMETHODS 是 METHODS 部分的长度；
+  METHODS 是客户端支持的认证方式列表，每个方法占 1 字节。当前的定义是：
+ 0x00 不需要认证 0x01 GSSAPI 0x02 用户名、密码认证 0x03 - 0x7F 由 IANA 分配（保留） 0x80 - 0xFE 为私人方法保留 0xFF 无可接受的方法    服务器回复客户端可用方法：</description>
+    </item>
+    
+    <item>
+      <title>固定搭配</title>
+      <link>https://sdttttt.github.io/%E5%9B%BA%E5%AE%9A%E6%90%AD%E9%85%8D/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://sdttttt.github.io/%E5%9B%BA%E5%AE%9A%E6%90%AD%E9%85%8D/</guid>
+      <description>接不定式（而不接动名词）作宾语的24个常用动词 afford to do sth. 负担得起做某事
 agree to do sth. 同意做某事
 arrange to do sth.安排做某事
 ask to do sth. 要求做某事
@@ -212,4 +556,8 @@ determine to do sth. 决心做某事
 expect to do sth. 期待做某事
 fear to do sth. 害怕做某事
 help to do sth. 帮助做某事
-hope to do sth. 希望做某事</description></item></channel></rss>
+hope to do sth. 希望做某事</description>
+    </item>
+    
+  </channel>
+</rss>
