@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Design on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+    <link>https://sdttttt.github.io/tags/design/</link>
+    <description>Recent content in Design on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    <lastBuildDate>Mon, 06 Apr 2020 23:34:30 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/tags/design/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>The Framework a good design?</title>
+      <link>https://sdttttt.github.io/blog/library_and_framework/</link>
+      <pubDate>Mon, 06 Apr 2020 23:34:30 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/library_and_framework/</guid>
+      <description>我第一次听到框架这个概念已经是在大学的时候了，当时我的老师和我提起。 一开始我非常不习惯在我不熟悉的上下文中编写程序的感觉。只能用四个字来形容寸步难行。
+过了一段时间后，当你熟悉里这个框架提前为你所做的一切的时候，一切只能用四个字来形容素巴拉细（美妙）。
+后来，我接触了各种形形色色的框架，从PHP到Java.
+最让我惊叹的莫过于SpringBoot, 它几乎为你准备好了你所需要的一切，如果你需要其他的，也能非常容易的引入进来， 任何框架以及库都能和Spring完美的结合在一起。Spring的可扩展性是我见过所有框架中最棒的！（它的核心理念就是IOC），不得不赞叹Spring是应用层的完美产物。（Spring无法被其他语言模仿和Java的万物对象的理念有很大关系）
+ 曾经的软件工程师没有这样的待遇，他们往往是从头构建起他们的应用。 这使得成为软件工程师这一职业难以企及。
+由于如今软件行业的变化，软件工程师们已经不能仅仅只在底层工作了，应用层的发展也突飞猛进。 各种软件架构的出现应接不暇。
+框架最初是为了解决重复而复杂的工作而诞生出来的产物。 帮助我们不必再写重复的代码，只需要关心业务逻辑。
+框架可以说是为了应用层的软件工程师而设计的。他们往往不会关心更细粒度的工作。他们只追求稳定的应用和企业架构。
+To be continued&amp;hellip;</description>
+    </item>
+    
+    <item>
+      <title>领域逻辑的组织模式</title>
+      <link>https://sdttttt.github.io/blog/domain-logic-org-mode/</link>
+      <pubDate>Fri, 03 Apr 2020 20:58:28 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/domain-logic-org-mode/</guid>
+      <description>目前领域逻辑的组织模式分为三种，“事务脚本”，“领域模型” 以及 “表模块”。
+事务脚本类似于面向过程编程，事务脚本有以下优点：
+ 它是一种大多数软件工程师都能理解的简单过程模型。 它能和一个行数据入口或表数据入口简单的数据源很好的协作。 非常容易设定事务的边界。  一个组数据源操作便是一个独立的事务脚本。 当然事务脚本也存在很大的缺陷，当领域逻辑开始变得复杂时，这些缺点就开始暴露出来。 当几个事务要执行类似的逻辑时，通常几个脚本中会含有某些相同的代码。 通过将这些代码提取出来，来形成公共的子例程，来消除这种情况。 但是，很多时候消除副本会变得棘手，而检测副本则更困难，倒是消除副本后的程序反而比以前还要杂乱无章，难以维护。
+复杂的领域逻辑，必然要引入对象，解决前面描述问题的面向对象方法就是领域模型。 一个内容管理系统会有用户，文章等类，进行鉴权，以及写入等逻辑均置于领域模型中。 因此，发布对象调用一次写入方法。 可能还会有其他例程来完成一些读取功能，但它其实都是调用领域模型中已有打方法实现的。
+ 领域模型的控制不再是由一个过程来控制用户某一个动作的逻辑，而是由每个对象都承担一部分相关逻辑。
+ 领域模型的开销来自于数据源的复杂度和使用上的复杂性，刚刚接触领域模型的人会需要时间来适应这种思维方式。一旦习惯了，你就会很爽！ 另一方面你需要将数据源映射到领域模型上，数据源越是复杂，领域模型的效果就越是显著。
+上为事务脚本
+上为领域模型
+第三中为领域逻辑的组织模式为表模块，它处于事务脚本和领域模型的一个中间地带。 和领域模型最大的区别就是在表模块中一个表只对应一个实例，而领域模型一行数据便能对应一个实例。
+表模块的优点在于可以很容易的和软件架构中已经存在的部分衔接，很多GUI应用都是假定将其与SQL查询结果的记录集结果协同工作的。表模块就工作在记录集之上。你可以很容易的使用。
+抉择 别问，问就，直接使用领域模型。
+接下来我稍微介绍一下目前各个框架/库在领域逻辑的组织模式上的选择（只列出我用）：
+  PHP
+ PHP 原生 &amp;lt;事务脚本&amp;gt; ThinkPHP &amp;lt;领域模型&amp;gt; Laravel &amp;lt;领域模型&amp;gt; YII &amp;lt;领域模型&amp;gt;    Java
+ java.sql.* &amp;lt;事务脚本&amp;gt; MyBatis &amp;lt;表模块&amp;gt; JPA &amp;lt;领域模型&amp;gt;    Go
+ gorm &amp;lt;表模块 | 领域模型&amp;gt; （这个比较神奇）    现在用表模块的人普遍比较多，我曾遇到好几个J2EE工程师都并不喜欢JPA的思维模式。</description>
+    </item>
+    
+  </channel>
+</rss>
