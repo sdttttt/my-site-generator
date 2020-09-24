@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+<link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
+<title>领域逻辑的组织模式 | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+<meta name="title" content="领域逻辑的组织模式" />
+<meta name="description" content="目前领域逻辑的组织模式分为三种，“事务脚本”，“领域模型” 以及 “表模块”。
+事务脚本类似于面向过程编程，事务脚本有以下优点：
+ 它是一种大多数软件工程师都能理解的简单过程模型。 它能和一个行数据入口或表数据入口简单的数据源很好的协作。 非常容易设定事务的边界。  一个组数据源操作便是一个独立的事务脚本。 当然事务脚本也存在很大的缺陷，当领域逻辑开始变得复杂时，这些缺点就开始暴露出来。 当几个事务要执行类似的逻辑时，通常几个脚本中会含有某些相同的代码。 通过将这些代码提取出来，来形成公共的子例程，来消除这种情况。 但是，很多时候消除副本会变得棘手，而检测副本则更困难，倒是消除副本后的程序反而比以前还要杂乱无章，难以维护。
+复杂的领域逻辑，必然要引入对象，解决前面描述问题的面向对象方法就是领域模型。 一个内容管理系统会有用户，文章等类，进行鉴权，以及写入等逻辑均置于领域模型中。 因此，发布对象调用一次写入方法。 可能还会有其他例程来完成一些读取功能，但它其实都是调用领域模型中已有打方法实现的。
+ 领域模型的控制不再是由一个过程来控制用户某一个动作的逻辑，而是由每个对象都承担一部分相关逻辑。
+ 领域模型的开销来自于数据源的复杂度和使用上的复杂性，刚刚接触领域模型的人会需要时间来适应这种思维方式。一旦习惯了，你就会很爽！ 另一方面你需要将数据源映射到领域模型上，数据源越是复杂，领域模型的效果就越是显著。
+上为事务脚本
+上为领域模型
+第三中为领域逻辑的组织模式为表模块，它处于事务脚本和领域模型的一个中间地带。 和领域模型最大的区别就是在表模块中一个表只对应一个实例，而领域模型一行数据便能对应一个实例。
+表模块的优点在于可以很容易的和软件架构中已经存在的部分衔接，很多GUI应用都是假定将其与SQL查询结果的记录集结果协同工作的。表模块就工作在记录集之上。你可以很容易的使用。
+抉择 别问，问就，直接使用领域模型。
+接下来我稍微介绍一下目前各个框架/库在领域逻辑的组织模式上的选择（只列出我用）：
+  PHP
+ PHP 原生 &lt;事务脚本&gt; ThinkPHP &lt;领域模型&gt; Laravel &lt;领域模型&gt; YII &lt;领域模型&gt;    Java
+ java.sql.* &lt;事务脚本&gt; MyBatis &lt;表模块&gt; JPA &lt;领域模型&gt;    Go
+ gorm &lt;表模块 | 领域模型&gt; （这个比较神奇）    现在用表模块的人普遍比较多，我曾遇到好几个J2EE工程师都并不喜欢JPA的思维模式。" />
+<meta name="keywords" content="Design," />
+
+
+<meta property="og:title" content="领域逻辑的组织模式" />
+<meta property="og:description" content="目前领域逻辑的组织模式分为三种，“事务脚本”，“领域模型” 以及 “表模块”。
+事务脚本类似于面向过程编程，事务脚本有以下优点：
+ 它是一种大多数软件工程师都能理解的简单过程模型。 它能和一个行数据入口或表数据入口简单的数据源很好的协作。 非常容易设定事务的边界。  一个组数据源操作便是一个独立的事务脚本。 当然事务脚本也存在很大的缺陷，当领域逻辑开始变得复杂时，这些缺点就开始暴露出来。 当几个事务要执行类似的逻辑时，通常几个脚本中会含有某些相同的代码。 通过将这些代码提取出来，来形成公共的子例程，来消除这种情况。 但是，很多时候消除副本会变得棘手，而检测副本则更困难，倒是消除副本后的程序反而比以前还要杂乱无章，难以维护。
+复杂的领域逻辑，必然要引入对象，解决前面描述问题的面向对象方法就是领域模型。 一个内容管理系统会有用户，文章等类，进行鉴权，以及写入等逻辑均置于领域模型中。 因此，发布对象调用一次写入方法。 可能还会有其他例程来完成一些读取功能，但它其实都是调用领域模型中已有打方法实现的。
+ 领域模型的控制不再是由一个过程来控制用户某一个动作的逻辑，而是由每个对象都承担一部分相关逻辑。
+ 领域模型的开销来自于数据源的复杂度和使用上的复杂性，刚刚接触领域模型的人会需要时间来适应这种思维方式。一旦习惯了，你就会很爽！ 另一方面你需要将数据源映射到领域模型上，数据源越是复杂，领域模型的效果就越是显著。
+上为事务脚本
+上为领域模型
+第三中为领域逻辑的组织模式为表模块，它处于事务脚本和领域模型的一个中间地带。 和领域模型最大的区别就是在表模块中一个表只对应一个实例，而领域模型一行数据便能对应一个实例。
+表模块的优点在于可以很容易的和软件架构中已经存在的部分衔接，很多GUI应用都是假定将其与SQL查询结果的记录集结果协同工作的。表模块就工作在记录集之上。你可以很容易的使用。
+抉择 别问，问就，直接使用领域模型。
+接下来我稍微介绍一下目前各个框架/库在领域逻辑的组织模式上的选择（只列出我用）：
+  PHP
+ PHP 原生 &lt;事务脚本&gt; ThinkPHP &lt;领域模型&gt; Laravel &lt;领域模型&gt; YII &lt;领域模型&gt;    Java
+ java.sql.* &lt;事务脚本&gt; MyBatis &lt;表模块&gt; JPA &lt;领域模型&gt;    Go
+ gorm &lt;表模块 | 领域模型&gt; （这个比较神奇）    现在用表模块的人普遍比较多，我曾遇到好几个J2EE工程师都并不喜欢JPA的思维模式。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/blog/domain-logic-org-mode/" />
+<meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
+<meta property="article:published_time" content="2020-04-03T20:58:28+08:00" />
+<meta property="article:modified_time" content="2020-04-03T20:58:28+08:00" /><meta property="og:site_name" content="SDTTTTT" />
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+<meta name="twitter:title" content="领域逻辑的组织模式"/>
+<meta name="twitter:description" content="目前领域逻辑的组织模式分为三种，“事务脚本”，“领域模型” 以及 “表模块”。
+事务脚本类似于面向过程编程，事务脚本有以下优点：
+ 它是一种大多数软件工程师都能理解的简单过程模型。 它能和一个行数据入口或表数据入口简单的数据源很好的协作。 非常容易设定事务的边界。  一个组数据源操作便是一个独立的事务脚本。 当然事务脚本也存在很大的缺陷，当领域逻辑开始变得复杂时，这些缺点就开始暴露出来。 当几个事务要执行类似的逻辑时，通常几个脚本中会含有某些相同的代码。 通过将这些代码提取出来，来形成公共的子例程，来消除这种情况。 但是，很多时候消除副本会变得棘手，而检测副本则更困难，倒是消除副本后的程序反而比以前还要杂乱无章，难以维护。
+复杂的领域逻辑，必然要引入对象，解决前面描述问题的面向对象方法就是领域模型。 一个内容管理系统会有用户，文章等类，进行鉴权，以及写入等逻辑均置于领域模型中。 因此，发布对象调用一次写入方法。 可能还会有其他例程来完成一些读取功能，但它其实都是调用领域模型中已有打方法实现的。
+ 领域模型的控制不再是由一个过程来控制用户某一个动作的逻辑，而是由每个对象都承担一部分相关逻辑。
+ 领域模型的开销来自于数据源的复杂度和使用上的复杂性，刚刚接触领域模型的人会需要时间来适应这种思维方式。一旦习惯了，你就会很爽！ 另一方面你需要将数据源映射到领域模型上，数据源越是复杂，领域模型的效果就越是显著。
+上为事务脚本
+上为领域模型
+第三中为领域逻辑的组织模式为表模块，它处于事务脚本和领域模型的一个中间地带。 和领域模型最大的区别就是在表模块中一个表只对应一个实例，而领域模型一行数据便能对应一个实例。
+表模块的优点在于可以很容易的和软件架构中已经存在的部分衔接，很多GUI应用都是假定将其与SQL查询结果的记录集结果协同工作的。表模块就工作在记录集之上。你可以很容易的使用。
+抉择 别问，问就，直接使用领域模型。
+接下来我稍微介绍一下目前各个框架/库在领域逻辑的组织模式上的选择（只列出我用）：
+  PHP
+ PHP 原生 &lt;事务脚本&gt; ThinkPHP &lt;领域模型&gt; Laravel &lt;领域模型&gt; YII &lt;领域模型&gt;    Java
+ java.sql.* &lt;事务脚本&gt; MyBatis &lt;表模块&gt; JPA &lt;领域模型&gt;    Go
+ gorm &lt;表模块 | 领域模型&gt; （这个比较神奇）    现在用表模块的人普遍比较多，我曾遇到好几个J2EE工程师都并不喜欢JPA的思维模式。"/>
+
+
+
+<meta itemprop="name" content="领域逻辑的组织模式">
+<meta itemprop="description" content="目前领域逻辑的组织模式分为三种，“事务脚本”，“领域模型” 以及 “表模块”。
+事务脚本类似于面向过程编程，事务脚本有以下优点：
+ 它是一种大多数软件工程师都能理解的简单过程模型。 它能和一个行数据入口或表数据入口简单的数据源很好的协作。 非常容易设定事务的边界。  一个组数据源操作便是一个独立的事务脚本。 当然事务脚本也存在很大的缺陷，当领域逻辑开始变得复杂时，这些缺点就开始暴露出来。 当几个事务要执行类似的逻辑时，通常几个脚本中会含有某些相同的代码。 通过将这些代码提取出来，来形成公共的子例程，来消除这种情况。 但是，很多时候消除副本会变得棘手，而检测副本则更困难，倒是消除副本后的程序反而比以前还要杂乱无章，难以维护。
+复杂的领域逻辑，必然要引入对象，解决前面描述问题的面向对象方法就是领域模型。 一个内容管理系统会有用户，文章等类，进行鉴权，以及写入等逻辑均置于领域模型中。 因此，发布对象调用一次写入方法。 可能还会有其他例程来完成一些读取功能，但它其实都是调用领域模型中已有打方法实现的。
+ 领域模型的控制不再是由一个过程来控制用户某一个动作的逻辑，而是由每个对象都承担一部分相关逻辑。
+ 领域模型的开销来自于数据源的复杂度和使用上的复杂性，刚刚接触领域模型的人会需要时间来适应这种思维方式。一旦习惯了，你就会很爽！ 另一方面你需要将数据源映射到领域模型上，数据源越是复杂，领域模型的效果就越是显著。
+上为事务脚本
+上为领域模型
+第三中为领域逻辑的组织模式为表模块，它处于事务脚本和领域模型的一个中间地带。 和领域模型最大的区别就是在表模块中一个表只对应一个实例，而领域模型一行数据便能对应一个实例。
+表模块的优点在于可以很容易的和软件架构中已经存在的部分衔接，很多GUI应用都是假定将其与SQL查询结果的记录集结果协同工作的。表模块就工作在记录集之上。你可以很容易的使用。
+抉择 别问，问就，直接使用领域模型。
+接下来我稍微介绍一下目前各个框架/库在领域逻辑的组织模式上的选择（只列出我用）：
+  PHP
+ PHP 原生 &lt;事务脚本&gt; ThinkPHP &lt;领域模型&gt; Laravel &lt;领域模型&gt; YII &lt;领域模型&gt;    Java
+ java.sql.* &lt;事务脚本&gt; MyBatis &lt;表模块&gt; JPA &lt;领域模型&gt;    Go
+ gorm &lt;表模块 | 领域模型&gt; （这个比较神奇）    现在用表模块的人普遍比较多，我曾遇到好几个J2EE工程师都并不喜欢JPA的思维模式。">
+<meta itemprop="datePublished" content="2020-04-03T20:58:28&#43;08:00" />
+<meta itemprop="dateModified" content="2020-04-03T20:58:28&#43;08:00" />
+<meta itemprop="wordCount" content="51">
+<meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+
+
+<meta itemprop="keywords" content="Design," />
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: white;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #eee;
+  }
+
+  pre code {
+    border-left: 1px solid #999;
+    color: #555;
+    display: block;
+    padding: 10px;
+    white-space: pre-wrap;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #555;
+    padding-left: 10px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>领域逻辑的组织模式</h1>
+<p>
+  <i>
+    <time datetime='2020-04-03' pubdate>
+      03 Apr, 2020
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>目前领域逻辑的组织模式分为三种，“事务脚本”，“领域模型” 以及 “表模块”。</p>
+<p><code>事务脚本</code>类似于<code>面向过程</code>编程，事务脚本有以下优点：</p>
+<ul>
+<li>它是一种大多数软件工程师都能理解的简单过程模型。</li>
+<li>它能和一个行数据入口或表数据入口简单的数据源很好的协作。</li>
+<li>非常容易设定事务的边界。</li>
+</ul>
+<p>一个组数据源操作便是一个独立的事务脚本。
+当然事务脚本也存在很大的缺陷，当领域逻辑开始变得复杂时，这些缺点就开始暴露出来。
+当几个事务要执行类似的逻辑时，通常几个脚本中会含有某些相同的代码。
+通过将这些代码提取出来，来形成公共的子例程，来消除这种情况。
+但是，很多时候消除副本会变得棘手，而检测副本则更困难，倒是消除副本后的程序反而比以前还要杂乱无章，难以维护。</p>
+<p>复杂的领域逻辑，必然要引入对象，解决前面描述问题的面向对象方法就是<code>领域模型</code>。
+一个内容管理系统会有用户，文章等类，进行鉴权，以及写入等逻辑均置于领域模型中。
+因此，发布对象调用一次写入方法。
+可能还会有其他例程来完成一些读取功能，但它其实都是调用领域模型中已有打方法实现的。</p>
+<blockquote>
+<p>领域模型的控制不再是由一个过程来控制用户某一个动作的逻辑，而是由每个对象都承担一部分相关逻辑。</p>
+</blockquote>
+<p>领域模型的开销来自于数据源的复杂度和使用上的复杂性，刚刚接触领域模型的人会需要时间来适应这种思维方式。一旦习惯了，你就会很爽！
+另一方面你需要将数据源映射到领域模型上，数据源越是复杂，领域模型的效果就越是显著。</p>
+<p><img src="/shiwujiaoben.png" alt=""></p>
+<p>上为事务脚本</p>
+<p><img src="/lingyumoxing.png" alt=""></p>
+<p>上为领域模型</p>
+<p>第三中为领域逻辑的组织模式为<code>表模块</code>，它处于<code>事务脚本</code>和<code>领域模型</code>的一个中间地带。
+和领域模型最大的区别就是在表模块中一个表只对应一个实例，而领域模型一行数据便能对应一个实例。</p>
+<p>表模块的优点在于可以很容易的和软件架构中已经存在的部分衔接，很多GUI应用都是假定将其与SQL查询结果的记录集结果协同工作的。表模块就工作在记录集之上。你可以很容易的使用。</p>
+<p><img src="/tablemodule.png" alt=""></p>
+<h2 id="抉择">抉择</h2>
+<p><img src="/modelfuzadu.png" alt=""></p>
+<p>别问，问就，直接使用领域模型。</p>
+<p>接下来我稍微介绍一下目前各个框架/库在领域逻辑的组织模式上的选择（只列出我用）：</p>
+<ul>
+<li>
+<p>PHP</p>
+<ul>
+<li>PHP 原生 &lt;事务脚本&gt;</li>
+<li>ThinkPHP &lt;领域模型&gt;</li>
+<li>Laravel &lt;领域模型&gt;</li>
+<li>YII &lt;领域模型&gt;</li>
+</ul>
+</li>
+<li>
+<p>Java</p>
+<ul>
+<li>java.sql.* &lt;事务脚本&gt;</li>
+<li>MyBatis &lt;表模块&gt;</li>
+<li>JPA &lt;领域模型&gt;</li>
+</ul>
+</li>
+<li>
+<p>Go</p>
+<ul>
+<li>gorm &lt;表模块 | 领域模型&gt; （这个比较神奇）</li>
+</ul>
+</li>
+</ul>
+<p>现在用表模块的人普遍比较多，我曾遇到好几个J2EE工程师都并不喜欢<code>JPA</code>的思维模式。</p>
+
+</content>
+<p>
+  
+  <a href="https://sdttttt.github.io/tags/design/">#Design</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+    
+</body>
+
+</html>
