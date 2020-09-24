@@ -3,4 +3,4 @@
 
 set -e
 
-hugo new post/$1.md
+hugo new blog/$1.md
