@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>assembly on SDTTTTT's Smelly fish Rotten shrimp 📓</title><link>https://sdttttt.github.io/blog/assembly/</link><description>Recent content in assembly on SDTTTTT's Smelly fish Rotten shrimp 📓</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Copyright © 2020, SDTTTTT.</copyright><lastBuildDate>Mon, 06 Apr 2020 16:38:01 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/assembly/index.xml" rel="self" type="application/rss+xml"/><item><title>SS:SP鸡你太美存器</title><link>https://sdttttt.github.io/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</link><pubDate>Mon, 06 Apr 2020 16:38:01 +0800</pubDate><guid>https://sdttttt.github.io/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</guid><description>如今的CPU都有提供栈机制，8086也不例外。
+8086提供的最基本的两个指令就是push and pop.
+push ax ;将寄存器ax中的数据送入栈顶 pop ax ;将栈顶的数据送入ax 我们知道CS:IP寄存器存放了下一条指令的段地址和偏移地址，那么CPU是如何知道栈顶在哪呐？ 显然也有两个寄存器专门存放栈顶的地址，那就是SS:SP寄存器，SS = 段地址， SP = 偏移地址
+任意时刻，SS:SP都指向栈顶元素。push和pop指令执行时CPU将从SS和SP中获得栈顶的地址。
+push 有2步:
+SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置. 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| 1000EH |__23___| &amp;lt;= SS:SP 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| &amp;lt;= SS:SP: 换个位置 |_______| 1000EH |__23___| 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| ;来自ax寄存器的数据 |__54___| &amp;lt;= SS:SP: 换个位置 |__11___| 1000EH |__23___| 1000FH |__01___| 假设 10000H -&amp;gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？</description></item><item><title>CSIP鸡你太美存器</title><link>https://sdttttt.github.io/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</link><pubDate>Mon, 06 Apr 2020 15:35:44 +0800</pubDate><guid>https://sdttttt.github.io/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</guid><description>之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
+CS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 + N 处读取指令并进行。
+也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.
+执行流程:
+初始状态: CS = 2000H, IP = 0000H CS:IP 内容送入地址加法器，2000H × 16 + 0000H = 20000H 地址加法器计算出物理地址20000H后将结果送入输入输出电路. 输入输出电路将物理地址20000H送到地址总线。 内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU. 输入输出电路将机器指令X送入指令缓冲器。 寄存器IP的值自动增加。 以此类推&amp;hellip; 当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。
+修改CS:IP mov指令能帮我们将值送入寄存器。但是，它不能用于修改CS:IP，原因很简单8086出于设计考量不允许。 能修改CS:IP的指令统称为转移指令（以后我们深入研究）,现在我学习第一个可以修改CS:IP寄存器的指令，jmp.
+若想同时修改CS:IP寄存器,可以用jmp 段地址, 偏移地址的指令来完成。
+jmp 2AE3:3 ;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令 如果只想修改IP寄存器, 可以用jmp 寄存器的指令来完成.
+jmp ax 类似, mov IP, ax</description></item></channel></rss>
