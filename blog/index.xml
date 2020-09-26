@@ -525,13 +525,15 @@ rails assets:precompile Rails 6 在生产环境下认为你使用 Apache 和 Ngi
       <guid>https://sdttttt.github.io/blog/ror_environment_config/</guid>
       <description>Rails ENV 环境配置参考 Ruby China 社区的 Wiki
 Windows 10 在 Windowns 10 的环境下和Linux上差不多，不过不需要RVM
- 首先在Ruby官方网站下载好安装包 之后使用RubyChina提供的Source替换Gem的Source 之后使用Gem下载 Bundler 和 Rails 创建Rails项目运行即可  有一个软件叫做 RailsInstaller可以直接帮你省下1和3步也就是直接帮你安装好了Ruby和Rails还有Gem，bundler。 但是🙅我目前使用的Railsinstaller有点问题。他的Ruby版本是2.3，rails版本是5，rails5依赖的是 &amp;gt;= 2.4版本的ruby，这就有问题了。我也没接着用这个软件了。
-在rails6中加入了Webpacker的打包工具，运行之前需要先安装webpacker不然会报错。 $ rails webpacker:install注意在上面可能会有点问题，Gem创建Rails项目的时候会下载各种依赖，这些依赖有可能会在Windows的环境上出现问题，比如我遇到的 SQLite3,所以Ruby最好还是不要在Windowns上运行。
+ 首先在Ruby官方网站下载好安装包 之后使用RubyChina提供的Source替换Gem的Source 之后使用Gem下载 Bundler 和 Rails 创建Rails项目运行即可  有一个软件叫做 RailsInstaller 可以直接帮你省下1和3步也就是直接帮你安装好了Ruby和Rails还有Gem，bundler。 但是🙅我目前使用的Railsinstaller有点问题。他的Ruby版本是2.3，rails版本是5，rails5依赖的是 &amp;gt;= 2.4版本的ruby，这就有问题了。我也没接着用这个软件了。
+在rails6中加入了Webpacker的打包工具，运行之前需要先安装webpacker不然会报错。 $ rails webpacker:install
+注意在上面可能会有点问题，Gem创建Rails项目的时候会下载各种依赖，这些依赖有可能会在Windows的环境上出现问题，比如我遇到的 SQLite3,所以Ruby最好还是不要在Windowns上运行。
 还有Rails 是要依赖 Yarn和 nodejs 最好是10版本以上
 Development Note 花了很长时间去吧Rails和一些大前端的框架合二为一，最后以失败而告终。 Rails终究是个全栈式的Web框架，老老实实用简单的就行。
- Bootstrap Configuration  # =&amp;gt; 首先在 Gemfile 中加入 gem &amp;#39;bootstrap&amp;#39;, &amp;#39;~&amp;gt; 4.3.1&amp;#39; gem &amp;#39;jquery-rails&amp;#39; 之后将app\assets\stylesheets\application.css改为 scss
+ Bootstrap Configuration  # =&amp;gt; 首先在 Gemfile 中加入 gem &amp;#39;bootstrap&amp;#39;, &amp;#39;~&amp;gt; 4.3.1&amp;#39; gem &amp;#39;jquery-rails&amp;#39; 之后将app\assets\stylesheets\application.css 改为 scss
 删掉所有的东西包括注释
-加入@import &amp;ldquo;bootstrap&amp;rdquo;; Ruby Note Todo Error running &#39;requirements_debian_libs_install g++ gcc autoconf automake bison libc6-dev libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev make pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline-dev libssl-dev&#39;, please read /home/sdttttt/.</description>
+加入@import &amp;ldquo;bootstrap&amp;rdquo;;
+ Ruby Note Todo Error running &#39;requirements_debian_libs_install g++ gcc autoconf automake bison libc6-dev libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev make pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline-dev libssl-dev&#39;, please read /home/sdttttt/.</description>
     </item>
     
     <item>
