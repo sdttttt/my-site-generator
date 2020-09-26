@@ -19,4 +19,6 @@ Hi! 我是SDTTTTT, 我是一个热情好客的软件工程师, 我常常和网�
 
 ---
 
+<iframe src="https://discordapp.com/widget?id=724268905555558400&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+
 ![SDTTTTT](https://imgsa.baidu.com/forum/w%3D580/sign=a3bf12530e4f78f0800b9afb49310a83/cbeaabdcd100baa19543cbbc4a10b912c9fc2ea5.jpg)
