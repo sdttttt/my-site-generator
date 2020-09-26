@@ -8,20 +8,16 @@
 <link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
 <title>GRC (一) | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
 <meta name="title" content="GRC (一)" />
-<meta name="description" content="我真的没法忍受git-cz了. 每次运行都特别慢, 还依赖Node.js这个东西. 使用时也没有办法自定义type.
-为了这个, 这两天我创建了一个新的项目,叫做GRC, 这个工具是为了我自己开发的, 当然, 我也希望能帮助到其他人. GRC是用Rust编写的, 抛开Runtime的环境, 可以直接运行, 而且Rust是编译型语言, GRC的速度和git-cz相比也有着绝对的优势.
-用法可以参考git-cz, 大部分操作都是一致的. 除了提交规范的Commit以外, 我也打算在GRC中加入一些其他的功能. 比如自动添加文件以及自动推送等等.
- 目前GRC的commit规范的功能已经完全实现了. 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
+<meta name="description" content="ooo! 一个不错的消息.
+目前GRC的commit规范的功能已经完全实现了. 之前还说要几个星期, 看来比我想得要快很多~~(我好勤勉)~~ 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
 开发也会继续进行, GRC会在以后为你提供更方便的功能. 我也期待有人能参与到这个项目中来.
 希望GRC能帮助更多人." />
 <meta name="keywords" content="Log," />
 
 
 <meta property="og:title" content="GRC (一)" />
-<meta property="og:description" content="我真的没法忍受git-cz了. 每次运行都特别慢, 还依赖Node.js这个东西. 使用时也没有办法自定义type.
-为了这个, 这两天我创建了一个新的项目,叫做GRC, 这个工具是为了我自己开发的, 当然, 我也希望能帮助到其他人. GRC是用Rust编写的, 抛开Runtime的环境, 可以直接运行, 而且Rust是编译型语言, GRC的速度和git-cz相比也有着绝对的优势.
-用法可以参考git-cz, 大部分操作都是一致的. 除了提交规范的Commit以外, 我也打算在GRC中加入一些其他的功能. 比如自动添加文件以及自动推送等等.
- 目前GRC的commit规范的功能已经完全实现了. 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
+<meta property="og:description" content="ooo! 一个不错的消息.
+目前GRC的commit规范的功能已经完全实现了. 之前还说要几个星期, 看来比我想得要快很多~~(我好勤勉)~~ 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
 开发也会继续进行, GRC会在以后为你提供更方便的功能. 我也期待有人能参与到这个项目中来.
 希望GRC能帮助更多人." />
 <meta property="og:type" content="article" />
@@ -36,25 +32,21 @@
 <meta name="twitter:image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 <meta name="twitter:title" content="GRC (一)"/>
-<meta name="twitter:description" content="我真的没法忍受git-cz了. 每次运行都特别慢, 还依赖Node.js这个东西. 使用时也没有办法自定义type.
-为了这个, 这两天我创建了一个新的项目,叫做GRC, 这个工具是为了我自己开发的, 当然, 我也希望能帮助到其他人. GRC是用Rust编写的, 抛开Runtime的环境, 可以直接运行, 而且Rust是编译型语言, GRC的速度和git-cz相比也有着绝对的优势.
-用法可以参考git-cz, 大部分操作都是一致的. 除了提交规范的Commit以外, 我也打算在GRC中加入一些其他的功能. 比如自动添加文件以及自动推送等等.
- 目前GRC的commit规范的功能已经完全实现了. 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
+<meta name="twitter:description" content="ooo! 一个不错的消息.
+目前GRC的commit规范的功能已经完全实现了. 之前还说要几个星期, 看来比我想得要快很多~~(我好勤勉)~~ 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
 开发也会继续进行, GRC会在以后为你提供更方便的功能. 我也期待有人能参与到这个项目中来.
 希望GRC能帮助更多人."/>
 
 
 
 <meta itemprop="name" content="GRC (一)">
-<meta itemprop="description" content="我真的没法忍受git-cz了. 每次运行都特别慢, 还依赖Node.js这个东西. 使用时也没有办法自定义type.
-为了这个, 这两天我创建了一个新的项目,叫做GRC, 这个工具是为了我自己开发的, 当然, 我也希望能帮助到其他人. GRC是用Rust编写的, 抛开Runtime的环境, 可以直接运行, 而且Rust是编译型语言, GRC的速度和git-cz相比也有着绝对的优势.
-用法可以参考git-cz, 大部分操作都是一致的. 除了提交规范的Commit以外, 我也打算在GRC中加入一些其他的功能. 比如自动添加文件以及自动推送等等.
- 目前GRC的commit规范的功能已经完全实现了. 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
+<meta itemprop="description" content="ooo! 一个不错的消息.
+目前GRC的commit规范的功能已经完全实现了. 之前还说要几个星期, 看来比我想得要快很多~~(我好勤勉)~~ 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
 开发也会继续进行, GRC会在以后为你提供更方便的功能. 我也期待有人能参与到这个项目中来.
 希望GRC能帮助更多人.">
 <meta itemprop="datePublished" content="2020-09-26T14:49:17&#43;08:00" />
 <meta itemprop="dateModified" content="2020-09-26T14:49:17&#43;08:00" />
-<meta itemprop="wordCount" content="28">
+<meta itemprop="wordCount" content="13">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
@@ -185,26 +177,13 @@
       26 Sep, 2020
     </time>
   </i>
-
-    <img align="right" width="60px" height="60px" src="/me.jpg" />
- 
-  <h5 align="right">Author: <a href="https://github.com/sdttttt">sdttttt</a></h5>
 </p>
 
 
 <content>
-  <p>我真的没法忍受<code>git-cz</code>了.
-每次运行都特别慢, 还依赖Node.js这个东西.
-使用时也没有办法自定义type.</p>
-<p>为了这个, 这两天我创建了一个新的项目,叫做GRC,
-这个工具是为了我自己开发的, 当然, 我也希望能帮助到其他人.
-GRC是用Rust编写的, 抛开Runtime的环境, 可以直接运行,
-而且Rust是编译型语言, GRC的速度和<code>git-cz</code>相比也有着绝对的优势.</p>
-<p>用法可以参考git-cz, 大部分操作都是一致的.
-除了提交规范的Commit以外, 我也打算在GRC中加入一些其他的功能.
-比如自动添加文件以及自动推送等等.</p>
-<hr>
+  <p>ooo! 一个不错的消息.</p>
 <p>目前GRC的commit规范的功能已经完全实现了.
+之前还说要几个星期, 看来比我想得要快很多~~(我好勤勉)~~
 基本上已经和git-cz有着完全一致的功能.
 我也已经把GRC发布在了crates.io网站上.
 在crates.io上搜索grc就能看到.
