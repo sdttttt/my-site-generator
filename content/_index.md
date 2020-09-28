@@ -5,7 +5,8 @@ date: 2020-03-04
 featured: "me.jpg"
 ---
 
-Hi! 我是SDTTTTT, 我是一个热情好客的臭鱼烂虾开发工程师, 我常常和网络编程打交道.
+Hi! 我是SDTTTTT, 我是一个热情好客的臭鱼烂虾开发工程师, 我常常和网络编程打交道. 
+我没有特别擅长的编程语言, 但是我不写`Python`和`PHP`.
 
 这个博客的构建源自我的[**hugo-blog-tool-man**](https://github.com/sdttttt/hugo-blog-tool-man)工具.
 我在这个博客里记录一些知识的或者是一些心情.
