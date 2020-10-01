@@ -7,10 +7,25 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Sat, 26 Sep 2020 14:49:17 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 01 Oct 2020 15:24:27 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/tags/log/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GRC (二)</title>
+      <link>https://sdttttt.github.io/blog/grc-2/</link>
+      <pubDate>Thu, 01 Oct 2020 15:24:27 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/grc-2/</guid>
+      <description>昨天姑且算是完成了GRC的开发. push这个命令不是很想加,想了一下也没有必要.
+GRC的0.8.0版本昨天算是发布了, 应该也算是头一次正经的用Rust来开发软件.
+在crate.io上看起来有100的安装了. 不知道他们脸上是什么表情 wwww
+希望GRC能给他们带去方便吧.
+当然, GRC的终点还没到. 我会一直使用这个工具. 碰到BUG或者有新想法肯定会去更新.况且现在连1.0.0版本都还没到.
+接下来主要工作会专注到学习加密算法,和sraft的开发上.
+&amp;hellip;sraft一直都没有什么好的想法啊&amp;hellip;</description>
+    </item>
     
     <item>
       <title>GRC (一)</title>
@@ -19,7 +34,7 @@
       
       <guid>https://sdttttt.github.io/blog/grc-1/</guid>
       <description>ooo! 一个不错的消息.
-目前GRC的commit规范的功能已经完全实现了. 之前还说要几个星期, 看来比我想得要快很多~~(我好勤勉)~~ 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
+目前GRC的commit规范的功能已经完全实现了. 之前还说要几个星期, 看来比我想得要快很多 👴勤勉 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
 开发也会继续进行, GRC会在以后为你提供更方便的功能. 我也期待有人能参与到这个项目中来.
 希望GRC能帮助更多人.</description>
     </item>
