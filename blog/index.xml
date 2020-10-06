@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Thu, 01 Oct 2020 15:24:27 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 06 Oct 2020 12:34:31 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Essays</title>
+      <link>https://sdttttt.github.io/blog/essays/</link>
+      <pubDate>Tue, 06 Oct 2020 12:34:31 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/essays/</guid>
+      <description>前几天去朋友那边玩了一趟, 事实上并没有什么好玩的. 这几天什么也没做. sraft也没有什么进展.
+我又重新对Ruby on Rails 感兴趣了.但是没有一个很好的环境写这个东西.还是算了.
+还是想想下一个项目写什么比较好.</description>
+    </item>
     
     <item>
       <title>GRC (二)</title>
