@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 06 Oct 2020 12:34:31 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 09 Oct 2020 10:52:24 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Sraft (三)</title>
+      <link>https://sdttttt.github.io/blog/sraft-3/</link>
+      <pubDate>Fri, 09 Oct 2020 10:52:24 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/sraft-3/</guid>
+      <description>经过几天思考, 我决定稍微重新分配一下各个模块的密度.
+RaftKernel中的Solt为本次的重点.对RaftKernel来说Solt为一个黑盒.Solt对外处理所有事件,但是不暴露实现. 内部的状态机转化也对RaftKernel进行隐藏.RaftKernel只要接受外界AE, 交给Solt, Solt反馈相应的事件, RaftKernel进行处理.
+挖藕, 希望这次有效.</description>
+    </item>
     
     <item>
       <title>Essays</title>
