@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Fri, 09 Oct 2020 10:52:24 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 11 Oct 2020 14:45:23 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/tags/log/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>日志</title>
+      <link>https://sdttttt.github.io/blog/log-2/</link>
+      <pubDate>Sun, 11 Oct 2020 14:45:23 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/log-2/</guid>
+      <description>昨天骑自行车下班回来后荨麻疹又犯了, 实在是比较难受, 今天算是去了趟皮肤病医院.
+算是配了点药. 希望能好一点.</description>
+    </item>
     
     <item>
       <title>Sraft (三)</title>
@@ -117,7 +127,7 @@ A: Python.</description>
     </item>
     
     <item>
-      <title>日志(一)</title>
+      <title>日志</title>
       <link>https://sdttttt.github.io/blog/log-1/</link>
       <pubDate>Sat, 19 Sep 2020 11:06:17 +0800</pubDate>
       
