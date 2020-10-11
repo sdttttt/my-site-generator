@@ -1,5 +1,5 @@
 ---
-title: "日志(一)"
+title: "日志"
 date: 2020-09-19T11:06:17+08:00
 description: "好难啊"
 featured: "me.jpg"
