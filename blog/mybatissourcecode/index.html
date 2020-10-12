@@ -34,7 +34,7 @@
 <meta itemprop="description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节.">
 <meta itemprop="datePublished" content="2020-09-10T22:15:42&#43;08:00" />
 <meta itemprop="dateModified" content="2020-09-10T22:15:42&#43;08:00" />
-<meta itemprop="wordCount" content="313">
+<meta itemprop="wordCount" content="607">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
@@ -258,8 +258,105 @@ SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。
     <span style="color:#f92672">}</span>
   <span style="color:#f92672">}</span>
 </code></pre></div><p>这样我们就得到了一个<code>SqlSession</code>.</p>
-<p>(To be continued &hellip; )</p>
+<blockquote>
+<p>2020.10.12 继续更新</p>
+</blockquote>
+<p>有了<code>SqlSession</code>之后我们就可以操作数据库了。</p>
+<p>我们来看看MyBatis是怎么实现<code>session.selectOne(&quot;org.mybatis.example.BlogMapper.selectBlog&quot;, 101);</code>的。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> T <span style="color:#a6e22e">selectOne</span><span style="color:#f92672">(</span>String statement<span style="color:#f92672">,</span> Object parameter<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// Popular vote was to return null on 0 results and throw exception on too many.
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//转而去调用selectList,很简单的，如果得到0条则返回null，得到1条则返回1条，得到多条报TooManyResultsException错
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 特别需要主要的是当没有查询到结果的时候就会返回null。因此一般建议在mapper中编写resultType的时候使用包装类型
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//而不是基本类型，比如推荐使用Integer而不是int。这样就可以避免NPE
+</span><span style="color:#75715e"></span>    List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.&lt;</span>T<span style="color:#f92672">&gt;</span>selectList<span style="color:#f92672">(</span>statement<span style="color:#f92672">,</span> parameter<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> TooManyResultsException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Expected one result (or null) to be returned by selectOne(), but found: &#34;</span> <span style="color:#f92672">+</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
 
+  <span style="color:#75715e">// emm，这里其实啥都没有，我们去SelectList看看。
+</span><span style="color:#75715e"></span>
+  <span style="color:#75715e">// 在下来解释一下这三个参数：
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// statement 映射语句的位置，比如&#34;org.mybatis.example.BlogMapper.selectBlog&#34;
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// parameter SQL语句中的参数
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// RowBounds 分页限制，相当于SQL中的limit. 
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">selectList</span><span style="color:#f92672">(</span>String statement<span style="color:#f92672">,</span> Object parameter<span style="color:#f92672">,</span> RowBounds rowBounds<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//根据statement id找到对应的MappedStatement
+</span><span style="color:#75715e"></span>      MappedStatement ms <span style="color:#f92672">=</span> configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">getMappedStatement</span><span style="color:#f92672">(</span>statement<span style="color:#f92672">);</span>
+      <span style="color:#75715e">//转而用执行器来查询结果,注意这里传入的ResultHandler是null
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// wrapCollection：如果参数是Collection类型，转换成Map，key为parameter的type.
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">return</span> executor<span style="color:#f92672">.</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> wrapCollection<span style="color:#f92672">(</span>parameter<span style="color:#f92672">),</span> rowBounds<span style="color:#f92672">,</span> Executor<span style="color:#f92672">.</span><span style="color:#a6e22e">NO_RESULT_HANDLER</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        
+      <span style="color:#66d9ef">throw</span> ExceptionFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">wrapException</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Error querying database.  Cause: &#34;</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+      ErrorContext<span style="color:#f92672">.</span><span style="color:#a6e22e">instance</span><span style="color:#f92672">().</span><span style="color:#a6e22e">reset</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+
+
+  <span style="color:#75715e">// 接下来是执行器的部分
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>MappedStatement ms<span style="color:#f92672">,</span> Object parameter<span style="color:#f92672">,</span> RowBounds rowBounds<span style="color:#f92672">,</span> ResultHandler resultHandler<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> SQLException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//得到绑定sql，就是将参数插入映射语句里，获得完整的SQL
+</span><span style="color:#75715e"></span>    BoundSql boundSql <span style="color:#f92672">=</span> ms<span style="color:#f92672">.</span><span style="color:#a6e22e">getBoundSql</span><span style="color:#f92672">(</span>parameter<span style="color:#f92672">);</span>
+    <span style="color:#75715e">//创建缓存Key
+</span><span style="color:#75715e"></span>    CacheKey key <span style="color:#f92672">=</span> createCacheKey<span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> parameter<span style="color:#f92672">,</span> rowBounds<span style="color:#f92672">,</span> boundSql<span style="color:#f92672">);</span>
+    <span style="color:#75715e">//查询
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> query<span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> parameter<span style="color:#f92672">,</span> rowBounds<span style="color:#f92672">,</span> resultHandler<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> boundSql<span style="color:#f92672">);</span>
+ <span style="color:#f92672">}</span>
+
+ <span style="color:#75715e">// 执行查询
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>MappedStatement ms<span style="color:#f92672">,</span> Object parameter<span style="color:#f92672">,</span> RowBounds rowBounds<span style="color:#f92672">,</span> ResultHandler resultHandler<span style="color:#f92672">,</span> CacheKey key<span style="color:#f92672">,</span> BoundSql boundSql<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> SQLException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// ErrorContext 是每个线程单独使用的错误上下文，它是用ThreadLocal制作的.
+</span><span style="color:#75715e"></span>    ErrorContext<span style="color:#f92672">.</span><span style="color:#a6e22e">instance</span><span style="color:#f92672">().</span><span style="color:#a6e22e">resource</span><span style="color:#f92672">(</span>ms<span style="color:#f92672">.</span><span style="color:#a6e22e">getResource</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">activity</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;executing a query&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">object</span><span style="color:#f92672">(</span>ms<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">());</span>
+    <span style="color:#75715e">//如果已经关闭，报错
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>closed<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> ExecutorException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Executor was closed.&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">//先清局部缓存，再查询.但仅查询堆栈为0，才清。为了处理递归调用
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>queryStack <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> ms<span style="color:#f92672">.</span><span style="color:#a6e22e">isFlushCacheRequired</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      clearLocalCache<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+    List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> list<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//加一,这样递归调用到上面的时候就不会再清局部缓存了
+</span><span style="color:#75715e"></span>      queryStack<span style="color:#f92672">++;</span>
+      <span style="color:#75715e">//先根据cachekey从localCache去查
+</span><span style="color:#75715e"></span>      list <span style="color:#f92672">=</span> resultHandler <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;)</span> localCache<span style="color:#f92672">.</span><span style="color:#a6e22e">getObject</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//若查到localCache缓存，处理localOutputParameterCache
+</span><span style="color:#75715e"></span>        handleLocallyCachedOutputParameters<span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> parameter<span style="color:#f92672">,</span> boundSql<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//从数据库查
+</span><span style="color:#75715e"></span>        list <span style="color:#f92672">=</span> queryFromDatabase<span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> parameter<span style="color:#f92672">,</span> rowBounds<span style="color:#f92672">,</span> resultHandler<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> boundSql<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//清空堆栈
+</span><span style="color:#75715e"></span>      queryStack<span style="color:#f92672">--;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>queryStack <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//延迟加载队列中所有元素
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DeferredLoad deferredLoad <span style="color:#f92672">:</span> deferredLoads<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        deferredLoad<span style="color:#f92672">.</span><span style="color:#a6e22e">load</span><span style="color:#f92672">();</span>
+      <span style="color:#f92672">}</span>
+
+      <span style="color:#75715e">// issue #601
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">//清空延迟加载队列
+</span><span style="color:#75715e"></span>      deferredLoads<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">getLocalCacheScope</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> LocalCacheScope<span style="color:#f92672">.</span><span style="color:#a6e22e">STATEMENT</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// issue #482
+</span><span style="color:#75715e"></span>    	<span style="color:#75715e">//如果是STATEMENT，清本地缓存
+</span><span style="color:#75715e"></span>        clearLocalCache<span style="color:#f92672">();</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> list<span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+</code></pre></div>
 </content>
 <p>
   
