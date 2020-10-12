@@ -1,2 +1,2 @@
-quick-sync:
-	bash ./deploy.sh
+deploy: deploy.sh
+	/bin/bash ./deploy.sh

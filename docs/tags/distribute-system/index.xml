@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>distribute system on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+    <link>https://sdttttt.github.io/tags/distribute-system/</link>
+    <description>Recent content in distribute system on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    <lastBuildDate>Thu, 25 Jun 2020 19:02:23 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/tags/distribute-system/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Raft实现的思考</title>
+      <link>https://sdttttt.github.io/blog/raft_impl/</link>
+      <pubDate>Thu, 25 Jun 2020 19:02:23 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/raft_impl/</guid>
+      <description>比较Raft算法和Paxos算法之后,确实能感受到Raft算法更加接近正常人的思维逻辑, Paxos反而比较专业?
+本文会说一些Raft算法实现上的一些考量, 我目前还没有正式开始开发Raft的实现. 文中所有的内容仅供参考.
+Raft最基础分为三种状态: Leader, Follower, Candidate. 整个Raft主体即是一个状态机.
+每个RaftNode都需要处理外部的事件.所以我们可以采用事件驱动模型.
+整体我们可以拆分为三个部分:
+ RaftProcessor: 处理事件的处理器. EventDispatcher: 负责接收外部任务,发送给Raft本体, 或者接收Raft本体发来的事件,向外发布. LogSynchronizer: 同步LogBuffer中的日志到Raft本体.  三个部分可以使用Channel来到达互相通信.</description>
+    </item>
+    
+  </channel>
+</rss>

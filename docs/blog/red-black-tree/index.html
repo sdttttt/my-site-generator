@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+<link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
+<title>Red Black Tree | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+<meta name="title" content="Red Black Tree" />
+<meta name="description" content="半年前在研究HashMap的时候已经学习过红黑树的规则原理了. 不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的) 这次就把这个数据结构做一个了断.
+性质  性质1：每个节点要么是黑色，要么是红色。 性质2：根节点是黑色。 性质3：每个叶子节点（NIL）是黑色。 性质4：每个红色结点的两个子结点一定都是黑色。 性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。  满足这5个性质就能保证红黑树是平衡的.
+Insert 插入的节点默认是红色的.因为这样可以最大限度满足红黑树的5个性质.
+请试想一下.如果插入的节点是红色:
+ 性质1可以满足. 性质2可以满足. 性质3可以满足(插入红色节点后自动衍生出2个黑色的NIL节点). 性质4可能没法满足(新插入的节点的父节点也是红色). 性质5可能没法满足(父节点是黑色时就不行).  然后是红黑树节点的左右旋.
+看懂没? 节点的旋转大概就是这样。
+然后就是要分插入的情况了.
+  第一种：根节点为空。这种情况，将node的颜色改为黑色即可.
+  第二种: node的父节点为黑色。这种情况不需要做修改.
+  第三种: node的父节点为红色 (根据性质3，N的祖父节点必为黑色). 这种情况和变换规则都比较多.下面细说&hellip;
+ node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树.   node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋)   node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。    Delete 这个以后再说.
+Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的。" />
+<meta name="keywords" content="Data Structure," />
+
+
+<meta property="og:title" content="Red Black Tree" />
+<meta property="og:description" content="半年前在研究HashMap的时候已经学习过红黑树的规则原理了. 不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的) 这次就把这个数据结构做一个了断.
+性质  性质1：每个节点要么是黑色，要么是红色。 性质2：根节点是黑色。 性质3：每个叶子节点（NIL）是黑色。 性质4：每个红色结点的两个子结点一定都是黑色。 性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。  满足这5个性质就能保证红黑树是平衡的.
+Insert 插入的节点默认是红色的.因为这样可以最大限度满足红黑树的5个性质.
+请试想一下.如果插入的节点是红色:
+ 性质1可以满足. 性质2可以满足. 性质3可以满足(插入红色节点后自动衍生出2个黑色的NIL节点). 性质4可能没法满足(新插入的节点的父节点也是红色). 性质5可能没法满足(父节点是黑色时就不行).  然后是红黑树节点的左右旋.
+看懂没? 节点的旋转大概就是这样。
+然后就是要分插入的情况了.
+  第一种：根节点为空。这种情况，将node的颜色改为黑色即可.
+  第二种: node的父节点为黑色。这种情况不需要做修改.
+  第三种: node的父节点为红色 (根据性质3，N的祖父节点必为黑色). 这种情况和变换规则都比较多.下面细说&hellip;
+ node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树.   node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋)   node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。    Delete 这个以后再说.
+Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/blog/red-black-tree/" />
+<meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
+<meta property="article:published_time" content="2020-05-25T19:27:28+08:00" />
+<meta property="article:modified_time" content="2020-05-25T19:27:28+08:00" /><meta property="og:site_name" content="SDTTTTT" />
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+<meta name="twitter:title" content="Red Black Tree"/>
+<meta name="twitter:description" content="半年前在研究HashMap的时候已经学习过红黑树的规则原理了. 不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的) 这次就把这个数据结构做一个了断.
+性质  性质1：每个节点要么是黑色，要么是红色。 性质2：根节点是黑色。 性质3：每个叶子节点（NIL）是黑色。 性质4：每个红色结点的两个子结点一定都是黑色。 性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。  满足这5个性质就能保证红黑树是平衡的.
+Insert 插入的节点默认是红色的.因为这样可以最大限度满足红黑树的5个性质.
+请试想一下.如果插入的节点是红色:
+ 性质1可以满足. 性质2可以满足. 性质3可以满足(插入红色节点后自动衍生出2个黑色的NIL节点). 性质4可能没法满足(新插入的节点的父节点也是红色). 性质5可能没法满足(父节点是黑色时就不行).  然后是红黑树节点的左右旋.
+看懂没? 节点的旋转大概就是这样。
+然后就是要分插入的情况了.
+  第一种：根节点为空。这种情况，将node的颜色改为黑色即可.
+  第二种: node的父节点为黑色。这种情况不需要做修改.
+  第三种: node的父节点为红色 (根据性质3，N的祖父节点必为黑色). 这种情况和变换规则都比较多.下面细说&hellip;
+ node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树.   node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋)   node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。    Delete 这个以后再说.
+Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的。"/>
+
+
+
+<meta itemprop="name" content="Red Black Tree">
+<meta itemprop="description" content="半年前在研究HashMap的时候已经学习过红黑树的规则原理了. 不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的) 这次就把这个数据结构做一个了断.
+性质  性质1：每个节点要么是黑色，要么是红色。 性质2：根节点是黑色。 性质3：每个叶子节点（NIL）是黑色。 性质4：每个红色结点的两个子结点一定都是黑色。 性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。  满足这5个性质就能保证红黑树是平衡的.
+Insert 插入的节点默认是红色的.因为这样可以最大限度满足红黑树的5个性质.
+请试想一下.如果插入的节点是红色:
+ 性质1可以满足. 性质2可以满足. 性质3可以满足(插入红色节点后自动衍生出2个黑色的NIL节点). 性质4可能没法满足(新插入的节点的父节点也是红色). 性质5可能没法满足(父节点是黑色时就不行).  然后是红黑树节点的左右旋.
+看懂没? 节点的旋转大概就是这样。
+然后就是要分插入的情况了.
+  第一种：根节点为空。这种情况，将node的颜色改为黑色即可.
+  第二种: node的父节点为黑色。这种情况不需要做修改.
+  第三种: node的父节点为红色 (根据性质3，N的祖父节点必为黑色). 这种情况和变换规则都比较多.下面细说&hellip;
+ node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树.   node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋)   node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。    Delete 这个以后再说.
+Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的。">
+<meta itemprop="datePublished" content="2020-05-25T19:27:28&#43;08:00" />
+<meta itemprop="dateModified" content="2020-05-25T19:27:28&#43;08:00" />
+<meta itemprop="wordCount" content="38">
+<meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+
+
+<meta itemprop="keywords" content="Data Structure," />
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: white;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #eee;
+  }
+
+  pre code {
+    border-left: 1px solid #999;
+    color: #555;
+    display: block;
+    padding: 10px;
+    white-space: pre-wrap;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #555;
+    padding-left: 10px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>Red Black Tree</h1>
+<hr />
+<p>
+  <i>
+    <time datetime='2020-05-25' pubdate>
+      25 May, 2020
+    </time>
+  </i>
+</p>
+
+
+<content>
+  <p>半年前在研究<code>HashMap</code>的时候已经学习过红黑树的规则原理了.
+不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的)
+这次就把这个数据结构做一个了断.</p>
+<h3 id="性质">性质</h3>
+<ul>
+<li>性质1：每个节点要么是黑色，要么是红色。</li>
+<li>性质2：根节点是黑色。</li>
+<li>性质3：每个叶子节点（NIL）是黑色。</li>
+<li>性质4：每个红色结点的两个子结点一定都是黑色。</li>
+<li>性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。</li>
+</ul>
+<p>满足这5个性质就能保证红黑树是平衡的.</p>
+<h3 id="insert">Insert</h3>
+<p>插入的节点默认是红色的.因为这样可以最大限度满足红黑树的5个性质.</p>
+<p>请试想一下.如果插入的节点是红色:</p>
+<ul>
+<li>性质1可以满足.</li>
+<li>性质2可以满足.</li>
+<li>性质3可以满足(插入红色节点后自动衍生出2个黑色的NIL节点).</li>
+<li>性质4可能没法满足(新插入的节点的父节点也是红色).</li>
+<li>性质5可能没法满足(父节点是黑色时就不行).</li>
+</ul>
+<p>然后是红黑树节点的左右旋.</p>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//1323444-ff870251222c460e.gif" alt=""></p>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//1323444-3f68be339d2a3983.gif" alt=""></p>
+<p>看懂没? 节点的旋转大概就是这样。</p>
+<p>然后就是要分插入的情况了.</p>
+<ul>
+<li>
+<p>第一种：根节点为空。这种情况，将node的颜色改为黑色即可.</p>
+</li>
+<li>
+<p>第二种: node的父节点为黑色。这种情况不需要做修改.</p>
+</li>
+<li>
+<p>第三种: node的父节点为红色 (根据性质3，N的祖父节点必为黑色). 这种情况和变换规则都比较多.下面细说&hellip;</p>
+<ul>
+<li>node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树.</li>
+</ul>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//Red-black_tree_insert_case_3.png" alt=""></p>
+<ul>
+<li>node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋)</li>
+</ul>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//Red-black_tree_insert_case_5.png" alt=""></p>
+<ul>
+<li>node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。</li>
+</ul>
+<p><img src="https://gitee.com/sdttttt/images/raw/master//Red-black_tree_insert_case_4.png" alt=""></p>
+</li>
+</ul>
+<h3 id="delete">Delete</h3>
+<p>这个以后再说.</p>
+<h3 id="search">Search</h3>
+<p>红黑树算是搜索二叉树的一个子集，<code>Search</code>方法是相同的。</p>
+
+</content>
+<p>
+  
+  <a href="https://sdttttt.github.io/tags/data-structure/">#Data Structure</a>
+  
+</p>
+
+  </main>
+  <footer>
+<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
+<img src="github.png" /></footer>
+
+    
+</body>
+
+</html>
