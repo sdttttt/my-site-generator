@@ -62,25 +62,27 @@ function cleanWork(){
 
 function syncSourceCode(){
 
-    echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
-
-    git add --ignore-errors .
-    git commit -q -m "${commit_message}"
+    echo -e "\033[32m[Pull]\033[0m 👀 Compare code ... "
 
     git pull $code_address master
 
+    echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
+
+    git add --ignore-errors .
+    git commit -q -m "$commit_message"
+
     push_starttime=`date +'%Y-%m-%d %H:%M:%S'`
 
-    if [ -n  $code_address_gitee ];
+    if [ ${#code_address_gitee} -eq 0 ];
     then
+        git push --progress --atomic $code_address master   
+    else
         echo -e "\033[32m[Synchronizing]\033[0m 🚀 Source code to Gitee..."
         git push -q --progress --atomic $code_address_gitee master &
         local pid=$!
         echo -e "\033[32m[Synchronizing]\033[0m 🚀 Source code to Github..."
         git push -q --progress --atomic $code_address master
         wait $pid
-    else
-        git push --progress --atomic $code_address master
     fi
 
     local push_endtime=`date +'%Y-%m-%d %H:%M:%S'`
