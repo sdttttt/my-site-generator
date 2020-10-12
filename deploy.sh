@@ -21,7 +21,6 @@
 
 set -e
 
-
 starttime=`date +'%Y-%m-%d %H:%M:%S'`
 
 code_address="git@github.com:sdttttt/sdttttt.github.io" # Hugo 项目地址
