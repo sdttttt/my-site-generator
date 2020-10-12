@@ -465,7 +465,7 @@ SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。
 </span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">convertArgsToSqlCommandParam</span><span style="color:#f92672">(</span>Object<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
       <span style="color:#75715e">// 这里有一个坑：
 </span><span style="color:#75715e"></span>      <span style="color:#75715e">// args 是Mapper方法执行的参数
-</span><span style="color:#75715e"></span>      <span style="color:#75715e">// paramCount 是编写的SQL语句所需要的命令参数
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// param 是编写的SQL语句所需要的命令参数
 </span><span style="color:#75715e"></span>      <span style="color:#75715e">// 它们有什么不同呢：
 </span><span style="color:#75715e"></span>      <span style="color:#75715e">// 在MyBatis中你需要使用分页时可以不显式在SQL语句中使用limit命令
 </span><span style="color:#75715e"></span>      <span style="color:#75715e">// 使用RowBounds对象作为Mapper的额外参数来做到数据分页
