@@ -352,7 +352,7 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   public Object convertArgsToSqlCommandParam(Object[] args) {
       // 这里有一个坑：
       // args 是Mapper方法执行的参数
-      // paramCount 是编写的SQL语句所需要的命令参数
+      // param 是编写的SQL语句所需要的命令参数
       // 它们有什么不同呢：
       // 在MyBatis中你需要使用分页时可以不显式在SQL语句中使用limit命令
       // 使用RowBounds对象作为Mapper的额外参数来做到数据分页
