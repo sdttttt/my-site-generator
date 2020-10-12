@@ -60,13 +60,14 @@ function cleanWork(){
     rm -rf ./public
 }
 
-
 function syncSourceCode(){
 
     echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
 
     git add --ignore-errors .
     git commit -q -m "${commit_message}"
+
+    git pull $code_address master
 
     push_starttime=`date +'%Y-%m-%d %H:%M:%S'`
 
