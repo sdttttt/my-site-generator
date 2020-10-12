@@ -221,3 +221,171 @@ try (SqlSession session = sqlSessionFactory.openSession()) {
   }
 ```
 
+以上是`SqlSession.selectOne`的流程。然而实际中我们直接使用SqlSession来执行数据库操作的情况很少。
+
+大多数情况我们会这样使用MyBatis:
+
+```Java
+try (SqlSession session = sqlSessionFactory.openSession()) {
+  BlogMapper mapper = session.getMapper(BlogMapper.class);
+  Blog blog = mapper.selectBlog(101);
+}
+```
+
+这个方法的详细过程我们使用MyBatis的单元测试来探索。
+
+单元测试代码：
+
+```Java
+  @Test
+  public void shouldSelectBlogWithPostsUsingSubSelect() throws Exception {
+    SqlSession session = sqlSessionFactory.openSession();
+    try {
+      BoundBlogMapper mapper = session.getMapper(BoundBlogMapper.class);
+      Blog b = mapper.selectBlogWithPostsUsingSubSelect(1);
+      assertEquals(1, b.getId());
+      session.close();
+      assertNotNull(b.getAuthor());
+      assertEquals(101, b.getAuthor().getId());
+      assertEquals("jim", b.getAuthor().getUsername());
+      assertEquals("********", b.getAuthor().getPassword());
+      assertEquals(2, b.getPosts().size());
+    } finally {
+      session.close();
+    }
+  }
+```
+
+快进到`session.getMapper`
+
+```Java
+  //返回代理类
+  public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
+    // 直接得到该类型Mapper代理工厂
+    final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
+    // 没有就离谱
+    if (mapperProxyFactory == null) {
+      throw new BindingException("Type " + type + " is not known to the MapperRegistry.");
+    }
+    try {
+      // 通过当前Session生产一个代理
+      return mapperProxyFactory.newInstance(sqlSession);
+    } catch (Exception e) {
+      throw new BindingException("Error getting mapper instance. Cause: " + e, e);
+    }
+  }
+```
+
+实际上生产Mapper的逻辑并不多。
+
+主要是执行代理方法时的动作。
+
+执行`mapper.selectBlogWithPostsUsingSubSelect(1);`的逻辑如下：
+
+```Java
+  // 由于是代理生成的，所以调用方法后会进入一下逻辑：
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    // 如果这个方法是来自Object，就直接执行，直接返回
+    if (Object.class.equals(method.getDeclaringClass())) {
+      try {
+        return method.invoke(this, args);
+      } catch (Throwable t) {
+        throw ExceptionUtil.unwrapThrowable(t);
+      }
+    }
+    
+    // 去缓存中找MapperMethod，第一次的话会new一个
+    final MapperMethod mapperMethod = cachedMapperMethod(method);
+    //执行本体
+    return mapperMethod.execute(sqlSession, args);
+  }
+
+```
+
+下面就是整个代理的执行数据库操作的逻辑，比较长：
+
+```Java
+  public Object execute(SqlSession sqlSession, Object[] args) {
+    Object result;
+    //可以看到执行时就是4种情况，insert|update|delete|select，分别调用SqlSession的4大类方法
+    if (SqlCommandType.INSERT == command.getType()) {
+      Object param = method.convertArgsToSqlCommandParam(args);
+      result = rowCountResult(sqlSession.insert(command.getName(), param));
+    } else if (SqlCommandType.UPDATE == command.getType()) {
+      Object param = method.convertArgsToSqlCommandParam(args);
+      result = rowCountResult(sqlSession.update(command.getName(), param));
+    } else if (SqlCommandType.DELETE == command.getType()) {
+      Object param = method.convertArgsToSqlCommandParam(args);
+      result = rowCountResult(sqlSession.delete(command.getName(), param));
+    } else if (SqlCommandType.SELECT == command.getType()) {
+      // 我们执行的是查询，直接跳到这里
+      if (method.returnsVoid() && method.hasResultHandler()) {
+        // 检查是不是没有返回值以及结果处理器: 我们执行的是查询，是有返回值的
+        executeWithResultHandler(sqlSession, args);
+        result = null;
+      } else if (method.returnsMany()) {
+        //如果结果有多条记录：我们只查一条
+        result = executeForMany(sqlSession, args);
+      } else if (method.returnsMap()) {
+        //如果结果是map：我们查的只是个对象
+        result = executeForMap(sqlSession, args);
+      } else {
+        //否则就是一条记录
+        // 我们仔细分析这个convertArgsToSqlCommandParam方法
+        Object param = method.convertArgsToSqlCommandParam(args);
+        // 之后我们又回到了SelectOne这个方法。
+        result = sqlSession.selectOne(command.getName(), param);
+      }
+    } else {
+      throw new BindingException("Unknown execution method for: " + command.getName());
+    }
+    if (result == null && method.getReturnType().isPrimitive() && !method.returnsVoid()) {
+      throw new BindingException("Mapper method '" + command.getName()
+          + " attempted to return null from a method with a primitive return type (" + method.getReturnType() + ").");
+    }
+    return result;
+  }
+
+
+  // 将参数转换为SQL命令参数
+  public Object convertArgsToSqlCommandParam(Object[] args) {
+      // 这里有一个坑：
+      // args 是Mapper方法执行的参数
+      // paramCount 是编写的SQL语句所需要的命令参数
+      // 它们有什么不同呢：
+      // 在MyBatis中你需要使用分页时可以不显式在SQL语句中使用limit命令
+      // 使用RowBounds对象作为Mapper的额外参数来做到数据分页
+      // 该参数不用在SQL语句中显式使用.
+      final int paramCount = params.size();
+      if (args == null || paramCount == 0) {
+        //如果没参数
+        return null;
+      } else if (!hasNamedParameters && paramCount == 1) {
+        //如果只有一个参数
+        return args[params.keySet().iterator().next().intValue()];
+      } else {
+        //否则，返回一个ParamMap，修改参数名，参数名就是其位置
+        final Map<String, Object> param = new ParamMap<Object>();
+        int i = 0;
+        for (Map.Entry<Integer, String> entry : params.entrySet()) {
+          //1.先加一个#{0},#{1},#{2}...参数
+          param.put(entry.getValue(), args[entry.getKey().intValue()]);
+          // issue #71, add param names as param1, param2...but ensure backward compatibility
+          final String genericParamName = "param" + String.valueOf(i + 1);
+          if (!param.containsKey(genericParamName)) {
+            //2.再加一个#{param1},#{param2}...参数
+            //你可以传递多个参数给一个映射器方法。如果你这样做了,
+            //默认情况下它们将会以它们在参数列表中的位置来命名,比如:#{param1},#{param2}等。
+            //如果你想改变参数的名称(只在多参数情况下) ,那么你可以在参数上使用@Param(“paramName”)注解。
+            param.put(genericParamName, args[entry.getKey()]);
+          }
+          i++;
+        }
+        return param;
+      }
+    }
+
+```
+
+OK, 我基本想说的都说完了。后续可能会额外补充一些内容，但是不会在本文中，会写新文章。
