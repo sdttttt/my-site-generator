@@ -8,26 +8,26 @@
 <link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
 <title>RocketMQ 3.3.4 Broker | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
 <meta name="title" content="RocketMQ 3.3.4 Broker" />
-<meta name="description" content="差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.3.4）， 坏消息是这个2014年的项目里没有单元测试极少，唯一有的几个还没法直接跑通。 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
+<meta name="description" content="差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.2.2）， 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难. 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
 我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：
 先从初始化开始：
-public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从命令行启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
- 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
+public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从commandline启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
+ 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象. 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
  以上就是createBrokerController的内容，函数虽然长，但是并不复杂。
-接下来我们看start函数，这个函数比较段，直接发出来吧：
-public static BrokerController start(BrokerController controller) { try { // 启动服务控制对象  controller.start(); String tip = &#34;The broker[&#34; &#43; controller.getBrokerConfig().getBrokerName() &#43; &#34;, &#34; &#43; controller.getBrokerAddr() &#43; &#34;] boot success.&#34;; if (null != controller.getBrokerConfig().getNamesrvAddr()) { tip &#43;= &#34; and name server is &#34; &#43; controller." />
+下面为start函数的内容, 在main中的start函数实际上是去委托了BrokerController去执行.
+public void start() throws Exception { // 启动Broker的各层服务  if (this.messageStore != null) { this.messageStore.start(); } if (this.remotingServer != null) { this.remotingServer.start(); } if (this.brokerOuterAPI != null) { this.brokerOuterAPI.start(); } if (this.pullRequestHoldService != null) { this." />
 <meta name="keywords" content="Java," />
 
 
 <meta property="og:title" content="RocketMQ 3.3.4 Broker" />
-<meta property="og:description" content="差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.3.4）， 坏消息是这个2014年的项目里没有单元测试极少，唯一有的几个还没法直接跑通。 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
+<meta property="og:description" content="差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.2.2）， 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难. 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
 我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：
 先从初始化开始：
-public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从命令行启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
- 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
+public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从commandline启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
+ 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象. 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
  以上就是createBrokerController的内容，函数虽然长，但是并不复杂。
-接下来我们看start函数，这个函数比较段，直接发出来吧：
-public static BrokerController start(BrokerController controller) { try { // 启动服务控制对象  controller.start(); String tip = &#34;The broker[&#34; &#43; controller.getBrokerConfig().getBrokerName() &#43; &#34;, &#34; &#43; controller.getBrokerAddr() &#43; &#34;] boot success.&#34;; if (null != controller.getBrokerConfig().getNamesrvAddr()) { tip &#43;= &#34; and name server is &#34; &#43; controller." />
+下面为start函数的内容, 在main中的start函数实际上是去委托了BrokerController去执行.
+public void start() throws Exception { // 启动Broker的各层服务  if (this.messageStore != null) { this.messageStore.start(); } if (this.remotingServer != null) { this.remotingServer.start(); } if (this.brokerOuterAPI != null) { this.brokerOuterAPI.start(); } if (this.pullRequestHoldService != null) { this." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://sdttttt.github.io/blog/rocketmq-comments/" />
 <meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
@@ -40,29 +40,29 @@ public static BrokerController start(BrokerController controller) { try { // 启
 <meta name="twitter:image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 <meta name="twitter:title" content="RocketMQ 3.3.4 Broker"/>
-<meta name="twitter:description" content="差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.3.4）， 坏消息是这个2014年的项目里没有单元测试极少，唯一有的几个还没法直接跑通。 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
+<meta name="twitter:description" content="差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.2.2）， 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难. 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
 我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：
 先从初始化开始：
-public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从命令行启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
- 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
+public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从commandline启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
+ 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象. 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
  以上就是createBrokerController的内容，函数虽然长，但是并不复杂。
-接下来我们看start函数，这个函数比较段，直接发出来吧：
-public static BrokerController start(BrokerController controller) { try { // 启动服务控制对象  controller.start(); String tip = &#34;The broker[&#34; &#43; controller.getBrokerConfig().getBrokerName() &#43; &#34;, &#34; &#43; controller.getBrokerAddr() &#43; &#34;] boot success.&#34;; if (null != controller.getBrokerConfig().getNamesrvAddr()) { tip &#43;= &#34; and name server is &#34; &#43; controller."/>
+下面为start函数的内容, 在main中的start函数实际上是去委托了BrokerController去执行.
+public void start() throws Exception { // 启动Broker的各层服务  if (this.messageStore != null) { this.messageStore.start(); } if (this.remotingServer != null) { this.remotingServer.start(); } if (this.brokerOuterAPI != null) { this.brokerOuterAPI.start(); } if (this.pullRequestHoldService != null) { this."/>
 
 
 
 <meta itemprop="name" content="RocketMQ 3.3.4 Broker">
-<meta itemprop="description" content="差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.3.4）， 坏消息是这个2014年的项目里没有单元测试极少，唯一有的几个还没法直接跑通。 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
+<meta itemprop="description" content="差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.2.2）， 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难. 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
 我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：
 先从初始化开始：
-public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从命令行启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
- 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
+public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从commandline启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
+ 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象. 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
  以上就是createBrokerController的内容，函数虽然长，但是并不复杂。
-接下来我们看start函数，这个函数比较段，直接发出来吧：
-public static BrokerController start(BrokerController controller) { try { // 启动服务控制对象  controller.start(); String tip = &#34;The broker[&#34; &#43; controller.getBrokerConfig().getBrokerName() &#43; &#34;, &#34; &#43; controller.getBrokerAddr() &#43; &#34;] boot success.&#34;; if (null != controller.getBrokerConfig().getNamesrvAddr()) { tip &#43;= &#34; and name server is &#34; &#43; controller.">
+下面为start函数的内容, 在main中的start函数实际上是去委托了BrokerController去执行.
+public void start() throws Exception { // 启动Broker的各层服务  if (this.messageStore != null) { this.messageStore.start(); } if (this.remotingServer != null) { this.remotingServer.start(); } if (this.brokerOuterAPI != null) { this.brokerOuterAPI.start(); } if (this.pullRequestHoldService != null) { this.">
 <meta itemprop="datePublished" content="2020-10-13T16:56:11&#43;08:00" />
 <meta itemprop="dateModified" content="2020-10-13T16:56:11&#43;08:00" />
-<meta itemprop="wordCount" content="90">
+<meta itemprop="wordCount" content="124">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
@@ -198,15 +198,15 @@ public static BrokerController start(BrokerController controller) { try { // 启
 
 <content>
   <p>差不多可以看消息队列的源码了。
-在下从gitee上找到了rocketmq的早期版本（3.3.4），
-坏消息是这个2014年的项目里没有单元测试极少，唯一有的几个还没法直接跑通。
+在下从gitee上找到了rocketmq的早期版本（3.2.2），
+坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难.
 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。</p>
 <p>我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：</p>
 <p>先从初始化开始：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         start<span style="color:#f92672">(</span>createBrokerController<span style="color:#f92672">(</span>args<span style="color:#f92672">));</span>
     <span style="color:#f92672">}</span>
-</code></pre></div><p>rocketmq是从命令行启动的，<code>createBrokerController</code>函数比较长，
+</code></pre></div><p>rocketmq是从<code>commandline</code>启动的，<code>createBrokerController</code>函数比较长，
 会有很多额外的逻辑干扰你，我这里直接说重点：</p>
 <ul>
 <li>读取环境变量，没有就用默认值。</li>
@@ -217,38 +217,61 @@ public static BrokerController start(BrokerController controller) { try { // 启
 <li>检查broker的类型（master，slave）</li>
 <li>初始化日志配置类。</li>
 <li>再次打印。</li>
-<li>初始化服务控制对象</li>
+<li>初始化服务控制对象.</li>
 <li>最后增加一个关闭Broker时触发的hook.</li>
 </ul>
 <blockquote>
 <p>服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。</p>
 </blockquote>
 <p>以上就是<code>createBrokerController</code>的内容，函数虽然长，但是并不复杂。</p>
-<p>接下来我们看<code>start</code>函数，这个函数比较段，直接发出来吧：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> BrokerController <span style="color:#a6e22e">start</span><span style="color:#f92672">(</span>BrokerController controller<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            <span style="color:#75715e">// 启动服务控制对象
-</span><span style="color:#75715e"></span>            controller<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
-            String tip <span style="color:#f92672">=</span>
-                    <span style="color:#e6db74">&#34;The broker[&#34;</span> <span style="color:#f92672">+</span> controller<span style="color:#f92672">.</span><span style="color:#a6e22e">getBrokerConfig</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getBrokerName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span>
-                            <span style="color:#f92672">+</span> controller<span style="color:#f92672">.</span><span style="color:#a6e22e">getBrokerAddr</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;] boot success.&#34;</span><span style="color:#f92672">;</span>
+<p>下面为<code>start</code>函数的内容, 在<code>main</code>中的<code>start</code>函数实际上是去委托了<code>BrokerController</code>去执行.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">start</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
 
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">null</span> <span style="color:#f92672">!=</span> controller<span style="color:#f92672">.</span><span style="color:#a6e22e">getBrokerConfig</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getNamesrvAddr</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-                tip <span style="color:#f92672">+=</span> <span style="color:#e6db74">&#34; and name server is &#34;</span> <span style="color:#f92672">+</span> controller<span style="color:#f92672">.</span><span style="color:#a6e22e">getBrokerConfig</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getNamesrvAddr</span><span style="color:#f92672">();</span>
+        <span style="color:#75715e">// 启动Broker的各层服务
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">messageStore</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">messageStore</span><span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">remotingServer</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">remotingServer</span><span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">brokerOuterAPI</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">brokerOuterAPI</span><span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pullRequestHoldService</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pullRequestHoldService</span><span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">clientHousekeepingService</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">clientHousekeepingService</span><span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">filterServerManager</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">filterServerManager</span><span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">// 启动时，注册该Broker的信息到所有的NameServer
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">registerBrokerAll</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// 定时注册Broker到Name Server
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">scheduledExecutorService</span><span style="color:#f92672">.</span><span style="color:#a6e22e">scheduleAtFixedRate</span><span style="color:#f92672">(()</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">registerBrokerAll</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                log<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;registerBrokerAll Exception&#34;</span><span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
             <span style="color:#f92672">}</span>
+        <span style="color:#f92672">},</span> 1000 <span style="color:#f92672">*</span> 10<span style="color:#f92672">,</span> 1000 <span style="color:#f92672">*</span> 30<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">MILLISECONDS</span><span style="color:#f92672">);</span>
 
-            <span style="color:#75715e">// 打印日志，没了
-</span><span style="color:#75715e"></span>            log<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><span style="color:#f92672">(</span>tip<span style="color:#f92672">);</span>
-            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>tip<span style="color:#f92672">);</span>
-
-            <span style="color:#66d9ef">return</span> controller<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
-            System<span style="color:#f92672">.</span><span style="color:#a6e22e">exit</span><span style="color:#f92672">(-</span>1<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">brokerStatsManager</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 看起来就是一些数据统计线程
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">brokerStatsManager</span><span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
         <span style="color:#f92672">}</span>
 
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#75715e">// 删除多余的Topic
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">addDeleteTopicTask</span><span style="color:#f92672">();</span>
     <span style="color:#f92672">}</span>
 </code></pre></div>
 </content>
