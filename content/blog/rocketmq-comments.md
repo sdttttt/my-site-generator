@@ -94,3 +94,5 @@ rocketmq是从`commandline`启动的，`createBrokerController`函数比较长�
         this.addDeleteTopicTask();
     }
 ```
+
+整个Borker的流程差不多就是这样.代码里并没有什么亮点说实话.

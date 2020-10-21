@@ -62,7 +62,7 @@ public static void main(String[] args) { start(createBrokerController(args)); } 
 public void start() throws Exception { // 启动Broker的各层服务  if (this.messageStore != null) { this.messageStore.start(); } if (this.remotingServer != null) { this.remotingServer.start(); } if (this.brokerOuterAPI != null) { this.brokerOuterAPI.start(); } if (this.pullRequestHoldService != null) { this.">
 <meta itemprop="datePublished" content="2020-10-13T16:56:11&#43;08:00" />
 <meta itemprop="dateModified" content="2020-10-13T16:56:11&#43;08:00" />
-<meta itemprop="wordCount" content="124">
+<meta itemprop="wordCount" content="125">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
@@ -273,7 +273,8 @@ public void start() throws Exception { // 启动Broker的各层服务  if (this.
         <span style="color:#75715e">// 删除多余的Topic
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">addDeleteTopicTask</span><span style="color:#f92672">();</span>
     <span style="color:#f92672">}</span>
-</code></pre></div>
+</code></pre></div><p>整个Borker的流程差不多就是这样.代码里并没有什么亮点说实话.</p>
+
 </content>
 <p>
   
