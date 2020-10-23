@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Thu, 22 Oct 2020 09:26:05 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 23 Oct 2020 16:44:07 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Log 5</title>
+      <link>https://sdttttt.github.io/blog/log-5/</link>
+      <pubDate>Fri, 23 Oct 2020 16:44:07 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/log-5/</guid>
+      <description>今天写了一天的sraft. 本来是自信满满，但是有些地方的设计真的让我焦头烂额.
+今天把sraft的rpc的网络通信部分换成了长连接。 但是写到节点发现的部分又有问题来了，我没有写关于处理节点发现之类的模块， 至今都是按照raft论文上的基础理论来实现的。
+这一块又要怎么设计呢&amp;hellip; 果然有些地方写的还是太复杂了么.</description>
+    </item>
     
     <item>
       <title>Log 4</title>
