@@ -263,7 +263,7 @@ LRU 最久没有使用算法，即LRU算法（Least Recently Used algorithm）�
 <p>第四次: [3, 2]</p>
 </blockquote>
 <p>最新访问的缓存会放在首位, 很久没有访问的缓存自然而然的就到了末尾, 然后被淘汰.</p>
-<h3 id="w-tinylru">W-TinyLRU</h3>
+<h2 id="w-tinylru">W-TinyLRU</h2>
 <p>知名缓存框架 caffeine 就是使用的这种算法 这种算法结合LRU和LFU算法，解决了突发流量问题带来的。</p>
 <pre><code>整个算法数据结构分成三个段,分别为  Eden,Probation,Protected 三个队列
 </code></pre>
