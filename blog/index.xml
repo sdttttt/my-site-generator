@@ -7,10 +7,32 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Fri, 23 Oct 2020 16:44:07 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 26 Oct 2020 11:03:33 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Cache Algorithm</title>
+      <link>https://sdttttt.github.io/blog/cache-algorithm/</link>
+      <pubDate>Mon, 26 Oct 2020 11:03:33 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/cache-algorithm/</guid>
+      <description>本文主要讲的是目前存在的几种缓存算法, 没错, 我又来误人子弟了.
+内容会围绕近几年比较流行的LFU, LRU, 还有W-TinyLRU这么三种缓存算法来讲, 尽量使用最简练的文本.
+LFU 近期最少使用算法，即LFU算法（Least Frequently Used algorithm）。 这种算法会淘汰近期最少访问的缓存, 仔细分析一下, 没错，这是一种非常合理的算法，因为到目前为止最少使用的页面， 很可能也是将来最少访问的页面。 该算法既充分利用了内存中缓存调度情况的历史信息，又正确反映了程序的局部性。
+但是，这种算法的开销极其高, 为了记录每个缓存的使用情况, 你不得不为每一个缓存增加一个很大的计数器, 每次到达临界点, 我们还需要找到所有计数器中最少的缓存, 淘汰它.
+核心思想：如果一个数据在最近一段时间内使用次数很少，那么在将来一段时间内被使用的可能性也很小.  通常我们会这么去实现:
+外部结构为Array, 存储元素为KV. K: 该缓存访问次数. V: 缓存本身. 数组按照K排序. 每次缓存大小即将临界, 淘汰K最小的缓存.
+顺便一提 Window-LFU 它是LFU算法的改良版. LFU中缓存的访问次数记录的时间范围为整个程序的生命周期, 在Window-LFU中只对特定范围的访问次数进行淘汰. (比如最近10次访问的缓存.)
+LRU 最久没有使用算法，即LRU算法（Least Recently Used algorithm）。 这种算法把近期最久没有被访问过的页面作为被替换的页面。 它把LFU算法中要记录数量上的&amp;quot;多&amp;quot;与&amp;quot;少&amp;quot;简化成判断&amp;quot;有&amp;quot;与&amp;quot;无&amp;rdquo;，因此，实现起来比较容易。
+核心思想：如果在一段时间内长时间不访问的页面将来也不会访问.  实现很简单:
+假设我们的缓存容量大小为2, 最多缓存2个元素. 下面是缓存的访问顺序.
+ 1 2 2 3
+  第一次: [1]
+  第二次: [2, 1]
+  第三次: [2, 1]</description>
+    </item>
     
     <item>
       <title>Log 5</title>
