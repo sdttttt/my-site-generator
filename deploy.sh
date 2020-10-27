@@ -19,8 +19,6 @@
 # 请配置仓库GitHub Page的Source为Master分支下的docs文件夹
 ######################################################################################
 
-set -e
-
 starttime=`date +'%Y-%m-%d %H:%M:%S'`
 
 code_address="git@github.com:sdttttt/sdttttt.github.io" # Hugo 项目地址
@@ -68,8 +66,11 @@ function syncSourceCode(){
     echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
 
     git add --ignore-errors .
-    git commit -q -m "$commit_message"
 
+    git commit -q -m "$commit_message"
+    
+    set -e
+    
     push_starttime=`date +'%Y-%m-%d %H:%M:%S'`
 
     if [ ${#code_address_gitee} -eq 0 ];
