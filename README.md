@@ -1,4 +1,4 @@
-# SDTTTTT's Blog Generator
+# SDTTTTT's Blog
 
 sdttttt的blog. 由hugo构建.
 
