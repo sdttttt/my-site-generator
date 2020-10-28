@@ -3,4 +3,7 @@
 
 set -e
 
-hugo new blog/$1.md
+read -p "Input post name: " name
+echo -e "\n"
+
+hugo new blog/$name.md
