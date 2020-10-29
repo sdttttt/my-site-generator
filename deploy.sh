@@ -59,7 +59,7 @@ function checkSSH() {
         echo -e "\033[33m[Auth]\033[0m 🥺 It looks like you're not using **SSH** for authentication."
 
     elif [[ $code_address == git@* ]]; then
-        echo -e "\033[33m[Auth]\033[0m 👍 Authentication of SSH! This is very good!"
+        echo -e "\033[32m[Auth]\033[0m 👍 Authentication of SSH! This is very good!"
     fi
 
 }
