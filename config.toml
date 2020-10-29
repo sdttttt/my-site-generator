@@ -45,5 +45,4 @@ unsafe = true
 
 [module]
   [[module.imports]]
-    name = "bearblog"
     path = "github.com/janraasch/hugo-bearblog"
