@@ -64,7 +64,7 @@ function checkSSH() {
 
 }
 
-function syncSourceCode() {
+function syncSourceCode {
     set -e
 
     git add --ignore-errors .
@@ -99,7 +99,7 @@ function syncSourceCode() {
     echo -e "Total in "$((end_seconds - start_seconds))" s"
 }
 
-function generateSite() {
+function generateSite {
 
     echo -e "\033[32m[HugoGenerator]\033[0m 🚚 Hugo Building..."
     hugo
@@ -109,7 +109,7 @@ function generateSite() {
     fi
 }
 
-function checkEnv() {
+function checkEnv {
     echo -e "\033[34m[Monitor]\033[0m 🤔 Check Status..."
 
     if [ $? -eq 0 ]; then
@@ -125,7 +125,7 @@ function checkEnv() {
     return 1
 }
 
-function deploy() {
+function deploy {
 
     checkEnv
     if [ $? -eq 0 ]; then
