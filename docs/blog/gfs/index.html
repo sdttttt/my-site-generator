@@ -30,7 +30,7 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
 <meta property="og:url" content="https://sdttttt.github.io/blog/gfs/" />
 <meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
 <meta property="article:published_time" content="2020-05-09T13:00:00+00:00" />
-<meta property="article:modified_time" content="2020-05-09T13:00:00+00:00" /><meta property="og:site_name" content="SDTTTTT" />
+<meta property="article:modified_time" content="2020-09-24T18:06:32+08:00" /><meta property="og:site_name" content="SDTTTTT" />
 
 
 
@@ -57,7 +57,7 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
 下面简单的解释一下读操作的交互。
  Client指定的文件名和字节偏移转换成文件的一个块索引（Chunk Index）。 给Master发送一个包含文件名和块索引的请求。 master回应对应的Chunk Handle(存储数据服务器以Chunk Handle标识Chunk)和副本的位置（多个副本）。 Client以文件名和块索引为键缓存这些信息。（handle和副本的位置） Client向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了Chunk Handle和块内的一个字节区间。 除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。  ">
 <meta itemprop="datePublished" content="2020-05-09T13:00:00&#43;00:00" />
-<meta itemprop="dateModified" content="2020-05-09T13:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-09-24T18:06:32&#43;08:00" />
 <meta itemprop="wordCount" content="28">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 

@@ -27,7 +27,7 @@ rails assets:precompile Rails 6 在生产环境下认为你使用 Apache 和 Ngi
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://sdttttt.github.io/blog/rails_development/" />
 <meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
-<meta property="og:site_name" content="SDTTTTT" />
+<meta property="article:modified_time" content="2020-09-24T18:06:32+08:00" /><meta property="og:site_name" content="SDTTTTT" />
 
 
 
@@ -51,7 +51,7 @@ production Rails 6 启动时需要一串Key作为加密的salt，key不能随意
 rails credentials:edit 然后Rails访问静态资源，需要使用webpacker打包编译后的资产。 运行
 rails assets:precompile Rails 6 在生产环境下认为你使用 Apache 和 Nginx 缓存编译后的静态资产。如果你不使用他们，需要
 # config/environments/production.rb config.public_file_server.enabled = true 记住，打包之后的js以及css统一叫application.js/css 在view页面引用时需要引用application这个名字。其他的会报错">
-
+<meta itemprop="dateModified" content="2020-09-24T18:06:32&#43;08:00" />
 <meta itemprop="wordCount" content="35">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
