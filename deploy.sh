@@ -72,7 +72,7 @@ function syncSourceCode(){
     if [[ -z `git diff --stat` ]];
     then
         echo -e "\033[31m[Error]\033[0m💔 文件没有变动欸..."
-        exit 1 
+        exit  
     fi
 
     set -e
