@@ -73,11 +73,9 @@ function cleanWork {
 function checkSSH() {
     if [[ $code_address == https* ]]; then
         warnLog "Authentication" "🥺 It looks like you're not using **SSH** for authentication."
-
     elif [[ $code_address == git@* ]]; then
         warnLog "Authentication" "👍 Authentication of SSH! This is very good!"
     fi
-
 }
 
 function syncSourceCode {
@@ -98,13 +96,21 @@ function syncSourceCode {
     push_starttime=$(date +'%Y-%m-%d %H:%M:%S')
 
     if [ ${#code_address_gitee} -eq 0 ]; then
+    
         git push --progress --atomic $code_address master
+    
     else
+        
         successLog "Synchronizing" "🚀 Source code to Gitee..."
+        
         git push -q --progress --atomic $code_address_gitee master &
+        
         local pid=$!
+        
         successLog "Synchronizing" "🚀 Source code to Github..."
+
         git push -q --progress --atomic $code_address master
+        
         wait $pid
     fi
 
