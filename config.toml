@@ -13,6 +13,9 @@ DisqusShortname = "sdttttt"
 author = "SDTTTTT"
 copyright = "Copyright © 2020, SDTTTTT."
 
+[build]
+  useResourceCacheWhen = "fallback"
+  writeStats = true
 
 [markup]
 [markup.goldmark]
