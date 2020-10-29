@@ -19,12 +19,12 @@
 # 请配置仓库GitHub Page的Source为Master分支下的docs文件夹
 ######################################################################################
 
-starttime=$(date +'%Y-%m-%d %H:%M:%S')
+starttime=`date +'%Y-%m-%d %H:%M:%S'`
 
 code_address="git@github.com:sdttttt/sdttttt.github.io"     # Hugo 项目地址
 code_address_gitee="git@gitee.com:sdttttt/sdttttt.gitee.io" # Hugo 项目地址 Gitee
 
-IMGTIME=$(date --rfc-3339="ns")
+IMGTIME=`date --rfc-3339="ns"`
 
 commit_message="$IMGTIME"
 
@@ -44,7 +44,8 @@ function envClean() {
     fi
 }
 
-function cleanWork() {
+
+function cleanWork {
 
     echo -e "\033[32m[Clean]\033[0m 🧹 Running..."
 
