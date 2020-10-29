@@ -57,7 +57,7 @@ function successLog {
 }
 
 function stateLog {
-    echo -e "\034[32m[$1]\033[0m $2"
+    echo -e "\033[34m[$1]\033[0m $2"
 }
 
 function cleanWork {
