@@ -2,8 +2,7 @@ baseURL = "https://sdttttt.github.io/"
 languageCode = "zh-cn"
 title = "SDTTTTT's Smelly fish Rotten shrimp 📓"
 
-theme = "bearblog"
-themesdir = "themes"
+theme = [ "github.com/janraasch/hugo-bearblog"]
 
 paginate = 5
 
@@ -41,3 +40,7 @@ unsafe = true
   # See https://ogp.me/ and https://gohugo.io/templates/internal#open-graph.
   title = "SDTTTTT"
 
+[module]
+  [[module.imports]]
+    name = "bearblog"
+    path = "github.com/janraasch/hugo-bearblog"
