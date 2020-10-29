@@ -72,9 +72,9 @@ function cleanWork {
 
 function checkSSH() {
     if [[ $code_address == https* ]]; then
-        warnLog "Authentication" "🥺 It looks like you're not using **SSH** for authentication."
+        warnLog "Authentication" "🗝 It looks like you're not using **SSH** for authentication."
     elif [[ $code_address == git@* ]]; then
-        successLog "Authentication" "👍 Authentication of SSH! This is very good!"
+        successLog "Authentication" "🔑 Authentication of SSH! This is very good!"
     fi
 }
 
@@ -96,7 +96,7 @@ function syncSourceCode {
     push_starttime=$(date +'%Y-%m-%d %H:%M:%S')
 
     if [ ${#code_address_gitee} -eq 0 ]; then
-    
+
         successLog "Synchronizing" "📚 Source code to Github..."
 
         git push --progress --atomic $code_address master
@@ -132,7 +132,7 @@ function generateSite {
 }
 
 function checkEnv {
-    stateLog "Monitor" "🤔 Check Status..."
+    stateLog "Monitor" "🛠 Check Status..."
 
     if [ $? -eq 0 ]; then
         if [ -d "./docs" ]; then
