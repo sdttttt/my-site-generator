@@ -65,12 +65,6 @@ function syncSourceCode(){
 
     echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
 
-    if [[ -z `git diff --stat` ]];
-    then
-        echo -e "\033[31m[Error]\033[0m💔 文件没有变动欸..."
-        exit  
-    fi
-
     git add --ignore-errors .
 
     git commit -q -m "$commit_message"
@@ -99,6 +93,13 @@ function syncSourceCode(){
 }
 
 function generateSite(){
+
+    if [[ -z `git diff --stat` ]];
+    then
+        echo -e "\033[31m[Error]\033[0m💔 文件没有变动欸..."
+        exit  
+    fi
+    
     echo -e "\033[32m[HugoGenerator]\033[0m 🚚 Hugo Building..."
     hugo
 
