@@ -97,18 +97,18 @@ function syncSourceCode {
 
     if [ ${#code_address_gitee} -eq 0 ]; then
     
+        successLog "Synchronizing" "📚 Source code to Github..."
+
         git push --progress --atomic $code_address master
     
     else
         
-        successLog "Synchronizing" "🚀 Source code to Gitee..."
+        successLog "Synchronizing" "📚 Source code to Github and Gitee..."
         
         git push -q --progress --atomic $code_address_gitee master &
         
         local pid=$!
         
-        successLog "Synchronizing" "🚀 Source code to Github..."
-
         git push -q --progress --atomic $code_address master
         
         wait $pid
