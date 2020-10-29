@@ -67,6 +67,12 @@ function syncSourceCode(){
 
     git add --ignore-errors .
 
+    if [ $? -ne 0 ];
+    then
+        echo -e "\033[31m[Error]\033[0m💔 文件没有变动欸..."
+        exit 1 
+    fi
+
     git commit -q -m "$commit_message"
     
     set -e
