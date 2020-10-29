@@ -94,12 +94,6 @@ function syncSourceCode(){
 
 function generateSite(){
 
-    if [[ -z `git diff --stat` ]];
-    then
-        echo -e "\033[31m[Error]\033[0m💔 文件没有变动欸..."
-        exit  
-    fi
-    
     echo -e "\033[32m[HugoGenerator]\033[0m 🚚 Hugo Building..."
     hugo
 
@@ -144,6 +138,12 @@ function deploy(){
         cleanWork
     fi
 }
+
+if [[ -z `git diff --stat` ]];
+then
+    echo -e "\033[31m[Error]\033[0m💔 文件没有变动欸..."
+    exit  
+fi
 
 envClean
 generateSite
