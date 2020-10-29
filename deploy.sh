@@ -54,12 +54,24 @@ function cleanWork() {
     rm -rf ./public
 }
 
+function checkSSH() {
+    if [[ $code_address == https* ]]; then
+        echo -e "\033[33m[Auth]\033[0m 🥺 It looks like you're not using **SSH** for authentication."
+
+    elif [[ $code_address == git@* ]]; then
+        echo -e "\033[33m[Auth]\033[0m 👍 Authentication of SSH! This is very good!"
+    fi
+
+}
+
 function syncSourceCode() {
     set -e
 
     git add --ignore-errors .
 
     git commit -q -m "$commit_message"
+
+    checkSSH
 
     echo -e "\033[32m[Pull]\033[0m 👀 Compare code ... "
 
