@@ -48,9 +48,21 @@ function errorLog {
     echo -e "\033[31m[$1]\033[0m $2"
 }
 
+function warnLog {
+    echo -e "\033[33m[$1]\033[0m $2"
+}
+
+function successLog {
+    echo -e "\033[32m[$1]\033[0m $2"
+}
+
+function stateLog {
+    echo -e "\034[32m[$1]\033[0m $2"
+}
+
 function cleanWork {
 
-    echo -e "\033[32m[Clean]\033[0m 🧹 Running..."
+    successLog "Clean" "🧹 Running..."
 
     cd $dir
     cd ..
@@ -60,10 +72,10 @@ function cleanWork {
 
 function checkSSH() {
     if [[ $code_address == https* ]]; then
-        echo -e "\033[33m[Authentication]\033[0m 🥺 It looks like you're not using **SSH** for authentication."
+        warnLog "Authentication" "🥺 It looks like you're not using **SSH** for authentication."
 
     elif [[ $code_address == git@* ]]; then
-        echo -e "\033[32m[Authentication]\033[0m 👍 Authentication of SSH! This is very good!"
+        warnLog "Authentication" "👍 Authentication of SSH! This is very good!"
     fi
 
 }
@@ -77,21 +89,21 @@ function syncSourceCode {
 
     checkSSH
 
-    echo -e "\033[32m[Pull]\033[0m 👀 Compare code ... "
+    successLog "Pull" "👀 Compare code ... "
 
     git pull $code_address master
 
-    echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
+    successLog "Deploying" "🚀 Push Running... "
 
     push_starttime=$(date +'%Y-%m-%d %H:%M:%S')
 
     if [ ${#code_address_gitee} -eq 0 ]; then
         git push --progress --atomic $code_address master
     else
-        echo -e "\033[32m[Synchronizing]\033[0m 🚀 Source code to Gitee..."
+        successLog "Synchronizing" "🚀 Source code to Gitee..."
         git push -q --progress --atomic $code_address_gitee master &
         local pid=$!
-        echo -e "\033[32m[Synchronizing]\033[0m 🚀 Source code to Github..."
+        successLog "Synchronizing" "🚀 Source code to Github..."
         git push -q --progress --atomic $code_address master
         wait $pid
     fi
@@ -100,12 +112,12 @@ function syncSourceCode {
     local start_seconds=$(date --date="$push_starttime" +%s)
     local end_seconds=$(date --date="$push_endtime" +%s)
 
-    echo -e "Total in "$((end_seconds - start_seconds))" s"
+    stateLog "Time" "⏱ Total in "$((end_seconds - start_seconds))" s"
 }
 
 function generateSite {
 
-    echo -e "\033[32m[HugoGenerator]\033[0m 🚚 Hugo Building..."
+    successLog "HugoGenerator" "🚚 Hugo Building..."
     hugo
 
     if [ -d "./public" ]; then
@@ -114,16 +126,16 @@ function generateSite {
 }
 
 function checkEnv {
-    echo -e "\033[34m[Monitor]\033[0m 🤔 Check Status..."
+    stateLog "Monitor" "🤔 Check Status..."
 
     if [ $? -eq 0 ]; then
         if [ -d "./docs" ]; then
             return 0
         else
-            echo -e "\033[31m[Error]\033[0m 💥 Oh! 没有找到docs目录."
+            errorLog "Error" "💥 Oh! 没有找到docs目录."
         fi
     else
-        echo -e "\033[31m[Error]\033[0m 💥 环境变量中不存在 hugo: 请安装它"
+        errorLog "Error" "💥 环境变量中不存在 hugo: 请安装它"
     fi
 
     return 1
@@ -140,7 +152,7 @@ function deploy {
         local start_seconds=$(date --date="$starttime" +%s)
         local end_seconds=$(date --date="$endtime" +%s)
 
-        echo -e "\033[32m[Successful]\033[0m 🎉 We did it! 🕒 Total Time: "$((end_seconds - start_seconds))"s"
+        successLog "Successful" "🎉 We did it! ⏱ Total Time: "$((end_seconds - start_seconds))"s"
     else
         cleanWork
     fi
