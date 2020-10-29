@@ -74,7 +74,7 @@ function checkSSH() {
     if [[ $code_address == https* ]]; then
         warnLog "Authentication" "🥺 It looks like you're not using **SSH** for authentication."
     elif [[ $code_address == git@* ]]; then
-        warnLog "Authentication" "👍 Authentication of SSH! This is very good!"
+        successLog "Authentication" "👍 Authentication of SSH! This is very good!"
     fi
 }
 
