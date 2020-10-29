@@ -55,18 +55,17 @@ function cleanWork() {
 }
 
 function syncSourceCode() {
+    set -e
+
+    git add --ignore-errors .
+
+    git commit -q -m "$commit_message"
 
     echo -e "\033[32m[Pull]\033[0m 👀 Compare code ... "
 
     git pull $code_address master
 
     echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
-
-    git add --ignore-errors .
-
-    git commit -q -m "$commit_message"
-
-    set -e
 
     push_starttime=$(date +'%Y-%m-%d %H:%M:%S')
 
