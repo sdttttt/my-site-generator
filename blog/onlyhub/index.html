@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
 <title>只需要服务中心 | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
 <meta name="title" content="只需要服务中心" />
@@ -97,7 +97,7 @@ https://github.com/sdttttt/go-tds
     padding: 20px;
     max-width: 720px;
     text-align: left;
-    background-color: white;
+    background-color: #fff;
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
@@ -117,6 +117,7 @@ https://github.com/sdttttt/go-tds
 
   a {
     color: #3273dc;
+     
   }
 
   .title {
@@ -155,21 +156,21 @@ https://github.com/sdttttt/go-tds
 
   code {
     padding: 2px 5px;
-    background-color: #eee;
+    background-color: #f2f2f2;
   }
 
   pre code {
-    border-left: 1px solid #999;
-    color: #555;
+    color: #222;
     display: block;
-    padding: 10px;
+    padding: 20px;
     white-space: pre-wrap;
+    font-size: 14px;
   }
 
   blockquote {
     border-left: 1px solid #999;
-    color: #555;
-    padding-left: 10px;
+    color: #222;
+    padding-left: 20px;
     font-style: italic;
   }
 
@@ -186,6 +187,68 @@ https://github.com/sdttttt/go-tds
   .errorlist {
     color: #eba613;
     font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
   }
 
 </style>
@@ -206,7 +269,6 @@ https://github.com/sdttttt/go-tds
   <main>
 
 <h1>只需要服务中心</h1>
-<hr />
 <p>
   <i>
     <time datetime='2020-04-02' pubdate>
@@ -214,7 +276,6 @@ https://github.com/sdttttt/go-tds
     </time>
   </i>
 </p>
-
 
 <content>
   <p>目前，市面上以及出现了各种各样的适用于微服务(下面简称ms)的注册中心，配合其使用的还有各种ms框架，例如Alibaba的<code>Dubbo</code>。</p>
@@ -244,9 +305,8 @@ https://github.com/sdttttt/go-tds
 </p>
 
   </main>
-  <footer>
-<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
-<img src="github.png" /></footer>
+  <footer><a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ</a>
+</footer>
 
     
 </body>

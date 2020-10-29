@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
 <title>Socks5 | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
 <meta name="title" content="Socks5" />
@@ -71,7 +71,7 @@ SOCKS5 协议可以分为三个部分：
     padding: 20px;
     max-width: 720px;
     text-align: left;
-    background-color: white;
+    background-color: #fff;
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
@@ -91,6 +91,7 @@ SOCKS5 协议可以分为三个部分：
 
   a {
     color: #3273dc;
+     
   }
 
   .title {
@@ -129,21 +130,21 @@ SOCKS5 协议可以分为三个部分：
 
   code {
     padding: 2px 5px;
-    background-color: #eee;
+    background-color: #f2f2f2;
   }
 
   pre code {
-    border-left: 1px solid #999;
-    color: #555;
+    color: #222;
     display: block;
-    padding: 10px;
+    padding: 20px;
     white-space: pre-wrap;
+    font-size: 14px;
   }
 
   blockquote {
     border-left: 1px solid #999;
-    color: #555;
-    padding-left: 10px;
+    color: #222;
+    padding-left: 20px;
     font-style: italic;
   }
 
@@ -160,6 +161,68 @@ SOCKS5 协议可以分为三个部分：
   .errorlist {
     color: #eba613;
     font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
   }
 
 </style>
@@ -180,7 +243,6 @@ SOCKS5 协议可以分为三个部分：
   <main>
 
 <h1>Socks5</h1>
-<hr />
 <p>
   <i>
     <time datetime='0001-01-01' pubdate>
@@ -188,7 +250,6 @@ SOCKS5 协议可以分为三个部分：
     </time>
   </i>
 </p>
-
 
 <content>
   <p>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&quot;SOCKetS&quot;的缩写。
@@ -529,9 +590,8 @@ SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。</p
 </p>
 
   </main>
-  <footer>
-<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
-<img src="github.png" /></footer>
+  <footer><a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ</a>
+</footer>
 
     
 </body>

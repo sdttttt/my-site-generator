@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
 <title>GFS | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
 <meta name="title" content="GFS" />
@@ -73,7 +73,7 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
     padding: 20px;
     max-width: 720px;
     text-align: left;
-    background-color: white;
+    background-color: #fff;
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
@@ -93,6 +93,7 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
 
   a {
     color: #3273dc;
+     
   }
 
   .title {
@@ -131,21 +132,21 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
 
   code {
     padding: 2px 5px;
-    background-color: #eee;
+    background-color: #f2f2f2;
   }
 
   pre code {
-    border-left: 1px solid #999;
-    color: #555;
+    color: #222;
     display: block;
-    padding: 10px;
+    padding: 20px;
     white-space: pre-wrap;
+    font-size: 14px;
   }
 
   blockquote {
     border-left: 1px solid #999;
-    color: #555;
-    padding-left: 10px;
+    color: #222;
+    padding-left: 20px;
     font-style: italic;
   }
 
@@ -162,6 +163,68 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
   .errorlist {
     color: #eba613;
     font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
   }
 
 </style>
@@ -182,7 +245,6 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
   <main>
 
 <h1>GFS</h1>
-<hr />
 <p>
   <i>
     <time datetime='2020-05-09' pubdate>
@@ -190,7 +252,6 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
     </time>
   </i>
 </p>
-
 
 <content>
   <p>这是 <code>MIT 6.824</code> 课程<code>GFS</code>部分的一些总结.</p>
@@ -214,9 +275,8 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
 </p>
 
   </main>
-  <footer>
-<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
-<img src="github.png" /></footer>
+  <footer><a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ</a>
+</footer>
 
     
 </body>

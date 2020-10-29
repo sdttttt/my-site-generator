@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
 <title>Azure Pipelines | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
 <meta name="title" content="Azure Pipelines" />
@@ -71,7 +71,7 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
     padding: 20px;
     max-width: 720px;
     text-align: left;
-    background-color: white;
+    background-color: #fff;
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.5;
@@ -91,6 +91,7 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
 
   a {
     color: #3273dc;
+     
   }
 
   .title {
@@ -129,21 +130,21 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
 
   code {
     padding: 2px 5px;
-    background-color: #eee;
+    background-color: #f2f2f2;
   }
 
   pre code {
-    border-left: 1px solid #999;
-    color: #555;
+    color: #222;
     display: block;
-    padding: 10px;
+    padding: 20px;
     white-space: pre-wrap;
+    font-size: 14px;
   }
 
   blockquote {
     border-left: 1px solid #999;
-    color: #555;
-    padding-left: 10px;
+    color: #222;
+    padding-left: 20px;
     font-style: italic;
   }
 
@@ -160,6 +161,68 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
   .errorlist {
     color: #eba613;
     font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
   }
 
 </style>
@@ -180,7 +243,6 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
   <main>
 
 <h1>Azure Pipelines</h1>
-<hr />
 <p>
   <i>
     <time datetime='0001-01-01' pubdate>
@@ -188,7 +250,6 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
     </time>
   </i>
 </p>
-
 
 <content>
   <p>Azure Pipelines是一种云服务，可用于自动构建和测试您的代码项目并将其提供给其他用户。它几乎适用于任何语言或项目类型。</p>
@@ -252,9 +313,8 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
 </p>
 
   </main>
-  <footer>
-<script async src="https://comments.app/js/widget.js?3" data-comments-app-website="16l5H9Ux" data-limit="5"></script>
-<img src="github.png" /></footer>
+  <footer><a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ</a>
+</footer>
 
     
 </body>
