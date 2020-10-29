@@ -83,7 +83,7 @@ function syncSourceCode {
 
     git add --ignore-errors .
 
-    git commit -q -m "$commit_message"
+    git commit -q -m "🌈 $commit_message"
 
     checkSSH
 
