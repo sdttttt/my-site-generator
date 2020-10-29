@@ -45,7 +45,7 @@ function envClean() {
 }
 
 function errorLog {
-    echo -e "\033[31m[Error]\033[0m $1"
+    echo -e "\033[31m[$1]\033[0m $2"
 }
 
 function cleanWork {
@@ -147,7 +147,7 @@ function deploy {
 }
 
 if [[ -z $(git diff --stat) ]]; then
-    errorLog "💔 文件没有变动欸..."
+    errorLog "Error" "💔 文件没有变动欸..."
     exit
 fi
 
