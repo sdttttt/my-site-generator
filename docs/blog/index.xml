@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on SDTTTTT's Smelly fish Rotten shrimp 📓</title><link>https://sdttttt.github.io/blog/</link><description>Recent content in Blogs on SDTTTTT's Smelly fish Rotten shrimp 📓</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Copyright © 2020, SDTTTTT.</copyright><lastBuildDate>Thu, 29 Oct 2020 09:04:14 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Log 8</title><link>https://sdttttt.github.io/blog/log-8/</link><pubDate>Thu, 29 Oct 2020 09:04:14 +0800</pubDate><guid>https://sdttttt.github.io/blog/log-8/</guid><description>每天上班, 先骑15分钟自行车到地铁再做20多分钟地铁, 针不戳.
-感觉体能下降的厉害.</description></item><item><title>Log 7</title><link>https://sdttttt.github.io/blog/log-7/</link><pubDate>Wed, 28 Oct 2020 09:54:22 +0800</pubDate><guid>https://sdttttt.github.io/blog/log-7/</guid><description>尝试优化一下文章创建的脚本.</description></item><item><title>Log 6</title><link>https://sdttttt.github.io/blog/log-6/</link><pubDate>Tue, 27 Oct 2020 17:24:55 +0800</pubDate><guid>https://sdttttt.github.io/blog/log-6/</guid><description>最近仔细反思了一下, 还是去研究一些什么东西. sraft已经写的我头都大了. 我打算最近一段时间不再在Github上编写代码了.
+感觉体能下降的厉害.
+今天在博客仓库了增加了hugo模块。 以后看起来跟换主题会方便很多。 但是为啥有go.mod文件。这又不是一个go项目&amp;hellip;</description></item><item><title>Log 7</title><link>https://sdttttt.github.io/blog/log-7/</link><pubDate>Wed, 28 Oct 2020 09:54:22 +0800</pubDate><guid>https://sdttttt.github.io/blog/log-7/</guid><description>尝试优化一下文章创建的脚本.</description></item><item><title>Log 6</title><link>https://sdttttt.github.io/blog/log-6/</link><pubDate>Tue, 27 Oct 2020 17:24:55 +0800</pubDate><guid>https://sdttttt.github.io/blog/log-6/</guid><description>最近仔细反思了一下, 还是去研究一些什么东西. sraft已经写的我头都大了. 我打算最近一段时间不再在Github上编写代码了.
 一方面是没有什么东西打得起我的兴趣, 另一方面还是觉得自己没有真正擅长的方面, 研究分布式系统这么长时间, 进展真的很慢, 一是我平时很懒, 不喜欢搭复杂的环境, 二是单纯的分布式方面的知识没有什么软用. 需要结合其他方面.
 潜了潜了. (当然博客还是会写www)</description></item><item><title>Cache Algorithm</title><link>https://sdttttt.github.io/blog/cache-algorithm/</link><pubDate>Mon, 26 Oct 2020 11:03:33 +0800</pubDate><guid>https://sdttttt.github.io/blog/cache-algorithm/</guid><description>本文主要讲的是目前存在的几种缓存算法, 没错, 我又来误人子弟了.
 内容会围绕近几年比较流行的LFU, LRU, 还有W-TinyLRU这么三种缓存算法来讲, 尽量使用最简练的文本.
 LFU 近期最少使用算法，即LFU算法（Least Frequently Used algorithm）。 这种算法会淘汰近期最少访问的缓存, 仔细分析一下, 没错，这是一种非常合理的算法，因为到目前为止最少使用的页面， 很可能也是将来最少访问的页面。 该算法既充分利用了内存中缓存调度情况的历史信息，又正确反映了程序的局部性。
 但是，这种算法的开销极其高, 为了记录每个缓存的使用情况, 你不得不为每一个缓存增加一个很大的计数器, 每次到达临界点, 我们还需要找到所有计数器中最少的缓存, 淘汰它.
-核心思想：如果一个数据在最近一段时间内使用次数很少，那么在将来一段时间内被使用的可能性也很小.
-通常我们会这么去实现:
+核心思想：如果一个数据在最近一段时间内使用次数很少，那么在将来一段时间内被使用的可能性也很小. 通常我们会这么去实现:
 外部结构为Array, 存储元素为KV. K: 该缓存访问次数. V: 缓存本身. 数组按照K排序. 每次缓存大小即将临界, 淘汰K最小的缓存.
 顺便一提 Window-LFU 它是LFU算法的改良版. LFU中缓存的访问次数记录的时间范围为整个程序的生命周期, 在Window-LFU中只对特定范围的访问次数进行淘汰. (比如最近10次访问的缓存.)
 LRU 最久没有使用算法，即LRU算法（Least Recently Used algorithm）。 这种算法把近期最久没有被访问过的页面作为被替换的页面。 它把LFU算法中要记录数量上的&amp;quot;多&amp;quot;与&amp;quot;少&amp;quot;简化成判断&amp;quot;有&amp;quot;与&amp;quot;无&amp;quot;，因此，实现起来比较容易。
-核心思想：如果在一段时间内长时间不访问的页面将来也不会访问.
-实现很简单:
+核心思想：如果在一段时间内长时间不访问的页面将来也不会访问. 实现很简单:
 假设我们的缓存容量大小为2, 最多缓存2个元素. 下面是缓存的访问顺序.
 1 2 2 3
 第一次: [1]
@@ -160,42 +159,10 @@ LOW if( isset( $_REQUEST[ &amp;#39;Submit&amp;#39; ] ) ) { // Get input $id = $_
 框架可以说是为了应用层的软件工程师而设计的。他们往往不会关心更细粒度的工作。他们只追求稳定的应用和企业架构。
 To be continued&amp;hellip;</description></item><item><title>SS:SP鸡你太美存器</title><link>https://sdttttt.github.io/blog/sssp/</link><pubDate>Mon, 06 Apr 2020 16:38:01 +0800</pubDate><guid>https://sdttttt.github.io/blog/sssp/</guid><description>如今的CPU都有提供栈机制，8086也不例外。
 8086提供的最基本的两个指令就是push and pop.
-push ax ;将寄存器ax中的数据送入栈顶
-pop ax ;将栈顶的数据送入ax
-我们知道CS:IP寄存器存放了下一条指令的段地址和偏移地址，那么CPU是如何知道栈顶在哪呐？ 显然也有两个寄存器专门存放栈顶的地址，那就是SS:SP寄存器，SS = 段地址， SP = 偏移地址
+push ax ;将寄存器ax中的数据送入栈顶 pop ax ;将栈顶的数据送入ax 我们知道CS:IP寄存器存放了下一条指令的段地址和偏移地址，那么CPU是如何知道栈顶在哪呐？ 显然也有两个寄存器专门存放栈顶的地址，那就是SS:SP寄存器，SS = 段地址， SP = 偏移地址
 任意时刻，SS:SP都指向栈顶元素。push和pop指令执行时CPU将从SS和SP中获得栈顶的地址。
 push 有2步:
-SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置. 10000H |_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______| |_______| 1000EH |__23___| &amp;lt;= SS:SP
-1000FH |__01___|
-10000H |_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______| &amp;lt;= SS:SP: 换个位置
-|_______| 1000EH |__23___| 1000FH |__01___|
-10000H |_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______|
-|_______| ;来自ax寄存器的数据
-|__54___| &amp;lt;= SS:SP: 换个位置
-|__11___| 1000EH |__23___| 1000FH |__01___|
-假设 10000H -&amp;gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？</description></item><item><title>CSIP鸡你太美存器</title><link>https://sdttttt.github.io/blog/csip/</link><pubDate>Mon, 06 Apr 2020 15:35:44 +0800</pubDate><guid>https://sdttttt.github.io/blog/csip/</guid><description>之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
+SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置. 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| 1000EH |__23___| &amp;lt;= SS:SP 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| &amp;lt;= SS:SP: 换个位置 |_______| 1000EH |__23___| 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| ;来自ax寄存器的数据 |__54___| &amp;lt;= SS:SP: 换个位置 |__11___| 1000EH |__23___| 1000FH |__01___| 假设 10000H -&amp;gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？</description></item><item><title>CSIP鸡你太美存器</title><link>https://sdttttt.github.io/blog/csip/</link><pubDate>Mon, 06 Apr 2020 15:35:44 +0800</pubDate><guid>https://sdttttt.github.io/blog/csip/</guid><description>之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
 CS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 + N 处读取指令并进行。
 也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.
 执行流程:
@@ -250,21 +217,7 @@ https://github.com/sdttttt/go-tds
 好！开始吧！
 小提示：阅读源码时请保持清醒。
 首先是按照Kratos tool 生产的工程目录。
-├── CHANGELOG.md ├── OWNERS
-├── README.md
-├── api # api目录为对外保留的proto文件及生成的pb.go文件
-│ ├── api.bm.go
-│ ├── api.pb.go # 通过go generate生成的pb.go文件
-│ ├── api.proto
-│ └── client.go
-├── cmd
-│ └── main.go # cmd目录为main所在
-├── configs # configs为配置文件目录
-│ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true
-│ ├── db.toml # db相关配置
-│ ├── grpc.toml # grpc相关配置
-│ ├── http.toml # http相关配置
-│ ├── memcache.</description></item><item><title>Protubuf 原理</title><link>https://sdttttt.github.io/blog/protubuf/</link><pubDate>Mon, 30 Mar 2020 03:05:12 +0800</pubDate><guid>https://sdttttt.github.io/blog/protubuf/</guid><description>protobuf的message中有很多字段,每个字段的格式为: 修饰符 字段类型 字段名 = 域号; 在序列化时,protobuf按照TLV的格式序列化每一个字段,T即Tag,也叫Key;V是该字段对应的值v 省略。 序列化后的Value是按原样保存到字符串或者文件中,Key按照一定的转换条件保存起来,序列化后的 message中字段后面的域号与字段类型来转换。转换公式如下:
+├── CHANGELOG.md ├── OWNERS ├── README.md ├── api # api目录为对外保留的proto文件及生成的pb.go文件 │ ├── api.bm.go │ ├── api.pb.go # 通过go generate生成的pb.go文件 │ ├── api.proto │ └── client.go ├── cmd │ └── main.go # cmd目录为main所在 ├── configs # configs为配置文件目录 │ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true │ ├── db.toml # db相关配置 │ ├── grpc.toml # grpc相关配置 │ ├── http.toml # http相关配置 │ ├── memcache.</description></item><item><title>Protubuf 原理</title><link>https://sdttttt.github.io/blog/protubuf/</link><pubDate>Mon, 30 Mar 2020 03:05:12 +0800</pubDate><guid>https://sdttttt.github.io/blog/protubuf/</guid><description>protobuf的message中有很多字段,每个字段的格式为: 修饰符 字段类型 字段名 = 域号; 在序列化时,protobuf按照TLV的格式序列化每一个字段,T即Tag,也叫Key;V是该字段对应的值v 省略。 序列化后的Value是按原样保存到字符串或者文件中,Key按照一定的转换条件保存起来,序列化后的 message中字段后面的域号与字段类型来转换。转换公式如下:
 (field_number &amp;laquo; 3) | wire_type
 wire_type与类型的对应关系表:
 wire_type meaning 0 Vaint int32、int64、uint32、uint64、sint32、sint64、bool、enum 1 64-bit fixed、sfixed64、double 2 Length-delimi string、bytes、embedded、messages、packed repeated fields 3 Start group Groups(deprecated) 4 End group Groups(deprecated) 5 32-bit fixed32、sfixed32、float 　As you can see, each field in the message definition has a unique numbered tag.</description></item><item><title>Github Actions</title><link>https://sdttttt.github.io/blog/github_actions/</link><pubDate>Wed, 11 Mar 2020 00:50:00 +0800</pubDate><guid>https://sdttttt.github.io/blog/github_actions/</guid><description>Github Actions 上传 Releases name: release # https://help.github.com/en/articles/workflow-syntax-for-github-actions#on on: push: tags: - &amp;#39;*&amp;#39; jobs: build: runs-on: ubuntu-latest steps: - uses: actions/checkout@v1 - name: &amp;#34;find env&amp;#34; run: |set | grep GITHUB_ | grep -v GITHUB_TOKEN zip -r pkg.zip *.md - uses: xresloader/upload-to-github-release@v1 env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} with: file: &amp;#34;*.md;*.zip&amp;#34; tags: true draft: false prerelease: true overwrite: true verbose: true</description></item><item><title>Appveyor</title><link>https://sdttttt.github.io/blog/appveyor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/blog/appveyor/</guid><description>Appveyor 也是一款线上 CICD 工具。
@@ -291,8 +244,7 @@ Development Note 花了很长时间去吧Rails和一些大前端的框架合二�
 Bootstrap Configuration # =&amp;gt; 首先在 Gemfile 中加入 gem &amp;#39;bootstrap&amp;#39;, &amp;#39;~&amp;gt; 4.3.1&amp;#39; gem &amp;#39;jquery-rails&amp;#39; 之后将app\assets\stylesheets\application.css 改为 scss
 删掉所有的东西包括注释
 加入@import &amp;ldquo;bootstrap&amp;rdquo;;
-Ruby Note Todo Error running 'requirements_debian_libs_install g++ gcc autoconf automake bison libc6-dev libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev make pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline-dev libssl-dev',
-please read /home/sdttttt/.</description></item><item><title>Socks5</title><link>https://sdttttt.github.io/blog/socks5/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/blog/socks5/</guid><description>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&amp;quot;SOCKetS&amp;quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
+Ruby Note Todo Error running 'requirements_debian_libs_install g++ gcc autoconf automake bison libc6-dev libffi-dev libgdbm-dev libncurses5-dev libsqlite3-dev libtool libyaml-dev make pkg-config sqlite3 zlib1g-dev libgmp-dev libreadline-dev libssl-dev', please read /home/sdttttt/.</description></item><item><title>Socks5</title><link>https://sdttttt.github.io/blog/socks5/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://sdttttt.github.io/blog/socks5/</guid><description>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&amp;quot;SOCKetS&amp;quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
 SOCKS5 协议可以分为三个部分：
 (1) 协议版本及认证方式 (2) 根据认证方式执行对应的认证 (3) 请求信息 （1）协议版本及认证方式 创建与 SOCKS5 服务器的 TCP 连接后客户端需要先发送请求来协议版本及认证方式，
 VER NMETHODS METHODS 1 1 1-255 VER 是 SOCKS 版本，这里应该是 0x05；

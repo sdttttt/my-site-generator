@@ -3,18 +3,4 @@
 好！开始吧！
 小提示：阅读源码时请保持清醒。
 首先是按照Kratos tool 生产的工程目录。
-├── CHANGELOG.md ├── OWNERS
-├── README.md
-├── api # api目录为对外保留的proto文件及生成的pb.go文件
-│ ├── api.bm.go
-│ ├── api.pb.go # 通过go generate生成的pb.go文件
-│ ├── api.proto
-│ └── client.go
-├── cmd
-│ └── main.go # cmd目录为main所在
-├── configs # configs为配置文件目录
-│ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true
-│ ├── db.toml # db相关配置
-│ ├── grpc.toml # grpc相关配置
-│ ├── http.toml # http相关配置
-│ ├── memcache.</description></item></channel></rss>
+├── CHANGELOG.md ├── OWNERS ├── README.md ├── api # api目录为对外保留的proto文件及生成的pb.go文件 │ ├── api.bm.go │ ├── api.pb.go # 通过go generate生成的pb.go文件 │ ├── api.proto │ └── client.go ├── cmd │ └── main.go # cmd目录为main所在 ├── configs # configs为配置文件目录 │ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true │ ├── db.toml # db相关配置 │ ├── grpc.toml # grpc相关配置 │ ├── http.toml # http相关配置 │ ├── memcache.</description></item></channel></rss>
