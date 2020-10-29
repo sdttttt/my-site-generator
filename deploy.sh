@@ -123,7 +123,7 @@ function syncSourceCode {
 
 function generateSite {
 
-    successLog "HugoGenerator" "🚚 Hugo Building..."
+    successLog "Hugo" "🚚 Building..."
     hugo --enableGitInfo --print-mem --minify  -v
 
     if [ -d "./public" ]; then
