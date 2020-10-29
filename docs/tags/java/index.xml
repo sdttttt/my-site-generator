@@ -1,57 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Java on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
-    <link>https://sdttttt.github.io/tags/java/</link>
-    <description>Recent content in Java on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>zh-cn</language>
-    <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 13 Oct 2020 16:56:11 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>RocketMQ 3.3.4 Broker</title>
-      <link>https://sdttttt.github.io/blog/rocketmq-comments/</link>
-      <pubDate>Tue, 13 Oct 2020 16:56:11 +0800</pubDate>
-      
-      <guid>https://sdttttt.github.io/blog/rocketmq-comments/</guid>
-      <description>差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.2.2）， 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难. 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Java on SDTTTTT's Smelly fish Rotten shrimp 📓</title><link>https://sdttttt.github.io/tags/java/</link><description>Recent content in Java on SDTTTTT's Smelly fish Rotten shrimp 📓</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Copyright © 2020, SDTTTTT.</copyright><lastBuildDate>Tue, 13 Oct 2020 16:56:11 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/java/index.xml" rel="self" type="application/rss+xml"/><item><title>RocketMQ 3.3.4 Broker</title><link>https://sdttttt.github.io/blog/rocketmq-comments/</link><pubDate>Tue, 13 Oct 2020 16:56:11 +0800</pubDate><guid>https://sdttttt.github.io/blog/rocketmq-comments/</guid><description>差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.2.2）， 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难. 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
 我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：
 先从初始化开始：
 public static void main(String[] args) { start(createBrokerController(args)); } rocketmq是从commandline启动的，createBrokerController函数比较长， 会有很多额外的逻辑干扰你，我这里直接说重点：
- 读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象. 最后增加一个关闭Broker时触发的hook.   服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
- 以上就是createBrokerController的内容，函数虽然长，但是并不复杂。
+读取环境变量，没有就用默认值。 解析命令行参数。 初始化配置类。 打印默认配置内容。 检查NameServer地址设置是否正确。 检查broker的类型（master，slave） 初始化日志配置类。 再次打印。 初始化服务控制对象. 最后增加一个关闭Broker时触发的hook. 服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。
+以上就是createBrokerController的内容，函数虽然长，但是并不复杂。
 下面为start函数的内容, 在main中的start函数实际上是去委托了BrokerController去执行.
-public void start() throws Exception { // 启动Broker的各层服务  if (this.messageStore != null) { this.messageStore.start(); } if (this.remotingServer != null) { this.remotingServer.start(); } if (this.brokerOuterAPI != null) { this.brokerOuterAPI.start(); } if (this.pullRequestHoldService != null) { this.</description>
-    </item>
-    
-    <item>
-      <title>MyBatis 源码分析</title>
-      <link>https://sdttttt.github.io/blog/mybatissourcecode/</link>
-      <pubDate>Thu, 10 Sep 2020 22:15:42 +0800</pubDate>
-      
-      <guid>https://sdttttt.github.io/blog/mybatissourcecode/</guid>
-      <description>其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
+public void start() throws Exception { // 启动Broker的各层服务 if (this.messageStore != null) { this.messageStore.start(); } if (this.remotingServer != null) { this.remotingServer.start(); } if (this.brokerOuterAPI != null) { this.brokerOuterAPI.start(); } if (this.pullRequestHoldService != null) { this.</description></item><item><title>MyBatis 源码分析</title><link>https://sdttttt.github.io/blog/mybatissourcecode/</link><pubDate>Thu, 10 Sep 2020 22:15:42 +0800</pubDate><guid>https://sdttttt.github.io/blog/mybatissourcecode/</guid><description>其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
 Init 现在开始正片.
 首先是 iBatis 的初始化工作.我们看下面的代码:
 // `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource DataSource dataSource = BlogDataSourceFactory.getBlogDataSource(); // JdbcTransactionFactory一个New就能得到, 没什么依赖条件 TransactionFactory transactionFactory = new JdbcTransactionFactory(); // Environment要你交出数据源和事务工厂还有你的环境是开发还是生产 Environment environment = new Environment(&amp;#34;development&amp;#34;, transactionFactory, dataSource); // Configuration有基本上你所有的配置 Configuration configuration = new Configuration(environment); // 添加你的mapper到配置列表中, 等会我们去分析它 configuration.addMapper(BlogMapper.class); // 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!! // 可能你觉得很快... 其实本人在这里面分析还是花了很长时间 SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration); 好, 上文有说configuration.addMapper(BlogMapper.class)这个方法, 现在我们来分析一下它.
-// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行  public &amp;lt;T&amp;gt; void addMapper(Class&amp;lt;T&amp;gt; type) { mapperRegistry.</description>
-    </item>
-    
-    <item>
-      <title>Thread Pool Executor 运行细节</title>
-      <link>https://sdttttt.github.io/blog/thread_pool_executor/</link>
-      <pubDate>Tue, 25 Aug 2020 17:29:15 +0800</pubDate>
-      
-      <guid>https://sdttttt.github.io/blog/thread_pool_executor/</guid>
-      <description>先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.
+// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行 public &amp;lt;T&amp;gt; void addMapper(Class&amp;lt;T&amp;gt; type) { mapperRegistry.</description></item><item><title>Thread Pool Executor 运行细节</title><link>https://sdttttt.github.io/blog/thread_pool_executor/</link><pubDate>Tue, 25 Aug 2020 17:29:15 +0800</pubDate><guid>https://sdttttt.github.io/blog/thread_pool_executor/</guid><description>先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.
 ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:
-public ThreadPoolExecutor(int corePoolSize, // 核心线程数量  int maximumPoolSize, // 最大线程数量  long keepAliveTime, // 存活时间  TimeUnit unit, // 时间单位  BlockingQueue&amp;lt;Runnable&amp;gt; workQueue // 来个列队  ) { this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler); } 提交任务时的运行如下:
- 如果正在运行的线程数 &amp;lt; coreSize，马上创建线程执行该task，不排队等待； 如果正在运行的线程数 &amp;gt;= coreSize，把该task放入阻塞队列； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;lt; maximumPoolSize，创建新的线程执行该task； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。 从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。  </description>
-    </item>
-    
-  </channel>
-</rss>
+public ThreadPoolExecutor(int corePoolSize, // 核心线程数量 int maximumPoolSize, // 最大线程数量 long keepAliveTime, // 存活时间 TimeUnit unit, // 时间单位 BlockingQueue&amp;lt;Runnable&amp;gt; workQueue // 来个列队 ) { this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler); } 提交任务时的运行如下:
+如果正在运行的线程数 &amp;lt; coreSize，马上创建线程执行该task，不排队等待； 如果正在运行的线程数 &amp;gt;= coreSize，把该task放入阻塞队列； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;lt; maximumPoolSize，创建新的线程执行该task； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。 从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。</description></item></channel></rss>
