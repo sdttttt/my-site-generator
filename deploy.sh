@@ -65,16 +65,16 @@ function syncSourceCode(){
 
     echo -e "\033[32m[Deploying]\033[0m 🚀 Push Running... "
 
-    git add --ignore-errors .
-
-    git commit -q -m "$commit_message"
-    
     if [[ -z `git diff --stat` ]];
     then
         echo -e "\033[31m[Error]\033[0m💔 文件没有变动欸..."
         exit  
     fi
 
+    git add --ignore-errors .
+
+    git commit -q -m "$commit_message"
+    
     set -e
     
     push_starttime=`date +'%Y-%m-%d %H:%M:%S'`
