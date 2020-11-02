@@ -4,4 +4,4 @@ deploy: deploy.sh
 
 .PHONEY: post
 post: newpost.sh
-	git bash newpost.sh || sh newpost
+	git bash newpost.sh || sh newpost.sh
