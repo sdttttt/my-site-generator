@@ -142,7 +142,6 @@ function checkEnv {
 }
 
 function deploy {
-
     checkEnv
     if [ $? -eq 0 ]; then
         syncSourceCode
