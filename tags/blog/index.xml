@@ -23,11 +23,35 @@
     </item>
     
     <item>
+      <title>Blog Upgrade</title>
+      <link>https://sdttttt.github.io/post/blogupgrade/</link>
+      <pubDate>Sat, 29 Aug 2020 18:07:48 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/blogupgrade/</guid>
+      <description>这几天修改了这个Blog的主题, 加载速度应该是更快了, 而且优化了整个项目的自动部署. 取消了双仓库的部署策略, 在部署任务的执行上也用上了异步.
+现在每次修改完成后的生成以及部署的速度比以前快了大概40%左右.但是访问Github Page的速度还是一如既往的的满.</description>
+    </item>
+    
+    <item>
       <title>About the Blog</title>
       <link>https://sdttttt.github.io/blog/about_blog/</link>
       <pubDate>Fri, 03 Apr 2020 15:36:02 +0800</pubDate>
       
       <guid>https://sdttttt.github.io/blog/about_blog/</guid>
+      <description>blog里的文章并非全部原创，有一部分是经过修改后整理出要点，集中一起写到这里面。也包涵了一些我对整个软件行业的想法。
+ 这个blog是用Hugo构建的，Theme使用的是rocinante,live2D的纸片人是我自己加的.(不是主题里自带的).
+我之前还使用过Vuepress做为静态网站生成器，不过自定义程度很低，也不是很复合我的审美。（我希望是旁边不要出现目录栏）
+后面我就转战Hugo,优点：用Go编写，生成快。生态圈也比较良好。我第一个使用的Theme是book，不得不说，配置复杂，我就马上丢弃了，后面又使用了Ezhi，由于我不是很喜欢红色，就又扔了。
+然后就使用了现在这个Theme，还是比较满意的，很极简。后面也加了utteranc做为评论模块，选择utteranc的理由很简单，最初Hugo是自带Disqus做为评论模块的，但是无奈这个Disqus在国外，而且还是被墙的！
+后来暂时搁了一段时间，才找到utteranc，优点就是结合Github issues无需翻墙，使用的UI也是Github的（Github使用的UI是Bootstrap库），而且零配置，授权一下App，改一下JS的tag马上就可以用。</description>
+    </item>
+    
+    <item>
+      <title>About the Blog</title>
+      <link>https://sdttttt.github.io/post/about_blog/</link>
+      <pubDate>Fri, 03 Apr 2020 15:36:02 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/about_blog/</guid>
       <description>blog里的文章并非全部原创，有一部分是经过修改后整理出要点，集中一起写到这里面。也包涵了一些我对整个软件行业的想法。
  这个blog是用Hugo构建的，Theme使用的是rocinante,live2D的纸片人是我自己加的.(不是主题里自带的).
 我之前还使用过Vuepress做为静态网站生成器，不过自定义程度很低，也不是很复合我的审美。（我希望是旁边不要出现目录栏）

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
+<title>GFS | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+<meta name="title" content="GFS" />
+<meta name="description" content="这是 MIT 6.824 课程GFS部分的一些总结.
+GFS (Google File System) 是Google为了管理海量数据而开发的一个分布式文件系统.
+直接进入正题.
+在GFS中文件是以Chunk的形式存储。所谓的Chunk是一个储存块。一个Chunk的大小为64MB.一个文件会分为多个Chunk.储存在不同的服务器里。当然也会有2-3份Chunk的拷贝。
+GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一张表中。
+下面简单的解释一下读操作的交互。
+ Client指定的文件名和字节偏移转换成文件的一个块索引（Chunk Index）。 给Master发送一个包含文件名和块索引的请求。 master回应对应的Chunk Handle(存储数据服务器以Chunk Handle标识Chunk)和副本的位置（多个副本）。 Client以文件名和块索引为键缓存这些信息。（handle和副本的位置） Client向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了Chunk Handle和块内的一个字节区间。 除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。  " />
+<meta name="keywords" content="" />
+
+
+<meta property="og:title" content="GFS" />
+<meta property="og:description" content="这是 MIT 6.824 课程GFS部分的一些总结.
+GFS (Google File System) 是Google为了管理海量数据而开发的一个分布式文件系统.
+直接进入正题.
+在GFS中文件是以Chunk的形式存储。所谓的Chunk是一个储存块。一个Chunk的大小为64MB.一个文件会分为多个Chunk.储存在不同的服务器里。当然也会有2-3份Chunk的拷贝。
+GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一张表中。
+下面简单的解释一下读操作的交互。
+ Client指定的文件名和字节偏移转换成文件的一个块索引（Chunk Index）。 给Master发送一个包含文件名和块索引的请求。 master回应对应的Chunk Handle(存储数据服务器以Chunk Handle标识Chunk)和副本的位置（多个副本）。 Client以文件名和块索引为键缓存这些信息。（handle和副本的位置） Client向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了Chunk Handle和块内的一个字节区间。 除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。  " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/post/gfs/" />
+<meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
+<meta property="article:published_time" content="2020-05-09T13:00:00+00:00" />
+<meta property="article:modified_time" content="2020-05-09T13:00:00+00:00" /><meta property="og:site_name" content="SDTTTTT" />
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+<meta name="twitter:title" content="GFS"/>
+<meta name="twitter:description" content="这是 MIT 6.824 课程GFS部分的一些总结.
+GFS (Google File System) 是Google为了管理海量数据而开发的一个分布式文件系统.
+直接进入正题.
+在GFS中文件是以Chunk的形式存储。所谓的Chunk是一个储存块。一个Chunk的大小为64MB.一个文件会分为多个Chunk.储存在不同的服务器里。当然也会有2-3份Chunk的拷贝。
+GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一张表中。
+下面简单的解释一下读操作的交互。
+ Client指定的文件名和字节偏移转换成文件的一个块索引（Chunk Index）。 给Master发送一个包含文件名和块索引的请求。 master回应对应的Chunk Handle(存储数据服务器以Chunk Handle标识Chunk)和副本的位置（多个副本）。 Client以文件名和块索引为键缓存这些信息。（handle和副本的位置） Client向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了Chunk Handle和块内的一个字节区间。 除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。  "/>
+
+
+
+<meta itemprop="name" content="GFS">
+<meta itemprop="description" content="这是 MIT 6.824 课程GFS部分的一些总结.
+GFS (Google File System) 是Google为了管理海量数据而开发的一个分布式文件系统.
+直接进入正题.
+在GFS中文件是以Chunk的形式存储。所谓的Chunk是一个储存块。一个Chunk的大小为64MB.一个文件会分为多个Chunk.储存在不同的服务器里。当然也会有2-3份Chunk的拷贝。
+GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一张表中。
+下面简单的解释一下读操作的交互。
+ Client指定的文件名和字节偏移转换成文件的一个块索引（Chunk Index）。 给Master发送一个包含文件名和块索引的请求。 master回应对应的Chunk Handle(存储数据服务器以Chunk Handle标识Chunk)和副本的位置（多个副本）。 Client以文件名和块索引为键缓存这些信息。（handle和副本的位置） Client向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了Chunk Handle和块内的一个字节区间。 除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。  ">
+<meta itemprop="datePublished" content="2020-05-09T13:00:00&#43;00:00" />
+<meta itemprop="dateModified" content="2020-05-09T13:00:00&#43;00:00" />
+<meta itemprop="wordCount" content="28">
+<meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+     
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #f2f2f2;
+  }
+
+  pre code {
+    color: #222;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #222;
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
+  }
+
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<content>
+  <p>这是 <code>MIT 6.824</code> 课程<code>GFS</code>部分的一些总结.</p>
+<p>GFS (Google File System) 是Google为了管理海量数据而开发的一个分布式文件系统.</p>
+<p>直接进入正题.</p>
+<p>在GFS中文件是以<code>Chunk</code>的形式存储。所谓的<code>Chunk</code>是一个储存块。一个Chunk的大小为64MB.一个文件会分为多个Chunk.储存在不同的服务器里。当然也会有2-3份<code>Chunk</code>的拷贝。</p>
+<p>GFS中还存在一个<code>Master</code>，Master收集所有文件的metadata, 保存在一张表中。</p>
+<p>下面简单的解释一下读操作的交互。</p>
+<ul>
+<li><code>Client</code>指定的文件名和字节偏移转换成文件的一个块索引（<code>Chunk Index</code>）。</li>
+<li>给<code>Master</code>发送一个包含文件名和块索引的请求。</li>
+<li>master回应对应的<code>Chunk Handle</code>(存储数据服务器以<code>Chunk Handle</code>标识<code>Chunk</code>)和副本的位置（多个副本）。</li>
+<li><code>Client</code>以文件名和块索引为键缓存这些信息。（handle和副本的位置）</li>
+<li><code>Client</code>向其中一个副本发送一个请求，很可能是最近的一个副本。请求指定了<code>Chunk Handle</code>和块内的一个字节区间。</li>
+<li>除非缓存的信息不再有效（cache for a limited time）或文件被重新打开，否则以后对同一个块的读操作不再需要client和master间的交互。</li>
+</ul>
+
+</content>
+<p>
+  
+</p>
+
+  </main>
+  <footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    var gitalk = new Gitalk({
+  clientID: '747ab8530477531c3d25',
+  clientSecret: 'af2cc18e4c27998636a6a3c82af0064f38574170',
+  repo: 'sdttttt.github.io',
+  owner: 'sdttttt',
+  admin: ['sdttttt'],
+  id: location.pathname,      
+  distractionFreeMode: true  
+})
+
+gitalk.render('gitalk-container')
+</script>
+
+</footer>
+
+    
+</body>
+
+</html>

@@ -34,11 +34,46 @@ https://github.com/sdttttt/go-tds
     </item>
     
     <item>
+      <title>只需要服务中心</title>
+      <link>https://sdttttt.github.io/post/onlyhub/</link>
+      <pubDate>Thu, 02 Apr 2020 15:58:01 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/onlyhub/</guid>
+      <description>目前，市面上以及出现了各种各样的适用于微服务(下面简称ms)的注册中心，配合其使用的还有各种ms框架，例如Alibaba的Dubbo。
+微服务能通过分解服务粒度，然后针对特定服务进行性能扩展，来达到高性能的目的。
+其中服务中心负责服务的注册和生命周期管理，Dubbo之类的微服务框架则对服务的注册, 负载均衡，服务鉴权, 服务调用等一系列操作做封装，供用户调用.
+使得用户不用去关心微服务的实现细节。
+ 我的想法相反，或许能让服务中心做更多的事。
+我们可以从头，去设计一个服务中心：
+ 只管理服务名和服务地址。 消费端索取服务时，则由服务中心来做负载均衡和一些额外的工作，直接给出服务提供方地址。  其他的功能可以按照现有的服务注册中心来设计。
+关于微服务的调用，则由服务注册中心提供一个微服务库，来供我们调用，或者由用户自己实现。这个架构下，就不需要Dubbo之类的RPC框架。
+优点：模块减少，开发可能会成本减少。
+缺点：需要服务中心来提供微服务调用库。（而且服务中心处理的东西变多了，不知道性能会有多少影响）
+目前小生已经搞了一个类似这中服务注册中心的Demo，可以参考。
+https://github.com/sdttttt/go-tds
+（这只是一个我突发的灵感罢了，其实挺荒唐的。）</description>
+    </item>
+    
+    <item>
       <title>Kratos 初始化流程源码解析</title>
       <link>https://sdttttt.github.io/blog/kratos/</link>
       <pubDate>Tue, 31 Mar 2020 20:17:28 +0800</pubDate>
       
       <guid>https://sdttttt.github.io/blog/kratos/</guid>
+      <description>Kratos 是bilibili开源的一套Go微服务框架，包含大量微服务相关框架及工具。
+ 名字来源于:《战神》游戏以希腊神话为背景，讲述由凡人成为战神的奎托斯（Kratos）成为战神并展开弑神屠杀的冒险历程。
+ 好！开始吧！
+小提示：阅读源码时请保持清醒。
+首先是按照Kratos tool 生产的工程目录。
+├── CHANGELOG.md ├── OWNERS ├── README.md ├── api # api目录为对外保留的proto文件及生成的pb.go文件 │ ├── api.bm.go │ ├── api.pb.go # 通过go generate生成的pb.go文件 │ ├── api.proto │ └── client.go ├── cmd │ └── main.go # cmd目录为main所在 ├── configs # configs为配置文件目录 │ ├── application.toml # 应用的自定义配置文件，可能是一些业务开关如：useABtest = true │ ├── db.toml # db相关配置 │ ├── grpc.toml # grpc相关配置 │ ├── http.toml # http相关配置 │ ├── memcache.</description>
+    </item>
+    
+    <item>
+      <title>Kratos 初始化流程源码解析</title>
+      <link>https://sdttttt.github.io/post/kratos/</link>
+      <pubDate>Tue, 31 Mar 2020 20:17:28 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/post/kratos/</guid>
       <description>Kratos 是bilibili开源的一套Go微服务框架，包含大量微服务相关框架及工具。
  名字来源于:《战神》游戏以希腊神话为背景，讲述由凡人成为战神的奎托斯（Kratos）成为战神并展开弑神屠杀的冒险历程。
  好！开始吧！
