@@ -7,10 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Thu, 29 Oct 2020 09:04:14 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 03 Nov 2020 14:28:39 +0800</lastBuildDate>
     
 	<atom:link href="https://sdttttt.github.io/tags/log/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GRC 3</title>
+      <link>https://sdttttt.github.io/blog/grc-3/</link>
+      <pubDate>Tue, 03 Nov 2020 14:28:39 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/grc-3/</guid>
+      <description>上周末算是把GRC扩展的部分开发完成了， 最开始写的时候没有遇到什么特别大的困难， 不禁感叹，我写Rust越来越顺手了已经.
+结果到星期六准备把几个模块接起来的时候， 发现出现了变量生命周期的问题，我还特地去找人问， 但根本没啥人鸟我。没办法，最后算是有意无意之间发现了解决的方法&amp;hellip;
+最后在星期六晚上总算是编写完成了已经，星期天的时候发布了。 可惜这几天的下载量都愁云惨淡&amp;hellip;</description>
+    </item>
     
     <item>
       <title>Log 8</title>
