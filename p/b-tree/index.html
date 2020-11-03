@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B&#43;树.
+试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
+数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
+哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.
+二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.
+B Tree B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量&#43;1.
+在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.
+Rules   排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.
+  子节点数：非叶节点的子节点数&amp;gt;1，且&amp;lt;=M ，且M&amp;gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；
+  关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);
+  所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;
+  Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&amp;gt;B&amp;gt;A):
+如上图我要从上图中找到E字母，查找流程如下:
+  获取根节点的关键字进行比较，当前根节点关键字为M，E&amp;lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；
+  拿到关键字D和G，D&amp;lt;E&amp;lt;G 所以直接找到D和G中间的节点；
+  拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null).'><title>B Tree</title>
+    
+    <link rel='canonical' href='https://sdttttt.github.io/p/b-tree/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='B Tree'>
+<meta property='og:description' content='这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B&#43;树.
+试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
+数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
+哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.
+二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.
+B Tree B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量&#43;1.
+在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.
+Rules   排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.
+  子节点数：非叶节点的子节点数&amp;gt;1，且&amp;lt;=M ，且M&amp;gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；
+  关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);
+  所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;
+  Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&amp;gt;B&amp;gt;A):
+如上图我要从上图中找到E字母，查找流程如下:
+  获取根节点的关键字进行比较，当前根节点关键字为M，E&amp;lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；
+  拿到关键字D和G，D&amp;lt;E&amp;lt;G 所以直接找到D和G中间的节点；
+  拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null).'>
+<meta property='og:url' content='https://sdttttt.github.io/p/b-tree/'>
+<meta property='og:site_name' content='SDTTTTT&#39;s Smelly fish Rotten shrimp 📓'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Data Structure' /><meta property='article:published_time' content='2020-08-30T20:41:54&#43;08:00'/><meta property='article:modified_time' content='2020-08-30T20:41:54&#43;08:00'/>
+<meta name="twitter:title" content="B Tree">
+<meta name="twitter:description" content="这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B&#43;树.
+试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
+数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
+哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.
+二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.
+B Tree B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量&#43;1.
+在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.
+Rules   排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.
+  子节点数：非叶节点的子节点数&amp;gt;1，且&amp;lt;=M ，且M&amp;gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；
+  关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);
+  所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;
+  Find 我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&amp;gt;B&amp;gt;A):
+如上图我要从上图中找到E字母，查找流程如下:
+  获取根节点的关键字进行比较，当前根节点关键字为M，E&amp;lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；
+  拿到关键字D和G，D&amp;lt;E&amp;lt;G 所以直接找到D和G中间的节点；
+  拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null)."></head><body class="">
+        <div class="container flex on-phone--column align-items--flex-start extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+
+                
+                    
+                    <img src="/img/wolaopo_huaa9cfa37fb7c13295de7156385ad8dbe_251770_300x300_resize_box_2.png" width="300"
+                        height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                <span class="emoji">🍥</span>
+            </figure>
+        
+        <h1 class="site-name"><a href="https://sdttttt.github.io/">SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</a></h1>
+        <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/about'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/archives'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+    </ol>
+</aside>
+            <main class="main full-width">
+    <div id="article-toolbar">
+        <a href="https://sdttttt.github.io/" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="https://sdttttt.github.io/p/b-tree/">B Tree</a>
+    </h2>
+
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">Aug 30, 2020</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    <p>这篇文章以数据库存储的数据结构来引出本文的重点<strong>B树</strong>,以及后面还有另一种数据结构<strong>B+树</strong>.</p>
+<p>试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.</p>
+<p>数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.</p>
+<p>哈希表, 通过给定的数据通过Hash函数生成对应的索引, 能非常高效的找到对应的数据. 但是, 哈希表不能用于范围查询.</p>
+<p>二叉树, 一种使用二分法作为查询算法的数据结构, 在内存中, 二叉树的效率确实非常高, 但是如果是在硬盘上, 每次读取节点, 都需要进行一次IO, 随着数据量的增大, 深度逐渐加深, 二叉树的效率就会大大降低.</p>
+<h2 id="b-tree">B Tree</h2>
+<p>B树存在一些和二叉树不一样的地方: 二叉树每个节点只保存一份数据以及两个指针, B树在每个节点都可以保留一样数量的数据和指针, 指针的数量为数据的数量+1.</p>
+<p>在B树中还有存在一个概念, 阶数, 它决定了该B树每个节点应该有多少数据以及指针.</p>
+<h3 id="rules">Rules</h3>
+<ul>
+<li>
+<p>排序方式：所有节点关键字是按递增次序排列，并遵循左小右大原则；例如一个节点能存放3份数据, 该数据需要从左到右增序存放, 1, 2, 3.</p>
+</li>
+<li>
+<p>子节点数：非叶节点的子节点数&gt;1，且&lt;=M ，且M&gt;=2，空树除外(注：M阶代表一个树节点最多有多少个查找路径，M=M路,当M=2则是2叉树,M=3则是3叉)；</p>
+</li>
+<li>
+<p>关键字数：子节点的关键字数量大于等于ceil(m/2)-1个且小于等于M-1个(注：ceil()是个朝正无穷方向取整的函数 如ceil(1.1)结果为2);</p>
+</li>
+<li>
+<p>所有叶子节点均在同一层、叶子节点除了包含了关键字和关键字记录的指针外也有指向其子节点的指针只不过其指针地址都为null对应下图最后一层节点的空格子;</p>
+</li>
+</ul>
+<h3 id="find">Find</h3>
+<p>我们用一个图和一个实际的例子来理解B树(这里为了理解方便我就直接用实际字母的大小来排列C&gt;B&gt;A):</p>
+<p><img src="/DataStructure/BT.jpg" alt="BT"  /></p>
+<p>如上图我要从上图中找到E字母，查找流程如下:</p>
+<ol>
+<li>
+<p>获取根节点的关键字进行比较，当前根节点关键字为M，E&lt;M(26个字母顺序)，所以往找到指向左边的子节点(二分法规则，左小右大，左边放小于当前节点值的子节点、右边放大于当前节点值的子节点)；</p>
+</li>
+<li>
+<p>拿到关键字D和G，D&lt;E&lt;G 所以直接找到D和G中间的节点；</p>
+</li>
+<li>
+<p>拿到E和F，因为E=E 所以直接返回关键字和指针信息(如果树结构里面没有包含所要查找的节点则返回null).</p>
+</li>
+</ol>
+<h3 id="insert">Insert</h3>
+<p>下次更新.</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://sdttttt.github.io/tags/data-structure/">Data Structure</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="widget related-contents--wrapper">
+    
+    
+</aside>
+
+    
+        
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    var gitalk = new Gitalk({
+  clientID: '747ab8530477531c3d25',
+  clientSecret: 'af2cc18e4c27998636a6a3c82af0064f38574170',
+  repo: 'sdttttt.github.io',
+  owner: 'sdttttt',
+  admin: ['sdttttt'],
+  id: location.pathname,      
+  distractionFreeMode: true  
+})
+
+gitalk.render('gitalk-container')
+</script>
+
+    
+
+    <footer class="site-footer">
+
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true" style="display:none">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"
+    integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin="anonymous"></script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<link rel="stylesheet" href="/css/highlight/light.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="/css/highlight/dark.min.css" media="(prefers-color-scheme: dark)">
+
+    </body>
+</html>

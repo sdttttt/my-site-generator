@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.
+ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:
+public ThreadPoolExecutor(int corePoolSize, // 核心线程数量  int maximumPoolSize, // 最大线程数量  long keepAliveTime, // 存活时间  TimeUnit unit, // 时间单位  BlockingQueue&amp;lt;Runnable&amp;gt; workQueue // 来个列队  ) { this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler); } 提交任务时的运行如下:
+ 如果正在运行的线程数 &amp;lt; coreSize，马上创建线程执行该task，不排队等待； 如果正在运行的线程数 &amp;gt;= coreSize，把该task放入阻塞队列； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;lt; maximumPoolSize，创建新的线程执行该task； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。 从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。  '><title>Thread Pool Executor 运行细节</title>
+    
+    <link rel='canonical' href='https://sdttttt.github.io/p/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='Thread Pool Executor 运行细节'>
+<meta property='og:description' content='先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.
+ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:
+public ThreadPoolExecutor(int corePoolSize, // 核心线程数量  int maximumPoolSize, // 最大线程数量  long keepAliveTime, // 存活时间  TimeUnit unit, // 时间单位  BlockingQueue&amp;lt;Runnable&amp;gt; workQueue // 来个列队  ) { this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler); } 提交任务时的运行如下:
+ 如果正在运行的线程数 &amp;lt; coreSize，马上创建线程执行该task，不排队等待； 如果正在运行的线程数 &amp;gt;= coreSize，把该task放入阻塞队列； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;lt; maximumPoolSize，创建新的线程执行该task； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。 从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。  '>
+<meta property='og:url' content='https://sdttttt.github.io/p/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/'>
+<meta property='og:site_name' content='SDTTTTT&#39;s Smelly fish Rotten shrimp 📓'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Java' /><meta property='article:published_time' content='2020-08-25T17:29:15&#43;08:00'/><meta property='article:modified_time' content='2020-08-25T17:29:15&#43;08:00'/>
+<meta name="twitter:title" content="Thread Pool Executor 运行细节">
+<meta name="twitter:description" content="先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.
+ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:
+public ThreadPoolExecutor(int corePoolSize, // 核心线程数量  int maximumPoolSize, // 最大线程数量  long keepAliveTime, // 存活时间  TimeUnit unit, // 时间单位  BlockingQueue&amp;lt;Runnable&amp;gt; workQueue // 来个列队  ) { this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler); } 提交任务时的运行如下:
+ 如果正在运行的线程数 &amp;lt; coreSize，马上创建线程执行该task，不排队等待； 如果正在运行的线程数 &amp;gt;= coreSize，把该task放入阻塞队列； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;lt; maximumPoolSize，创建新的线程执行该task； 如果队列已满 &amp;amp;&amp;amp; 正在运行的线程数 &amp;gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。 从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。  "></head><body class="">
+        <div class="container flex on-phone--column align-items--flex-start extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+
+                
+                    
+                    <img src="/img/wolaopo_huaa9cfa37fb7c13295de7156385ad8dbe_251770_300x300_resize_box_2.png" width="300"
+                        height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                <span class="emoji">🍥</span>
+            </figure>
+        
+        <h1 class="site-name"><a href="https://sdttttt.github.io/">SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</a></h1>
+        <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/about'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/archives'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+    </ol>
+</aside>
+            <main class="main full-width">
+    <div id="article-toolbar">
+        <a href="https://sdttttt.github.io/" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="https://sdttttt.github.io/p/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/">Thread Pool Executor 运行细节</a>
+    </h2>
+
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">Aug 25, 2020</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    <p>先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.</p>
+<p>ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="nf">ThreadPoolExecutor</span><span class="o">(</span><span class="kt">int</span> <span class="n">corePoolSize</span><span class="o">,</span> <span class="c1">// 核心线程数量
+</span><span class="c1"></span>                              <span class="kt">int</span> <span class="n">maximumPoolSize</span><span class="o">,</span> <span class="c1">// 最大线程数量
+</span><span class="c1"></span>                              <span class="kt">long</span> <span class="n">keepAliveTime</span><span class="o">,</span> <span class="c1">// 存活时间
+</span><span class="c1"></span>                              <span class="n">TimeUnit</span> <span class="n">unit</span><span class="o">,</span> <span class="c1">// 时间单位
+</span><span class="c1"></span>                              <span class="n">BlockingQueue</span><span class="o">&lt;</span><span class="n">Runnable</span><span class="o">&gt;</span> <span class="n">workQueue</span> <span class="c1">// 来个列队
+</span><span class="c1"></span>                        <span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">(</span><span class="n">corePoolSize</span><span class="o">,</span> <span class="n">maximumPoolSize</span><span class="o">,</span> <span class="n">keepAliveTime</span><span class="o">,</span> <span class="n">unit</span><span class="o">,</span> <span class="n">workQueue</span><span class="o">,</span>
+             <span class="n">Executors</span><span class="o">.</span><span class="na">defaultThreadFactory</span><span class="o">(),</span> <span class="n">defaultHandler</span><span class="o">);</span>
+    <span class="o">}</span>
+</code></pre></div><p>提交任务时的运行如下:</p>
+<ul>
+<li>如果正在运行的线程数 &lt; coreSize，马上创建线程执行该task，不排队等待；</li>
+<li>如果正在运行的线程数 &gt;= coreSize，把该task放入阻塞队列；</li>
+<li>如果队列已满 &amp;&amp; 正在运行的线程数 &lt; maximumPoolSize，创建新的线程执行该task；</li>
+<li>如果队列已满 &amp;&amp; 正在运行的线程数 &gt;= maximumPoolSize，线程池调用handler的reject方法拒绝本次提交。</li>
+<li>从worker线程自己的角度来看，当worker的task执行结束之后，循环从阻塞队列中取出任务执行。</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://sdttttt.github.io/tags/java/">Java</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="widget related-contents--wrapper">
+    
+    
+</aside>
+
+    
+        
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    var gitalk = new Gitalk({
+  clientID: '747ab8530477531c3d25',
+  clientSecret: 'af2cc18e4c27998636a6a3c82af0064f38574170',
+  repo: 'sdttttt.github.io',
+  owner: 'sdttttt',
+  admin: ['sdttttt'],
+  id: location.pathname,      
+  distractionFreeMode: true  
+})
+
+gitalk.render('gitalk-container')
+</script>
+
+    
+
+    <footer class="site-footer">
+
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true" style="display:none">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"
+    integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin="anonymous"></script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<link rel="stylesheet" href="/css/highlight/light.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="/css/highlight/dark.min.css" media="(prefers-color-scheme: dark)">
+
+    </body>
+</html>

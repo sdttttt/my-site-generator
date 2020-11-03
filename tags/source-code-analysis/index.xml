@@ -7,17 +7,13 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 31 Mar 2020 20:17:28 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/tags/source-code-analysis/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 31 Mar 2020 20:17:28 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/source-code-analysis/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Kratos 初始化流程源码解析</title>
-      <link>https://sdttttt.github.io/blog/kratos/</link>
+      <link>https://sdttttt.github.io/p/kratos-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</link>
       <pubDate>Tue, 31 Mar 2020 20:17:28 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/kratos/</guid>
+      <guid>https://sdttttt.github.io/p/kratos-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/</guid>
       <description>Kratos 是bilibili开源的一套Go微服务框架，包含大量微服务相关框架及工具。
  名字来源于:《战神》游戏以希腊神话为背景，讲述由凡人成为战神的奎托斯（Kratos）成为战神并展开弑神屠杀的冒险历程。
  好！开始吧！

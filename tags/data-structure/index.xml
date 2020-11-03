@@ -7,17 +7,13 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Sun, 30 Aug 2020 20:41:54 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/tags/data-structure/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 30 Aug 2020 20:41:54 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/data-structure/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>B Tree</title>
-      <link>https://sdttttt.github.io/blog/btree/</link>
+      <link>https://sdttttt.github.io/p/b-tree/</link>
       <pubDate>Sun, 30 Aug 2020 20:41:54 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/btree/</guid>
+      <guid>https://sdttttt.github.io/p/b-tree/</guid>
       <description>这篇文章以数据库存储的数据结构来引出本文的重点B树,以及后面还有另一种数据结构B+树.
 试想, 如果你想持久化大量的数据在硬盘上, 同时还希望能高效的查询和修改他们, 你会怎么做, 使用哪种数据结构.
 数组和链表, 他们的缺点很明显, 我们寻找数据需要遍历整个数据结构, 试想一下你的数据库中有50PB的数据, 这个开销是我们无法接受的.
@@ -38,10 +34,10 @@ Rules   排序方式：所有节点关键字是按递增次序排列，并遵循
     
     <item>
       <title>Red Black Tree</title>
-      <link>https://sdttttt.github.io/blog/red-black-tree/</link>
+      <link>https://sdttttt.github.io/p/red-black-tree/</link>
       <pubDate>Mon, 25 May 2020 19:27:28 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/red-black-tree/</guid>
+      <guid>https://sdttttt.github.io/p/red-black-tree/</guid>
       <description>半年前在研究HashMap的时候已经学习过红黑树的规则原理了. 不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的) 这次就把这个数据结构做一个了断.
 性质  性质1：每个节点要么是黑色，要么是红色。 性质2：根节点是黑色。 性质3：每个叶子节点（NIL）是黑色。 性质4：每个红色结点的两个子结点一定都是黑色。 性质5：任意一结点到每个叶子结点的路径都包含数量相同的黑结点。  满足这5个性质就能保证红黑树是平衡的.
 Insert 插入的节点默认是红色的.因为这样可以最大限度满足红黑树的5个性质.
@@ -58,19 +54,19 @@ Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的�
     
     <item>
       <title>Tree by Rust implement</title>
-      <link>https://sdttttt.github.io/blog/tree_rust/</link>
+      <link>https://sdttttt.github.io/p/tree-by-rust-implement/</link>
       <pubDate>Wed, 20 May 2020 19:14:33 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/tree_rust/</guid>
+      <guid>https://sdttttt.github.io/p/tree-by-rust-implement/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Stack by Rust implement</title>
-      <link>https://sdttttt.github.io/blog/stack_rust/</link>
+      <link>https://sdttttt.github.io/p/stack-by-rust-implement/</link>
       <pubDate>Wed, 20 May 2020 19:01:23 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/stack_rust/</guid>
+      <guid>https://sdttttt.github.io/p/stack-by-rust-implement/</guid>
       <description></description>
     </item>
     

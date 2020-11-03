@@ -7,17 +7,13 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Mon, 27 Apr 2020 10:05:10 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/tags/distrbuted-system/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 27 Apr 2020 10:05:10 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/distrbuted-system/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>一致性哈希算法</title>
-      <link>https://sdttttt.github.io/blog/consistent_hash_algorithm/</link>
+      <link>https://sdttttt.github.io/p/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</link>
       <pubDate>Mon, 27 Apr 2020 10:05:10 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/consistent_hash_algorithm/</guid>
+      <guid>https://sdttttt.github.io/p/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</guid>
       <description>第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
 第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播&amp;hellip;&amp;hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。
 第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.

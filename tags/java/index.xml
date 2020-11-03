@@ -7,17 +7,13 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 13 Oct 2020 16:56:11 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 13 Oct 2020 16:56:11 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>RocketMQ 3.3.4 Broker</title>
-      <link>https://sdttttt.github.io/blog/rocketmq-comments/</link>
+      <link>https://sdttttt.github.io/p/rocketmq-3.3.4-broker/</link>
       <pubDate>Tue, 13 Oct 2020 16:56:11 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/rocketmq-comments/</guid>
+      <guid>https://sdttttt.github.io/p/rocketmq-3.3.4-broker/</guid>
       <description>差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.2.2）， 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难. 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
 我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：
 先从初始化开始：
@@ -30,10 +26,10 @@ public void start() throws Exception { // 启动Broker的各层服务  if (this.
     
     <item>
       <title>MyBatis 源码分析</title>
-      <link>https://sdttttt.github.io/blog/mybatissourcecode/</link>
+      <link>https://sdttttt.github.io/p/mybatis-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</link>
       <pubDate>Thu, 10 Sep 2020 22:15:42 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/mybatissourcecode/</guid>
+      <guid>https://sdttttt.github.io/p/mybatis-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</guid>
       <description>其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近 重新捡起 Java 就把以前没填的坑,填一下.
 Init 现在开始正片.
 首先是 iBatis 的初始化工作.我们看下面的代码:
@@ -43,10 +39,10 @@ Init 现在开始正片.
     
     <item>
       <title>Thread Pool Executor 运行细节</title>
-      <link>https://sdttttt.github.io/blog/thread_pool_executor/</link>
+      <link>https://sdttttt.github.io/p/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/</link>
       <pubDate>Tue, 25 Aug 2020 17:29:15 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/thread_pool_executor/</guid>
+      <guid>https://sdttttt.github.io/p/thread-pool-executor-%E8%BF%90%E8%A1%8C%E7%BB%86%E8%8A%82/</guid>
       <description>先说说线程池本身, 由于线程资源本身在计算机中比较昂贵, 创建和销毁都有相当的开销, 所以在一些处理简单但是并发量大的场景使用一个请求对应一个线程的是不明智的选择.
 ThreadPoolExecutor是Java中线程池的一种实现. 构造函数如下:
 public ThreadPoolExecutor(int corePoolSize, // 核心线程数量  int maximumPoolSize, // 最大线程数量  long keepAliveTime, // 存活时间  TimeUnit unit, // 时间单位  BlockingQueue&amp;lt;Runnable&amp;gt; workQueue // 来个列队  ) { this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, Executors.defaultThreadFactory(), defaultHandler); } 提交任务时的运行如下:

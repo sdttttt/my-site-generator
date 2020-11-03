@@ -7,17 +7,13 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Mon, 30 Mar 2020 03:05:12 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/tags/protobuf/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 30 Mar 2020 03:05:12 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/protobuf/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Protubuf 原理</title>
-      <link>https://sdttttt.github.io/blog/protubuf/</link>
+      <link>https://sdttttt.github.io/p/protubuf-%E5%8E%9F%E7%90%86/</link>
       <pubDate>Mon, 30 Mar 2020 03:05:12 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/blog/protubuf/</guid>
+      <guid>https://sdttttt.github.io/p/protubuf-%E5%8E%9F%E7%90%86/</guid>
       <description>protobuf的message中有很多字段,每个字段的格式为: 修饰符 字段类型 字段名 = 域号; 在序列化时,protobuf按照TLV的格式序列化每一个字段,T即Tag,也叫Key;V是该字段对应的值v 省略。 序列化后的Value是按原样保存到字符串或者文件中,Key按照一定的转换条件保存起来,序列化后的 message中字段后面的域号与字段类型来转换。转换公式如下:
  (field_number &amp;laquo; 3) | wire_type
  wire_type与类型的对应关系表:

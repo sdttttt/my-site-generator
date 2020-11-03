@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
+第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播&amp;hellip;&amp;hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。
+第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.
+算法背景 一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了 解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希 算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。
+但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 memcached 缓存数据库的人都知道, memcached 服务器端本身不提供分布式 Cache 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:
+  首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
+  然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
+  然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
+  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化 而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向 的第一台服务器上的键会受到影响。
+性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。 在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。'><title>一致性哈希算法</title>
+    
+    <link rel='canonical' href='https://sdttttt.github.io/p/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='一致性哈希算法'>
+<meta property='og:description' content='第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
+第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播&amp;hellip;&amp;hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。
+第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.
+算法背景 一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了 解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希 算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。
+但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 memcached 缓存数据库的人都知道, memcached 服务器端本身不提供分布式 Cache 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:
+  首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
+  然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
+  然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
+  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化 而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向 的第一台服务器上的键会受到影响。
+性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。 在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。'>
+<meta property='og:url' content='https://sdttttt.github.io/p/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/'>
+<meta property='og:site_name' content='SDTTTTT&#39;s Smelly fish Rotten shrimp 📓'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='distrbuted system' /><meta property='article:published_time' content='2020-04-27T10:05:10&#43;08:00'/><meta property='article:modified_time' content='2020-04-27T10:05:10&#43;08:00'/>
+<meta name="twitter:title" content="一致性哈希算法">
+<meta name="twitter:description" content="第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是中央节点成为了整个个分布式系统的单点故障.
+第二代分布式系统，节点之间通行采用的是广播，每个节点都向自己相连的所有节点进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行广播&amp;hellip;&amp;hellip;如此往复,直至找到所需文件。请求变多就意味着会产生广播风暴，这会严重占用带宽和系统资源。
+第三代分布式系统开始采用DHT(Distrbuted Hash Table)，也就是一致性HASH算法.
+算法背景 一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了 解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希 算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。
+但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 memcached 缓存数据库的人都知道, memcached 服务器端本身不提供分布式 Cache 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:
+  首先求出 memcached 服务器(节点)的哈希值,并将其配置到 0 ~ 2^32 的圆(continuum)上。
+  然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。
+  然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
+  从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化 而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向 的第一台服务器上的键会受到影响。
+性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。 在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。"></head><body class="">
+        <div class="container flex on-phone--column align-items--flex-start extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+
+                
+                    
+                    <img src="/img/wolaopo_huaa9cfa37fb7c13295de7156385ad8dbe_251770_300x300_resize_box_2.png" width="300"
+                        height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                <span class="emoji">🍥</span>
+            </figure>
+        
+        <h1 class="site-name"><a href="https://sdttttt.github.io/">SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</a></h1>
+        <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/about'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/archives'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+    </ol>
+</aside>
+            <main class="main full-width">
+    <div id="article-toolbar">
+        <a href="https://sdttttt.github.io/" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="https://sdttttt.github.io/p/%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/">一致性哈希算法</a>
+    </h2>
+
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">Apr 27, 2020</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    <p>第一代分布式系统采用的是中心化的系统，对于存贮大量数据的分布式系统来说它的缺点就是<code>中央节点</code>成为了整个个分布式系统的<code>单点故障</code>.</p>
+<p>第二代分布式系统，节点之间通行采用的是<code>广播</code>，每个节点都向自己相连的<code>所有节点</code>进行询问，被询问的节点如果不知道这个文件在哪里,就再次进行<code>广播</code>&hellip;&hellip;如此往复,直至找到所需文件。请求变多就意味着会产生<code>广播风暴</code>，这会严重占用带宽和系统资源。</p>
+<p>第三代分布式系统开始采用<code>DHT</code>(Distrbuted Hash Table)，也就是<code>一致性HASH算法</code>.</p>
+<h2 id="算法背景">算法背景</h2>
+<p>一致性 HASH 算法在 1997 年由麻省理工学院的 Karger 等人在解决分布式 Cache 中提出的,设计目标是为了
+解决因特网中的热点(Hot spot)问题,初衷和 CARP 十分类似。一致性 HASH 修正了 CARP 使用的简单哈希
+算法带来的问题,使得 DHT 可以在 P2P 环境中真正得到应用。</p>
+<p>但现在一致性 hash 算法在分布式系统中也得到了广泛应用,研究过 <code>memcached</code> 缓存数据库的人都知道,
+<code>memcached</code> 服务器端本身不提供分布式 <code>Cache</code> 的一致性,而是由客户端来提供,具体在计算一致性 HASH 时采用如下步骤:</p>
+<ul>
+<li>
+<p>首先求出 memcached 服务器(节点)的哈希值,并将其配置到 <code>0 ~ 2^32</code> 的圆(continuum)上。</p>
+</li>
+<li>
+<p>然后采用同样的方法求出存储数据的键的哈希值,并映射到相同的圆上。</p>
+</li>
+<li>
+<p>然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。</p>
+</li>
+</ul>
+<p><img src="/ConsistentHashAlgorithm/1.png" alt=""  /></p>
+<p>从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化
+而影响缓存的命中率,但<code>一致性Hashing</code> 中,只有在圆(continuum)上增加服务器的地点逆时针方向
+的第一台服务器上的键会受到影响。</p>
+<h2 id="性质">性质</h2>
+<p>因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。
+在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。
+如果不采用<code>一致性HASH算法</code>, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关),
+由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以<code>一致性HASH算法</code>，在分布式系统中十分重要。</p>
+<p>良好的<code>一致性HASH算法</code>需要满足一下特点：</p>
+<p><strong>平衡性(Balance)</strong></p>
+<p>平衡性是指哈希的结果能够尽可能分布到所有的缓冲中去,这样可以使得所有的缓冲空间都得到利用。很多哈希算法都能够满足这一条件。</p>
+<p><strong>单调性(Monotonicity)</strong></p>
+<p>单调性是指如果已经有一些内容通过哈希分派到了相应的缓冲中,又有新的缓冲区加入到系统中,那么哈 希的结果应能够保证原有已分配的内容可以被映射到新的缓冲区中去,而不会被映射到旧的缓冲集合中的 其他缓冲区。简单的哈希算法往往不能满足单调性的要求,如最简单的线性哈希:x = (ax + b) mod (P), 在上式中,P 表示全部缓冲的大小。不难看出,当缓冲大小发生变化时(从 P1 到 P2),原来所有的哈希结果 均会发生变化,从而不满足单调性的要求。哈希结果的变化意味着当缓冲空间发生变化时,所有的映射关 系需要在系统内全部更新。而在 P2P 系统内,缓冲的变化等价于 Peer 加入或退出系统,这一情况在 P2P 系 统中会频繁发生,因此会带来极大计算和传输负荷。单调性就是要求哈希算法能够应对这种情况。</p>
+<p><strong>分散性(Spread)</strong></p>
+<p>在分布式环境中,终端有可能看不到所有的缓冲,而是只能看到其中的一部分。当终端希望通过哈希过程 将内容映射到缓冲上时,由于不同终端所见的缓冲范围有可能不同,从而导致哈希的结果不一致,最终的 结果是相同的内容被不同的终端映射到不同的缓冲区中。这种情况显然是应该避免的,因为它导致相同内 容被存储到不同缓冲中去,降低了系统存储的效率。分散性的定义就是上述情况发生的严重程度。好的哈 希算法应能够尽量避免不一致的情况发生,也就是尽量降低分散性。</p>
+<p><strong>负载(Load)</strong></p>
+<p>负载问题实际上是从另一个角度看待分散性问题。既然不同的终端可能将相同的内容映射到不同的缓冲区 中,那么对于一个特定的缓冲区而言,也可能被不同的用户映射为不同的内容。与分散性一样,这种情况 也是应当避免的,因此好的哈希算法应能够尽量降低缓冲的负荷。</p>
+<p><strong>平滑性(Smoothness)</strong></p>
+<p>平滑性是指缓存服务器的数目平滑改变和缓存对象的平滑改变是一致的。</p>
+<h2 id="虚拟节点">虚拟节点</h2>
+<p>假设在圆上<code>Node A</code>和<code>Node B</code>距离过近，按照以上的环形一致 HASH 算法就会发生两个节点所拥有的数据数量不一致的问题。</p>
+<p><img src="/ConsistentHashAlgorithm/2.png" alt=""  /></p>
+<p>为了解决这种数据倾斜问题，一致性哈希算法引入了虚拟节点机制，即对每一个服务节点计算<code>多个哈希</code>，每个计算结果位置都放置一个此<code>服务节点</code>，称为虚拟节点。具体做法可以在服务器 ip 或主机名的后面增加编号来实现。例如上面的情况，可以为每台服务器计算三个虚拟节点，于是可以分别计算 “Node A#1”、“Node A#2”、“Node A#3”、“Node B#1”、“Node B#2”、“Node B#3”的哈希值，于是形成六个虚拟节点：</p>
+<p>同时数据定位算法不变，只是多了一步虚拟节点到实际节点的映射，例如定位到“Node A#1”、“Node A#2”、“Node A#3”三个虚拟节点的数据均定位到 Node A 上。这样就解决了服务节点少时数据倾斜的问题。在实际应用中，通常将虚拟节点数设置为 32 甚至更大，因此即使很少的服务节点也能做到相对均匀的数据分布。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://sdttttt.github.io/tags/distrbuted-system/">distrbuted system</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="widget related-contents--wrapper">
+    
+    
+</aside>
+
+    
+        
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    var gitalk = new Gitalk({
+  clientID: '747ab8530477531c3d25',
+  clientSecret: 'af2cc18e4c27998636a6a3c82af0064f38574170',
+  repo: 'sdttttt.github.io',
+  owner: 'sdttttt',
+  admin: ['sdttttt'],
+  id: location.pathname,      
+  distractionFreeMode: true  
+})
+
+gitalk.render('gitalk-container')
+</script>
+
+    
+
+    <footer class="site-footer">
+
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true" style="display:none">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"
+    integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin="anonymous"></script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<link rel="stylesheet" href="/css/highlight/light.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="/css/highlight/dark.min.css" media="(prefers-color-scheme: dark)">
+
+    </body>
+</html>

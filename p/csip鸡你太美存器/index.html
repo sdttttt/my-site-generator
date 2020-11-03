@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-cn"><head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
+CS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 &#43; N 处读取指令并进行。
+也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.
+执行流程:
+ 初始状态: CS = 2000H, IP = 0000H CS:IP 内容送入地址加法器，2000H × 16 &#43; 0000H = 20000H 地址加法器计算出物理地址20000H后将结果送入输入输出电路. 输入输出电路将物理地址20000H送到地址总线。 内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU. 输入输出电路将机器指令X送入指令缓冲器。 寄存器IP的值自动增加。 以此类推&amp;hellip;   当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。
+修改CS:IP mov指令能帮我们将值送入寄存器。但是，它不能用于修改CS:IP，原因很简单8086出于设计考量不允许。 能修改CS:IP的指令统称为转移指令（以后我们深入研究）,现在我学习第一个可以修改CS:IP寄存器的指令，jmp.
+若想同时修改CS:IP寄存器,可以用jmp 段地址, 偏移地址的指令来完成。
+jmp 2AE3:3 ;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令 如果只想修改IP寄存器, 可以用jmp 寄存器的指令来完成.
+jmp ax 类似, mov IP, ax'><title>CSIP鸡你太美存器</title>
+    
+    <link rel='canonical' href='https://sdttttt.github.io/p/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='CSIP鸡你太美存器'>
+<meta property='og:description' content='之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
+CS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 &#43; N 处读取指令并进行。
+也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.
+执行流程:
+ 初始状态: CS = 2000H, IP = 0000H CS:IP 内容送入地址加法器，2000H × 16 &#43; 0000H = 20000H 地址加法器计算出物理地址20000H后将结果送入输入输出电路. 输入输出电路将物理地址20000H送到地址总线。 内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU. 输入输出电路将机器指令X送入指令缓冲器。 寄存器IP的值自动增加。 以此类推&amp;hellip;   当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。
+修改CS:IP mov指令能帮我们将值送入寄存器。但是，它不能用于修改CS:IP，原因很简单8086出于设计考量不允许。 能修改CS:IP的指令统称为转移指令（以后我们深入研究）,现在我学习第一个可以修改CS:IP寄存器的指令，jmp.
+若想同时修改CS:IP寄存器,可以用jmp 段地址, 偏移地址的指令来完成。
+jmp 2AE3:3 ;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令 如果只想修改IP寄存器, 可以用jmp 寄存器的指令来完成.
+jmp ax 类似, mov IP, ax'>
+<meta property='og:url' content='https://sdttttt.github.io/p/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/'>
+<meta property='og:site_name' content='SDTTTTT&#39;s Smelly fish Rotten shrimp 📓'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='assembly' /><meta property='article:published_time' content='2020-04-06T15:35:44&#43;08:00'/><meta property='article:modified_time' content='2020-04-06T15:35:44&#43;08:00'/>
+<meta name="twitter:title" content="CSIP鸡你太美存器">
+<meta name="twitter:description" content="之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
+CS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 &#43; N 处读取指令并进行。
+也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.
+执行流程:
+ 初始状态: CS = 2000H, IP = 0000H CS:IP 内容送入地址加法器，2000H × 16 &#43; 0000H = 20000H 地址加法器计算出物理地址20000H后将结果送入输入输出电路. 输入输出电路将物理地址20000H送到地址总线。 内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU. 输入输出电路将机器指令X送入指令缓冲器。 寄存器IP的值自动增加。 以此类推&amp;hellip;   当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。
+修改CS:IP mov指令能帮我们将值送入寄存器。但是，它不能用于修改CS:IP，原因很简单8086出于设计考量不允许。 能修改CS:IP的指令统称为转移指令（以后我们深入研究）,现在我学习第一个可以修改CS:IP寄存器的指令，jmp.
+若想同时修改CS:IP寄存器,可以用jmp 段地址, 偏移地址的指令来完成。
+jmp 2AE3:3 ;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令 如果只想修改IP寄存器, 可以用jmp 寄存器的指令来完成.
+jmp ax 类似, mov IP, ax"></head><body class="">
+        <div class="container flex on-phone--column align-items--flex-start extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+
+                
+                    
+                    <img src="/img/wolaopo_huaa9cfa37fb7c13295de7156385ad8dbe_251770_300x300_resize_box_2.png" width="300"
+                        height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                <span class="emoji">🍥</span>
+            </figure>
+        
+        <h1 class="site-name"><a href="https://sdttttt.github.io/">SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</a></h1>
+        <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/about'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='https://sdttttt.github.io/archives'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+    </ol>
+</aside>
+            <main class="main full-width">
+    <div id="article-toolbar">
+        <a href="https://sdttttt.github.io/" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <h2 class="article-title">
+        <a href="https://sdttttt.github.io/p/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/">CSIP鸡你太美存器</a>
+    </h2>
+
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">Apr 06, 2020</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    <p>之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。</p>
+<p>CS为代码段寄存器，IP为指令指针寄存器。
+设CS = M, IP = N, 8086CPU将从 <code>M × 16 + N</code> 处读取指令并进行。</p>
+<p>也可以这样表述： <strong>8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.</strong></p>
+<p>执行流程:</p>
+<ul>
+<li>初始状态: CS = 2000H, IP = 0000H</li>
+<li>CS:IP 内容送入地址加法器，2000H × 16 + 0000H = 20000H</li>
+<li>地址加法器计算出物理地址20000H后将结果送入输入输出电路.</li>
+<li>输入输出电路将物理地址20000H送到地址总线。</li>
+<li>内存将物理地址20000H上存放的机器指令X通过数据总线送入CPU.</li>
+<li>输入输出电路将机器指令X送入指令缓冲器。</li>
+<li>寄存器IP的值自动增加。</li>
+<li>以此类推&hellip;</li>
+</ul>
+<hr>
+<p>当8086CPU加点或者复位后，CS = FFFFH, IP = 0000H,也就是CPU清晨起床做的第一件事就是去执行FFFF0H内存单元中存放的机器指令。</p>
+<h2 id="修改csip">修改CS:IP</h2>
+<p><code>mov</code>指令能帮我们将值送入寄存器。但是，它不能用于修改CS:IP，原因很简单8086出于设计考量不允许。
+能修改CS:IP的指令统称为<code>转移指令</code>（以后我们深入研究）,现在我学习第一个可以修改CS:IP寄存器的指令，<code>jmp</code>.</p>
+<p>若想同时修改CS:IP寄存器,可以用<code>jmp 段地址, 偏移地址</code>的指令来完成。</p>
+<div class="highlight"><pre class="chroma"><code class="language-asm" data-lang="asm"><span class="nf">jmp</span> <span class="mi">2</span><span class="no">AE3</span><span class="p">:</span><span class="mi">3</span> <span class="c">;执行后: CS = 2AE3H IP = 0003H, CPU 将从这2AE33H 处读取指令
+</span></code></pre></div><p>如果只想修改IP寄存器, 可以用<code>jmp 寄存器</code>的指令来完成.</p>
+<div class="highlight"><pre class="chroma"><code class="language-asm" data-lang="asm"><span class="nf">jmp</span> <span class="no">ax</span>
+</code></pre></div><p>类似, <code>mov IP, ax</code></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="https://sdttttt.github.io/tags/assembly/">assembly</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="widget related-contents--wrapper">
+    
+    
+</aside>
+
+    
+        
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    var gitalk = new Gitalk({
+  clientID: '747ab8530477531c3d25',
+  clientSecret: 'af2cc18e4c27998636a6a3c82af0064f38574170',
+  repo: 'sdttttt.github.io',
+  owner: 'sdttttt',
+  admin: ['sdttttt'],
+  id: location.pathname,      
+  distractionFreeMode: true  
+})
+
+gitalk.render('gitalk-container')
+</script>
+
+    
+
+    <footer class="site-footer">
+
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true" style="display:none">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+            </main>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"
+    integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g=" crossorigin="anonymous"></script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+<link rel="stylesheet" href="/css/highlight/light.min.css" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="/css/highlight/dark.min.css" media="(prefers-color-scheme: dark)">
+
+    </body>
+</html>
