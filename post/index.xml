@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 03 Nov 2020 14:28:39 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/post/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 03 Nov 2020 14:28:39 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GRC 3</title>
       <link>https://sdttttt.github.io/post/grc-3/</link>
@@ -67,7 +63,7 @@ LFU 近期最少使用算法，即LFU算法（Least Frequently Used algorithm）
 核心思想：如果一个数据在最近一段时间内使用次数很少，那么在将来一段时间内被使用的可能性也很小.  通常我们会这么去实现:
 外部结构为Array, 存储元素为KV. K: 该缓存访问次数. V: 缓存本身. 数组按照K排序. 每次缓存大小即将临界, 淘汰K最小的缓存.
 顺便一提 Window-LFU 它是LFU算法的改良版. LFU中缓存的访问次数记录的时间范围为整个程序的生命周期, 在Window-LFU中只对特定范围的访问次数进行淘汰. (比如最近10次访问的缓存.)
-LRU 最久没有使用算法，即LRU算法（Least Recently Used algorithm）。 这种算法把近期最久没有被访问过的页面作为被替换的页面。 它把LFU算法中要记录数量上的&amp;quot;多&amp;quot;与&amp;quot;少&amp;quot;简化成判断&amp;quot;有&amp;quot;与&amp;quot;无&amp;rdquo;，因此，实现起来比较容易。
+LRU 最久没有使用算法，即LRU算法（Least Recently Used algorithm）。 这种算法把近期最久没有被访问过的页面作为被替换的页面。 它把LFU算法中要记录数量上的&amp;quot;多&amp;quot;与&amp;quot;少&amp;quot;简化成判断&amp;quot;有&amp;quot;与&amp;quot;无&amp;quot;，因此，实现起来比较容易。
 核心思想：如果在一段时间内长时间不访问的页面将来也不会访问.  实现很简单:
 假设我们的缓存容量大小为2, 最多缓存2个元素. 下面是缓存的访问顺序.
  1 2 2 3
@@ -456,7 +452,7 @@ GFS中还存在一个Master，Master收集所有文件的metadata, 保存在一�
       
       <guid>https://sdttttt.github.io/post/file_upload/</guid>
       <description>DVWA File upload 过关秘籍.
-LOW if( isset( $_POST[ &amp;#39;Upload&amp;#39; ] ) ) { // Where are we going to be writing to? $target_path = DVWA_WEB_PAGE_TO_ROOT . &amp;#34;hackable/uploads/&amp;#34;; $target_path .= basename( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;name&amp;#39; ] ); // Can we move the file to the upload folder? // 完全没做过滤. // 上传一个PHP文件也是可以的. if( !move_uploaded_file( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;tmp_name&amp;#39; ], $target_path ) ) { // No echo &amp;#39;&amp;lt;pre&amp;gt;Your image was not uploaded.&amp;lt;/pre&amp;gt;&amp;#39;; } else { // Yes!</description>
+LOW if( isset( $_POST[ &amp;#39;Upload&amp;#39; ] ) ) { // Where are we going to be writing to?  $target_path = DVWA_WEB_PAGE_TO_ROOT . &amp;#34;hackable/uploads/&amp;#34;; $target_path .= basename( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;name&amp;#39; ] ); // Can we move the file to the upload folder?  // 完全没做过滤.  // 上传一个PHP文件也是可以的.  if( !move_uploaded_file( $_FILES[ &amp;#39;uploaded&amp;#39; ][ &amp;#39;tmp_name&amp;#39; ], $target_path ) ) { // No  echo &amp;#39;&amp;lt;pre&amp;gt;Your image was not uploaded.</description>
     </item>
     
     <item>
@@ -467,7 +463,7 @@ LOW if( isset( $_POST[ &amp;#39;Upload&amp;#39; ] ) ) { // Where are we going to
       <guid>https://sdttttt.github.io/post/sql_injection_blind/</guid>
       <description>返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
 DVWA SQL Injection blind 过关秘籍.
-Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input $id = $_GET[ &amp;#39;id&amp;#39; ]; // Check database $getid = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 没有一点点防备 // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效) // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,2 # &amp;#39;; // User ID exists in the database. &amp;lt;存在注入漏洞&amp;gt; // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,if(length( database())=4,sleep(4),2) # &amp;#39;; $result = mysql_query( $getid ); // Removed &amp;#39;or die&amp;#39; to suppress mysql errors // Get results $num = @mysql_numrows( $result ); // The &amp;#39;@&amp;#39; character suppresses errors if( $num &amp;gt; 0 ) { // Feedback for end user echo &amp;#39;&amp;lt;pre&amp;gt;User ID exists in the database.</description>
+Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input  $id = $_GET[ &amp;#39;id&amp;#39; ]; // Check database  $getid = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 没有一点点防备  // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效)  // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,2 # &amp;#39;;  // User ID exists in the database. &amp;lt;存在注入漏洞&amp;gt;  // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,if(length( database())=4,sleep(4),2) # &amp;#39;;  $result = mysql_query( $getid ); // Removed &amp;#39;or die&amp;#39; to suppress mysql errors  // Get results  $num = @mysql_numrows( $result ); // The &amp;#39;@&amp;#39; character suppresses errors  if( $num &amp;gt; 0 ) { // Feedback for end user  echo &amp;#39;&amp;lt;pre&amp;gt;User ID exists in the database.</description>
     </item>
     
     <item>
@@ -477,7 +473,7 @@ Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input $id = $_GET[ &a
       
       <guid>https://sdttttt.github.io/post/sql_injection/</guid>
       <description>DVWA SQL Injection 过关秘籍.
-LOW if( isset( $_REQUEST[ &amp;#39;Submit&amp;#39; ] ) ) { // Get input $id = $_REQUEST[ &amp;#39;id&amp;#39; ]; // Check database $query = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 并没有做什么注入防护 // 尝试构造： // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=1; // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=2; // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; or 1=1; $result = mysql_query( $query ) or die( &amp;#39;&amp;lt;pre&amp;gt;&amp;#39; .</description>
+LOW if( isset( $_REQUEST[ &amp;#39;Submit&amp;#39; ] ) ) { // Get input  $id = $_REQUEST[ &amp;#39;id&amp;#39; ]; // Check database  $query = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 并没有做什么注入防护  // 尝试构造：  // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=1;  // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; and 1=2;  // select first_name, last_name from from users where user_id = &amp;#39;1&amp;#39; or 1=1;  $result = mysql_query( $query ) or die( &amp;#39;&amp;lt;pre&amp;gt;&amp;#39; .</description>
     </item>
     
     <item>
@@ -535,7 +531,7 @@ jmp ax 类似, mov IP, ax</description>
       
       <guid>https://sdttttt.github.io/post/multiplexingio/</guid>
       <description>其实“I/O多路复用”这个坑爹翻译可能是这个概念在中文里面如此难理解的原因。所谓的I/O多路 复用在英文中其实叫 I/O multiplexing. 如果你搜索multiplexing啥意思,基本上都会出这个图:
-于是大部分人都直接联想到&amp;quot;一根网线,多个sock复用&amp;rdquo; 这个概念,包括上面的几个回答, 其实不 管你用多进程还是I/O多路复用, 网线都只有一根好伐。多个Sock复用一根网线这个功能是在内核 +驱动层实现的.
+于是大部分人都直接联想到&amp;quot;一根网线,多个sock复用&amp;quot; 这个概念,包括上面的几个回答, 其实不 管你用多进程还是I/O多路复用, 网线都只有一根好伐。多个Sock复用一根网线这个功能是在内核 +驱动层实现的.
 重要的事情再说一遍: I/O multiplexing 这里面的 multiplexing 指的其实是在单个线程通过记 录跟踪每一个Sock(I/O流)的状态(对应空管塔里面的Fight progress strip槽)来同时管理多个I/O 流. 发明它的原因,是尽量多的提高服务器的吞吐能力。
 是不是听起来好拗口,看个图就懂了.
 在同一个线程里面, 通过拨开关的方式,来同时传输多个I/O流, (学过EE的人现在可以站出来义正 严辞说这个叫“时分复用”了)。

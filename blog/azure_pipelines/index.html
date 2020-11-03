@@ -62,6 +62,7 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
 
 
 <meta itemprop="keywords" content="CICD," />
+
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -270,41 +271,41 @@ Price 如果使用公共项目，则Azure Pipelines是免费的。如果您使�
 <span style="color:#75715e"># Add steps that install rails, analyze code, save build artifacts, deploy, and more:</span>
 <span style="color:#75715e"># https://docs.microsoft.com/azure/devops/pipelines/languages/ruby</span>
 
-<span style="color:#66d9ef">trigger</span>:
-  <span style="color:#66d9ef">branches</span>:
+<span style="color:#f92672">trigger</span>:
+  <span style="color:#f92672">branches</span>:
     <span style="color:#75715e"># 只有以下分支提交才会触发CICD</span>
-    <span style="color:#66d9ef">include</span>:
-      - master
-      - sdtttttt
-      - CICD
-      - depend*
-  <span style="color:#66d9ef">paths</span>:
+    <span style="color:#f92672">include</span>:
+      - <span style="color:#ae81ff">master</span>
+      - <span style="color:#ae81ff">sdtttttt</span>
+      - <span style="color:#ae81ff">CICD</span>
+      - <span style="color:#ae81ff">depend*</span>
+  <span style="color:#f92672">paths</span>:
     <span style="color:#75715e"># 只有以下文件提交时不触发CICD</span>
-    <span style="color:#66d9ef">exclude</span>:
-      - README.md
-      - appveyor.yml
+    <span style="color:#f92672">exclude</span>:
+      - <span style="color:#ae81ff">README.md</span>
+      - <span style="color:#ae81ff">appveyor.yml</span>
 
-<span style="color:#66d9ef">pool</span>:
-  <span style="color:#66d9ef">vmImage</span>: <span style="color:#e6db74">&#39;ubuntu-18.04&#39;</span>
+<span style="color:#f92672">pool</span>:
+  <span style="color:#f92672">vmImage</span>: <span style="color:#e6db74">&#39;ubuntu-18.04&#39;</span>
 
-<span style="color:#66d9ef">steps</span>:
-- <span style="color:#66d9ef">task</span>: UseRubyVersion@<span style="color:#ae81ff">0</span>
-  <span style="color:#66d9ef">inputs</span>:
+<span style="color:#f92672">steps</span>:
+- <span style="color:#f92672">task</span>: <span style="color:#ae81ff">UseRubyVersion@0</span>
+  <span style="color:#f92672">inputs</span>:
   <span style="color:#75715e"># 天杀的，微软提供的Ubuntu 镜像已经不支持 Ruby2.6.3</span>
-    <span style="color:#66d9ef">versionSpec</span>: <span style="color:#e6db74">&#39;&gt;= 2.6.3&#39;</span>
+    <span style="color:#f92672">versionSpec</span>: <span style="color:#e6db74">&#39;&gt;= 2.6.3&#39;</span>
 
 <span style="color:#75715e"># Rails 内置数据库 SQLite3 需要依赖以下工具</span>
-- <span style="color:#66d9ef">script</span>: sudo apt-get -yqq install libsqlite3-dev libpq-dev
-  <span style="color:#66d9ef">displayName</span>: install sqlite3
+- <span style="color:#f92672">script</span>: <span style="color:#ae81ff">sudo apt-get -yqq install libsqlite3-dev libpq-dev</span>
+  <span style="color:#f92672">displayName</span>: <span style="color:#ae81ff">install sqlite3</span>
 
-- <span style="color:#66d9ef">script</span>: <span style="color:#e6db74">|
-</span><span style="color:#e6db74">    gem install bundler</span>
-    bundle install --retry=<span style="color:#ae81ff">3</span> --jobs=<span style="color:#ae81ff">4</span>
-  <span style="color:#66d9ef">displayName</span>: <span style="color:#e6db74">&#39;bundle install&#39;</span>
-
-- <span style="color:#66d9ef">script</span>: bundle exec rake
-  <span style="color:#66d9ef">displayName</span>: <span style="color:#e6db74">&#39;bundle exec rake&#39;</span>
-</code></pre></div>
+- <span style="color:#f92672">script</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">    gem install bundler
+</span><span style="color:#e6db74">    bundle install --retry=3 --jobs=4
+</span><span style="color:#e6db74">  displayName: &#39;bundle install&#39;
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">- script: bundle exec rake
+</span><span style="color:#e6db74">  displayName: &#39;bundle exec rake&#39;
+</span></code></pre></div>
 </content>
 <p>
   
