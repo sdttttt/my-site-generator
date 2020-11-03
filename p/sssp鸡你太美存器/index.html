@@ -18,7 +18,7 @@ push ax ;将寄存器ax中的数据送入栈顶 pop ax ;将栈顶的数据送入
 push 有2步:
  SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置.  10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| 1000EH |__23___| &amp;lt;= SS:SP 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| &amp;lt;= SS:SP: 换个位置 |_______| 1000EH |__23___| 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| ;来自ax寄存器的数据 |__54___| &amp;lt;= SS:SP: 换个位置 |__11___| 1000EH |__23___| 1000FH |__01___|  假设 10000H -&amp;gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？'>
 <meta property='og:url' content='https://sdttttt.github.io/p/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/'>
-<meta property='og:site_name' content='SDTTTTT&#39;s Smelly fish Rotten shrimp 📓'>
+<meta property='og:site_name' content='Smelly fish Rotten shrimp 📓'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='assembly' /><meta property='article:published_time' content='2020-04-06T16:38:01&#43;08:00'/><meta property='article:modified_time' content='2020-04-06T16:38:01&#43;08:00'/>
 <meta name="twitter:title" content="SS:SP鸡你太美存器">
 <meta name="twitter:description" content="如今的CPU都有提供栈机制，8086也不例外。
@@ -49,8 +49,8 @@ push 有2步:
                 <span class="emoji">🍥</span>
             </figure>
         
-        <h1 class="site-name"><a href="https://sdttttt.github.io/">SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</a></h1>
-        <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        <h1 class="site-name"><a href="https://sdttttt.github.io/">Smelly fish Rotten shrimp 📓</a></h1>
+        <h2 class="site-description"></h2>
     </header>
 
     <ol class="menu" id="main-menu">

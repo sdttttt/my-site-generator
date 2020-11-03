@@ -12,7 +12,7 @@ Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input  $id = $_GET[ &
 DVWA SQL Injection blind 过关秘籍.
 Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input  $id = $_GET[ &amp;#39;id&amp;#39; ]; // Check database  $getid = &amp;#34;SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;$id&amp;#39;;&amp;#34;; // 没有一点点防备  // 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效)  // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,2 # &amp;#39;;  // User ID exists in the database. &amp;lt;存在注入漏洞&amp;gt;  // SELECT first_name, last_name FROM users WHERE user_id = &amp;#39;0&amp;#39; union select 1,if(length( database())=4,sleep(4),2) # &amp;#39;;  $result = mysql_query( $getid ); // Removed &amp;#39;or die&amp;#39; to suppress mysql errors  // Get results  $num = @mysql_numrows( $result ); // The &amp;#39;@&amp;#39; character suppresses errors  if( $num &amp;gt; 0 ) { // Feedback for end user  echo &amp;#39;&amp;lt;pre&amp;gt;User ID exists in the database.'>
 <meta property='og:url' content='https://sdttttt.github.io/p/sql-injection-blind/'>
-<meta property='og:site_name' content='SDTTTTT&#39;s Smelly fish Rotten shrimp 📓'>
+<meta property='og:site_name' content='Smelly fish Rotten shrimp 📓'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='penetration test' /><meta property='article:published_time' content='2020-04-10T11:11:22&#43;08:00'/><meta property='article:modified_time' content='2020-04-10T11:11:22&#43;08:00'/>
 <meta name="twitter:title" content="Sql Injection Blind">
 <meta name="twitter:description" content="返回的结果集无法看到，只能通过一些页面显示或状态来判断。 像瞎子一样。
@@ -40,8 +40,8 @@ Low if(isset( $_GET[ &amp;#39;Submit&amp;#39; ])) { // Get input  $id = $_GET[ &
                 <span class="emoji">🍥</span>
             </figure>
         
-        <h1 class="site-name"><a href="https://sdttttt.github.io/">SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</a></h1>
-        <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        <h1 class="site-name"><a href="https://sdttttt.github.io/">Smelly fish Rotten shrimp 📓</a></h1>
+        <h2 class="site-description"></h2>
     </header>
 
     <ol class="menu" id="main-menu">

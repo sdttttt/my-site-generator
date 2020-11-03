@@ -30,7 +30,7 @@ Insert 插入的节点默认是红色的.因为这样可以最大限度满足红
  node的叔父节点为红色。这种情况，将N的父节点和叔父节点的颜色都改为黑色，若祖父节点是跟节点就将其改为黑色，否则将其颜色改为红色，并以祖父节点为插入的目标节点开始重新递归修复红黑树.   node的叔父节点为黑色，且node和node的父节点在同一边 (即父节点为祖父的左儿子时，N也是父节点的左儿子。父节点为祖父节点的右儿子时。N也是父节点的右儿子)。以父节点为祖父节的左儿子为例，将父节点改为黑色，祖父节点改为红色，然后以祖父节点为基准右旋。(N为父节点右儿子时做相应的左旋)   node的叔父节点为黑色，且node和node的父节点不在同一边 (即父节点为祖父的左儿子时，N是父节点的右儿子。父节点为祖父节点的右儿子时。N也是父节点左右儿子)。以父节点为祖父节点的左儿子为例。以父节点为基准，进行左旋，然后以父节点为目标插入节点进入情况3的b情况进行操作。    Delete 这个以后再说.
 Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的。'>
 <meta property='og:url' content='https://sdttttt.github.io/p/red-black-tree/'>
-<meta property='og:site_name' content='SDTTTTT&#39;s Smelly fish Rotten shrimp 📓'>
+<meta property='og:site_name' content='Smelly fish Rotten shrimp 📓'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Data Structure' /><meta property='article:published_time' content='2020-05-25T19:27:28&#43;08:00'/><meta property='article:modified_time' content='2020-05-25T19:27:28&#43;08:00'/>
 <meta name="twitter:title" content="Red Black Tree">
 <meta name="twitter:description" content="半年前在研究HashMap的时候已经学习过红黑树的规则原理了. 不过现在又遇到就忘记是怎么实现的了.(只知道这玩意是用来平衡树的) 这次就把这个数据结构做一个了断.
@@ -67,8 +67,8 @@ Search 红黑树算是搜索二叉树的一个子集，Search方法是相同的�
                 <span class="emoji">🍥</span>
             </figure>
         
-        <h1 class="site-name"><a href="https://sdttttt.github.io/">SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</a></h1>
-        <h2 class="site-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h2>
+        <h1 class="site-name"><a href="https://sdttttt.github.io/">Smelly fish Rotten shrimp 📓</a></h1>
+        <h2 class="site-description"></h2>
     </header>
 
     <ol class="menu" id="main-menu">
