@@ -52,15 +52,14 @@ Raft最基础分为三种状态: Leader, Follower, Candidate. 整个Raft主体�
 每个RaftNode都需要处理外部的事件.所以我们可以采用事件驱动模型.
 整体我们可以拆分为三个部分:
  RaftProcessor: 处理事件的处理器. EventDispatcher: 负责接收外部任务,发送给Raft本体, 或者接收Raft本体发来的事件,向外发布. LogSynchronizer: 同步LogBuffer中的日志到Raft本体.  三个部分可以使用Channel来到达互相通信.">
-<meta itemprop="datePublished" content="2020-06-25T19:02:23+08:00" />
-<meta itemprop="dateModified" content="2020-06-25T19:02:23+08:00" />
+<meta itemprop="datePublished" content="2020-06-25T19:02:23&#43;08:00" />
+<meta itemprop="dateModified" content="2020-06-25T19:02:23&#43;08:00" />
 <meta itemprop="wordCount" content="20">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
 
 <meta itemprop="keywords" content="distribute system," />
-
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>

@@ -6,6 +6,10 @@
     <description>Recent content in Categories on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <copyright>Copyright © 2020, SDTTTTT.</copyright><atom:link href="https://sdttttt.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    
+	<atom:link href="https://sdttttt.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
   </channel>
 </rss>
