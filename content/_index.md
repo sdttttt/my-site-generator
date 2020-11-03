@@ -5,7 +5,7 @@ date: 2020-03-04
 featured: "me.jpg"
 ---
 
-Hi! 我是SDTTTTT, 我是一个热情好客的臭鱼烂虾开发工程师, 我常常和网络编程打交道. 
+Hi! 我是SDTTTTT, 我是一个热情好客的臭鱼烂虾开发工程师, 我常常和网络编程打交道.
 我没有特别擅长的编程语言, 但是我不写`Python`和`PHP`.
 
 这个博客的构建源自我的[**hugo-blog-tool-man**](https://github.com/sdttttt/hugo-blog-tool-man)工具.
@@ -17,9 +17,5 @@ Hi! 我是SDTTTTT, 我是一个热情好客的臭鱼烂虾开发工程师, 我�
 , 或者[![https://t.me/sdzzzzz](https://img.shields.io/badge/Discord-SDTTTTT-99f.svg?logo=Discord)](https://discord.gg/VVqZzus)
 [![sdt](https://img.shields.io/badge/bilibili-SDTTTTT-red?logo=niconico)](https://space.bilibili.com/27781539)
 .
-
----
-<iframe src="https://discordapp.com/widget?id=724268905555558400&theme=dark" width="730" height="300" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
-
 
 <img src="https://imgsa.baidu.com/forum/w%3D580/sign=a3bf12530e4f78f0800b9afb49310a83/cbeaabdcd100baa19543cbbc4a10b912c9fc2ea5.jpg" />
