@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>assembly on Smelly fish Rotten shrimp 📓</title>
+    <title>assembly on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
     <link>https://sdttttt.github.io/tags/assembly/</link>
-    <description>Recent content in assembly on Smelly fish Rotten shrimp 📓</description>
+    <description>Recent content in assembly on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Mon, 06 Apr 2020 16:38:01 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/assembly/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Apr 2020 16:38:01 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/tags/assembly/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>SS:SP鸡你太美存器</title>
-      <link>https://sdttttt.github.io/p/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</link>
+      <link>https://sdttttt.github.io/blog/sssp/</link>
       <pubDate>Mon, 06 Apr 2020 16:38:01 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/sssp%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</guid>
+      <guid>https://sdttttt.github.io/blog/sssp/</guid>
       <description>如今的CPU都有提供栈机制，8086也不例外。
 8086提供的最基本的两个指令就是push and pop.
 push ax ;将寄存器ax中的数据送入栈顶 pop ax ;将栈顶的数据送入ax 我们知道CS:IP寄存器存放了下一条指令的段地址和偏移地址，那么CPU是如何知道栈顶在哪呐？ 显然也有两个寄存器专门存放栈顶的地址，那就是SS:SP寄存器，SS = 段地址， SP = 偏移地址
@@ -24,10 +28,10 @@ push 有2步:
     
     <item>
       <title>CSIP鸡你太美存器</title>
-      <link>https://sdttttt.github.io/p/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</link>
+      <link>https://sdttttt.github.io/blog/csip/</link>
       <pubDate>Mon, 06 Apr 2020 15:35:44 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/csip%E9%B8%A1%E4%BD%A0%E5%A4%AA%E7%BE%8E%E5%AD%98%E5%99%A8/</guid>
+      <guid>https://sdttttt.github.io/blog/csip/</guid>
       <description>之前刚学的时候对这个玩意音响没那么深刻，现在再学，感觉很不一样了。
 CS为代码段寄存器，IP为指令指针寄存器。 设CS = M, IP = N, 8086CPU将从 M × 16 + N 处读取指令并进行。
 也可以这样表述： 8086CPU中，任意时刻，CPU都会将CS:IP指向的内容做为执行指令.

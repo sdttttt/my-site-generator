@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
+<title>MyBatis 源码分析 | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+<meta name="title" content="MyBatis 源码分析" />
+<meta name="description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节." />
+<meta name="keywords" content="Java," />
+
+
+<meta property="og:title" content="MyBatis 源码分析" />
+<meta property="og:description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/blog/mybatissourcecode/" />
+<meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
+<meta property="article:published_time" content="2020-09-10T22:15:42+08:00" />
+<meta property="article:modified_time" content="2020-09-10T22:15:42+08:00" /><meta property="og:site_name" content="SDTTTTT" />
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+<meta name="twitter:title" content="MyBatis 源码分析"/>
+<meta name="twitter:description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节."/>
+
+
+
+<meta itemprop="name" content="MyBatis 源码分析">
+<meta itemprop="description" content="本文让你知道iBatis是怎么工作的, 以及一些你可能不知道的执行细节.">
+<meta itemprop="datePublished" content="2020-09-10T22:15:42&#43;08:00" />
+<meta itemprop="dateModified" content="2020-09-10T22:15:42&#43;08:00" />
+<meta itemprop="wordCount" content="1059">
+<meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
+
+
+
+<meta itemprop="keywords" content="Java," />
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+     
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #f2f2f2;
+  }
+
+  pre code {
+    color: #222;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #222;
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
+  }
+
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>MyBatis 源码分析</h1>
+<p>
+  <i>
+    <time datetime='2020-09-10' pubdate>
+      10 Sep, 2020
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>其实很早就想写一篇 iBatis 的源码分析了, 不过有段时间去学习 Go 了, Java 就放下了, 最近
+重新捡起 Java 就把以前没填的坑,填一下.</p>
+<h1 id="init">Init</h1>
+<p>现在开始正片.</p>
+<p>首先是 iBatis 的初始化工作.我们看下面的代码:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java"><span style="color:#75715e">// `BlogDataSourceFactory`的主要作用: 通过你的配置文件, 初始化一个DataSource
+</span><span style="color:#75715e"></span>DataSource dataSource <span style="color:#f92672">=</span> BlogDataSourceFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">getBlogDataSource</span><span style="color:#f92672">();</span>
+<span style="color:#75715e">// JdbcTransactionFactory一个New就能得到, 没什么依赖条件
+</span><span style="color:#75715e"></span>TransactionFactory transactionFactory <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> JdbcTransactionFactory<span style="color:#f92672">();</span>
+<span style="color:#75715e">// Environment要你交出数据源和事务工厂还有你的环境是开发还是生产
+</span><span style="color:#75715e"></span>Environment environment <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Environment<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;development&#34;</span><span style="color:#f92672">,</span> transactionFactory<span style="color:#f92672">,</span> dataSource<span style="color:#f92672">);</span>
+<span style="color:#75715e">// Configuration有基本上你所有的配置
+</span><span style="color:#75715e"></span>Configuration configuration <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Configuration<span style="color:#f92672">(</span>environment<span style="color:#f92672">);</span>
+<span style="color:#75715e">// 添加你的mapper到配置列表中, 等会我们去分析它
+</span><span style="color:#75715e"></span>configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">addMapper</span><span style="color:#f92672">(</span>BlogMapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+<span style="color:#75715e">// 通过你的配置类,让我们初始化一个SqlSessionFactory! 我们终于进入正题了!!
+</span><span style="color:#75715e">// 可能你觉得很快... 其实本人在这里面分析还是花了很长时间
+</span><span style="color:#75715e"></span>SqlSessionFactory sqlSessionFactory <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SqlSessionFactoryBuilder<span style="color:#f92672">().</span><span style="color:#a6e22e">build</span><span style="color:#f92672">(</span>configuration<span style="color:#f92672">);</span>
+</code></pre></div><p>好, 上文有说<code>configuration.addMapper(BlogMapper.class)</code>这个方法, 现在我们来分析一下它.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">
+    <span style="color:#75715e">// 这个是Configuration中的方法, 它实际上是委托mapperRegistry去执行
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addMapper</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> type<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        mapperRegistry<span style="color:#f92672">.</span><span style="color:#a6e22e">addMapper</span><span style="color:#f92672">(</span>type<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addMapper</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> type<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//mapper必须是接口
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>type<span style="color:#f92672">.</span><span style="color:#a6e22e">isInterface</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hasMapper<span style="color:#f92672">(</span>type<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//如果重复添加了，报错
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> BindingException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Type &#34;</span> <span style="color:#f92672">+</span> type <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is already known to the MapperRegistry.&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">boolean</span> loadCompleted <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 加入一个Mapper的代理生产工厂
+</span><span style="color:#75715e"></span>            knownMappers<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>type<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> MapperProxyFactory<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;(</span>type<span style="color:#f92672">));</span>
+            <span style="color:#75715e">// It&#39;s important that the type is added before the parser is run
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// otherwise the binding may automatically be attempted by the
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// mapper parser. If the type is already known, it won&#39;t try.
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// 这个是通过注解来构建Mapper, 暂时不看
+</span><span style="color:#75715e"></span>            MapperAnnotationBuilder parser <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MapperAnnotationBuilder<span style="color:#f92672">(</span>config<span style="color:#f92672">,</span> type<span style="color:#f92672">);</span>
+            parser<span style="color:#f92672">.</span><span style="color:#a6e22e">parse</span><span style="color:#f92672">();</span>
+            loadCompleted <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//如果加载过程中出现异常需要再将这个mapper从mybatis中删除
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>loadCompleted<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            knownMappers<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>type<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h1 id="sqlsessionfactory">SqlSessionFactory</h1>
+<p>既然有了 SqlSessionFactory，顾名思义，我们可以从中获得 SqlSession 的实例。
+SqlSession 提供了在数据库执行 SQL 命令所需的所有方法。
+你可以通过 SqlSession 实例来直接执行已映射的 SQL 语句。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java"><span style="color:#66d9ef">try</span> <span style="color:#f92672">(</span>SqlSession session <span style="color:#f92672">=</span> sqlSessionFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">openSession</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+  BlogMapper mapper <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span><span style="color:#a6e22e">getMapper</span><span style="color:#f92672">(</span>BlogMapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+  Blog blog <span style="color:#f92672">=</span> mapper<span style="color:#f92672">.</span><span style="color:#a6e22e">selectBlog</span><span style="color:#f92672">(</span>101<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>好! 我们快进到<del>曹丕</del>sqlSessionFactory.openSession()</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">    <span style="color:#66d9ef">public</span> SqlSession <span style="color:#a6e22e">openSession</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> openSessionFromDataSource<span style="color:#f92672">(</span>configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">getDefaultExecutorType</span><span style="color:#f92672">(),</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> SqlSession <span style="color:#a6e22e">openSessionFromDataSource</span><span style="color:#f92672">(</span>ExecutorType execType<span style="color:#f92672">,</span> TransactionIsolationLevel level<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> autoCommit<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// Transaction事务，包装了一个Connection, 包含commit,rollback,close方法
+</span><span style="color:#75715e"></span>    Transaction tx <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// 还记得么, environment里封装了我们的数据源;事务工厂;还有环境
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> Environment environment <span style="color:#f92672">=</span> configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">getEnvironment</span><span style="color:#f92672">();</span>
+      <span style="color:#75715e">// 得到一个事务工厂, 如果env或者env里的事务工厂是空的就返回一个托管事务工厂
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 托管事务工厂的特点就是每次执行完成SQL都会关闭连接, 如果你不希望关闭连接要在配置文件里设置它
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> TransactionFactory transactionFactory <span style="color:#f92672">=</span> getTransactionFactoryFromEnvironment<span style="color:#f92672">(</span>environment<span style="color:#f92672">);</span>
+      <span style="color:#75715e">//通过事务工厂来产生一个事务
+</span><span style="color:#75715e"></span>      tx <span style="color:#f92672">=</span> transactionFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">newTransaction</span><span style="color:#f92672">(</span>environment<span style="color:#f92672">.</span><span style="color:#a6e22e">getDataSource</span><span style="color:#f92672">(),</span> level<span style="color:#f92672">,</span> autoCommit<span style="color:#f92672">);</span>
+      <span style="color:#75715e">//生成一个执行器(事务包含在执行器里)
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> Executor executor <span style="color:#f92672">=</span> configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">newExecutor</span><span style="color:#f92672">(</span>tx<span style="color:#f92672">,</span> execType<span style="color:#f92672">);</span>
+      <span style="color:#75715e">//然后产生一个DefaultSqlSession
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DefaultSqlSession<span style="color:#f92672">(</span>configuration<span style="color:#f92672">,</span> executor<span style="color:#f92672">,</span> autoCommit<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//如果打开事务出错，则关闭它
+</span><span style="color:#75715e"></span>      closeTransaction<span style="color:#f92672">(</span>tx<span style="color:#f92672">);</span> <span style="color:#75715e">// may have fetched a connection so lets call close()
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">throw</span> ExceptionFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">wrapException</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Error opening session.  Cause: &#34;</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//最后清空错误上下文
+</span><span style="color:#75715e"></span>      ErrorContext<span style="color:#f92672">.</span><span style="color:#a6e22e">instance</span><span style="color:#f92672">().</span><span style="color:#a6e22e">reset</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+</code></pre></div><p>这样我们就得到了一个<code>SqlSession</code>.</p>
+<blockquote>
+<p>2020.10.12 继续更新</p>
+</blockquote>
+<p>有了<code>SqlSession</code>之后我们就可以操作数据库了。</p>
+<p>我们来看看MyBatis是怎么实现<code>session.selectOne(&quot;org.mybatis.example.BlogMapper.selectBlog&quot;, 101);</code>的。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> T <span style="color:#a6e22e">selectOne</span><span style="color:#f92672">(</span>String statement<span style="color:#f92672">,</span> Object parameter<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// Popular vote was to return null on 0 results and throw exception on too many.
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//转而去调用selectList,很简单的，如果得到0条则返回null，得到1条则返回1条，得到多条报TooManyResultsException错
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 特别需要主要的是当没有查询到结果的时候就会返回null。因此一般建议在mapper中编写resultType的时候使用包装类型
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//而不是基本类型，比如推荐使用Integer而不是int。这样就可以避免NPE
+</span><span style="color:#75715e"></span>    List<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.&lt;</span>T<span style="color:#f92672">&gt;</span>selectList<span style="color:#f92672">(</span>statement<span style="color:#f92672">,</span> parameter<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> TooManyResultsException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Expected one result (or null) to be returned by selectOne(), but found: &#34;</span> <span style="color:#f92672">+</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+
+  <span style="color:#75715e">// emm，这里其实啥都没有，我们去SelectList看看。
+</span><span style="color:#75715e"></span>
+  <span style="color:#75715e">// 在下来解释一下这三个参数：
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// statement 映射语句的位置，比如&#34;org.mybatis.example.BlogMapper.selectBlog&#34;
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// parameter SQL语句中的参数
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// RowBounds 分页限制，相当于SQL中的limit. 
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">selectList</span><span style="color:#f92672">(</span>String statement<span style="color:#f92672">,</span> Object parameter<span style="color:#f92672">,</span> RowBounds rowBounds<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//根据statement id找到对应的MappedStatement
+</span><span style="color:#75715e"></span>      MappedStatement ms <span style="color:#f92672">=</span> configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">getMappedStatement</span><span style="color:#f92672">(</span>statement<span style="color:#f92672">);</span>
+      <span style="color:#75715e">//转而用执行器来查询结果,注意这里传入的ResultHandler是null
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// wrapCollection：如果参数是Collection类型，转换成Map，key为parameter的type.
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">return</span> executor<span style="color:#f92672">.</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> wrapCollection<span style="color:#f92672">(</span>parameter<span style="color:#f92672">),</span> rowBounds<span style="color:#f92672">,</span> Executor<span style="color:#f92672">.</span><span style="color:#a6e22e">NO_RESULT_HANDLER</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        
+      <span style="color:#66d9ef">throw</span> ExceptionFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">wrapException</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Error querying database.  Cause: &#34;</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+      ErrorContext<span style="color:#f92672">.</span><span style="color:#a6e22e">instance</span><span style="color:#f92672">().</span><span style="color:#a6e22e">reset</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+
+
+  <span style="color:#75715e">// 接下来是执行器的部分
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>MappedStatement ms<span style="color:#f92672">,</span> Object parameter<span style="color:#f92672">,</span> RowBounds rowBounds<span style="color:#f92672">,</span> ResultHandler resultHandler<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> SQLException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//得到绑定sql，就是将参数插入映射语句里，获得完整的SQL
+</span><span style="color:#75715e"></span>    BoundSql boundSql <span style="color:#f92672">=</span> ms<span style="color:#f92672">.</span><span style="color:#a6e22e">getBoundSql</span><span style="color:#f92672">(</span>parameter<span style="color:#f92672">);</span>
+    <span style="color:#75715e">//创建缓存Key
+</span><span style="color:#75715e"></span>    CacheKey key <span style="color:#f92672">=</span> createCacheKey<span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> parameter<span style="color:#f92672">,</span> rowBounds<span style="color:#f92672">,</span> boundSql<span style="color:#f92672">);</span>
+    <span style="color:#75715e">//查询
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> query<span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> parameter<span style="color:#f92672">,</span> rowBounds<span style="color:#f92672">,</span> resultHandler<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> boundSql<span style="color:#f92672">);</span>
+ <span style="color:#f92672">}</span>
+
+ <span style="color:#75715e">// 执行查询
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>MappedStatement ms<span style="color:#f92672">,</span> Object parameter<span style="color:#f92672">,</span> RowBounds rowBounds<span style="color:#f92672">,</span> ResultHandler resultHandler<span style="color:#f92672">,</span> CacheKey key<span style="color:#f92672">,</span> BoundSql boundSql<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> SQLException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// ErrorContext 是每个线程单独使用的错误上下文，它是用ThreadLocal制作的.
+</span><span style="color:#75715e"></span>    ErrorContext<span style="color:#f92672">.</span><span style="color:#a6e22e">instance</span><span style="color:#f92672">().</span><span style="color:#a6e22e">resource</span><span style="color:#f92672">(</span>ms<span style="color:#f92672">.</span><span style="color:#a6e22e">getResource</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">activity</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;executing a query&#34;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">object</span><span style="color:#f92672">(</span>ms<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">());</span>
+    <span style="color:#75715e">//如果已经关闭，报错
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>closed<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> ExecutorException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Executor was closed.&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">//先清局部缓存，再查询.但仅查询堆栈为0，才清。为了处理递归调用
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>queryStack <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> ms<span style="color:#f92672">.</span><span style="color:#a6e22e">isFlushCacheRequired</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      clearLocalCache<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+    List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> list<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//加一,这样递归调用到上面的时候就不会再清局部缓存了
+</span><span style="color:#75715e"></span>      queryStack<span style="color:#f92672">++;</span>
+      <span style="color:#75715e">//先根据cachekey从localCache去查
+</span><span style="color:#75715e"></span>      list <span style="color:#f92672">=</span> resultHandler <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;)</span> localCache<span style="color:#f92672">.</span><span style="color:#a6e22e">getObject</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//若查到localCache缓存，处理localOutputParameterCache
+</span><span style="color:#75715e"></span>        handleLocallyCachedOutputParameters<span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> parameter<span style="color:#f92672">,</span> boundSql<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//从数据库查
+</span><span style="color:#75715e"></span>        list <span style="color:#f92672">=</span> queryFromDatabase<span style="color:#f92672">(</span>ms<span style="color:#f92672">,</span> parameter<span style="color:#f92672">,</span> rowBounds<span style="color:#f92672">,</span> resultHandler<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> boundSql<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//清空堆栈
+</span><span style="color:#75715e"></span>      queryStack<span style="color:#f92672">--;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>queryStack <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">//延迟加载队列中所有元素
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DeferredLoad deferredLoad <span style="color:#f92672">:</span> deferredLoads<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        deferredLoad<span style="color:#f92672">.</span><span style="color:#a6e22e">load</span><span style="color:#f92672">();</span>
+      <span style="color:#f92672">}</span>
+
+      <span style="color:#75715e">// issue #601
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">//清空延迟加载队列
+</span><span style="color:#75715e"></span>      deferredLoads<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>configuration<span style="color:#f92672">.</span><span style="color:#a6e22e">getLocalCacheScope</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> LocalCacheScope<span style="color:#f92672">.</span><span style="color:#a6e22e">STATEMENT</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// issue #482
+</span><span style="color:#75715e"></span>    	<span style="color:#75715e">//如果是STATEMENT，清本地缓存
+</span><span style="color:#75715e"></span>        clearLocalCache<span style="color:#f92672">();</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> list<span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+</code></pre></div><p>以上是<code>SqlSession.selectOne</code>的流程。然而实际中我们直接使用SqlSession来执行数据库操作的情况很少。</p>
+<p>大多数情况我们会这样使用MyBatis:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java"><span style="color:#66d9ef">try</span> <span style="color:#f92672">(</span>SqlSession session <span style="color:#f92672">=</span> sqlSessionFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">openSession</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+  BlogMapper mapper <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span><span style="color:#a6e22e">getMapper</span><span style="color:#f92672">(</span>BlogMapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+  Blog blog <span style="color:#f92672">=</span> mapper<span style="color:#f92672">.</span><span style="color:#a6e22e">selectBlog</span><span style="color:#f92672">(</span>101<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>这个方法的详细过程我们使用MyBatis的单元测试来探索。</p>
+<p>单元测试代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">  <span style="color:#a6e22e">@Test</span>
+  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">shouldSelectBlogWithPostsUsingSubSelect</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
+    SqlSession session <span style="color:#f92672">=</span> sqlSessionFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">openSession</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+      BoundBlogMapper mapper <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span><span style="color:#a6e22e">getMapper</span><span style="color:#f92672">(</span>BoundBlogMapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+      Blog b <span style="color:#f92672">=</span> mapper<span style="color:#f92672">.</span><span style="color:#a6e22e">selectBlogWithPostsUsingSubSelect</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+      assertEquals<span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">());</span>
+      session<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+      assertNotNull<span style="color:#f92672">(</span>b<span style="color:#f92672">.</span><span style="color:#a6e22e">getAuthor</span><span style="color:#f92672">());</span>
+      assertEquals<span style="color:#f92672">(</span>101<span style="color:#f92672">,</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">getAuthor</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getId</span><span style="color:#f92672">());</span>
+      assertEquals<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;jim&#34;</span><span style="color:#f92672">,</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">getAuthor</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getUsername</span><span style="color:#f92672">());</span>
+      assertEquals<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;********&#34;</span><span style="color:#f92672">,</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">getAuthor</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getPassword</span><span style="color:#f92672">());</span>
+      assertEquals<span style="color:#f92672">(</span>2<span style="color:#f92672">,</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">getPosts</span><span style="color:#f92672">().</span><span style="color:#a6e22e">size</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+      session<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+</code></pre></div><p>快进到<code>session.getMapper</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">  <span style="color:#75715e">//返回代理类
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> T <span style="color:#a6e22e">getMapper</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> type<span style="color:#f92672">,</span> SqlSession sqlSession<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// 直接得到该类型Mapper代理工厂
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> MapperProxyFactory<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> mapperProxyFactory <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>MapperProxyFactory<span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;)</span> knownMappers<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>type<span style="color:#f92672">);</span>
+    <span style="color:#75715e">// 没有就离谱
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mapperProxyFactory <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> BindingException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Type &#34;</span> <span style="color:#f92672">+</span> type <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is not known to the MapperRegistry.&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// 通过当前Session生产一个代理
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">return</span> mapperProxyFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">newInstance</span><span style="color:#f92672">(</span>sqlSession<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> BindingException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Error getting mapper instance. Cause: &#34;</span> <span style="color:#f92672">+</span> e<span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+</code></pre></div><p>实际上生产Mapper的逻辑并不多。</p>
+<p>主要是执行代理方法时的动作。</p>
+<p>执行<code>mapper.selectBlogWithPostsUsingSubSelect(1);</code>的逻辑如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">  <span style="color:#75715e">// 由于是代理生成的，所以调用方法后会进入一下逻辑：
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">@Override</span>
+  <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>Object proxy<span style="color:#f92672">,</span> Method method<span style="color:#f92672">,</span> Object<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// 如果这个方法是来自Object，就直接执行，直接返回
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Object<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaringClass</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">throw</span> ExceptionUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">unwrapThrowable</span><span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#75715e">// 去缓存中找MapperMethod，第一次的话会new一个
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> MapperMethod mapperMethod <span style="color:#f92672">=</span> cachedMapperMethod<span style="color:#f92672">(</span>method<span style="color:#f92672">);</span>
+    <span style="color:#75715e">//执行本体
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> mapperMethod<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span>sqlSession<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+  <span style="color:#f92672">}</span>
+
+</code></pre></div><p>下面就是整个代理的执行数据库操作的逻辑，比较长：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java">  <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span>SqlSession sqlSession<span style="color:#f92672">,</span> Object<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Object result<span style="color:#f92672">;</span>
+    <span style="color:#75715e">//可以看到执行时就是4种情况，insert|update|delete|select，分别调用SqlSession的4大类方法
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SqlCommandType<span style="color:#f92672">.</span><span style="color:#a6e22e">INSERT</span> <span style="color:#f92672">==</span> command<span style="color:#f92672">.</span><span style="color:#a6e22e">getType</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      Object param <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">convertArgsToSqlCommandParam</span><span style="color:#f92672">(</span>args<span style="color:#f92672">);</span>
+      result <span style="color:#f92672">=</span> rowCountResult<span style="color:#f92672">(</span>sqlSession<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>command<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">(),</span> param<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SqlCommandType<span style="color:#f92672">.</span><span style="color:#a6e22e">UPDATE</span> <span style="color:#f92672">==</span> command<span style="color:#f92672">.</span><span style="color:#a6e22e">getType</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      Object param <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">convertArgsToSqlCommandParam</span><span style="color:#f92672">(</span>args<span style="color:#f92672">);</span>
+      result <span style="color:#f92672">=</span> rowCountResult<span style="color:#f92672">(</span>sqlSession<span style="color:#f92672">.</span><span style="color:#a6e22e">update</span><span style="color:#f92672">(</span>command<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">(),</span> param<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SqlCommandType<span style="color:#f92672">.</span><span style="color:#a6e22e">DELETE</span> <span style="color:#f92672">==</span> command<span style="color:#f92672">.</span><span style="color:#a6e22e">getType</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      Object param <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">convertArgsToSqlCommandParam</span><span style="color:#f92672">(</span>args<span style="color:#f92672">);</span>
+      result <span style="color:#f92672">=</span> rowCountResult<span style="color:#f92672">(</span>sqlSession<span style="color:#f92672">.</span><span style="color:#a6e22e">delete</span><span style="color:#f92672">(</span>command<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">(),</span> param<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SqlCommandType<span style="color:#f92672">.</span><span style="color:#a6e22e">SELECT</span> <span style="color:#f92672">==</span> command<span style="color:#f92672">.</span><span style="color:#a6e22e">getType</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// 我们执行的是查询，直接跳到这里
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">returnsVoid</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">hasResultHandler</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 检查是不是没有返回值以及结果处理器: 我们执行的是查询，是有返回值的
+</span><span style="color:#75715e"></span>        executeWithResultHandler<span style="color:#f92672">(</span>sqlSession<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+        result <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">returnsMany</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//如果结果有多条记录：我们只查一条
+</span><span style="color:#75715e"></span>        result <span style="color:#f92672">=</span> executeForMany<span style="color:#f92672">(</span>sqlSession<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">returnsMap</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//如果结果是map：我们查的只是个对象
+</span><span style="color:#75715e"></span>        result <span style="color:#f92672">=</span> executeForMap<span style="color:#f92672">(</span>sqlSession<span style="color:#f92672">,</span> args<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//否则就是一条记录
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 我们仔细分析这个convertArgsToSqlCommandParam方法
+</span><span style="color:#75715e"></span>        Object param <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">convertArgsToSqlCommandParam</span><span style="color:#f92672">(</span>args<span style="color:#f92672">);</span>
+        <span style="color:#75715e">// 之后我们又回到了SelectOne这个方法。
+</span><span style="color:#75715e"></span>        result <span style="color:#f92672">=</span> sqlSession<span style="color:#f92672">.</span><span style="color:#a6e22e">selectOne</span><span style="color:#f92672">(</span>command<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">(),</span> param<span style="color:#f92672">);</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> BindingException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Unknown execution method for: &#34;</span> <span style="color:#f92672">+</span> command<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>result <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getReturnType</span><span style="color:#f92672">().</span><span style="color:#a6e22e">isPrimitive</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">returnsVoid</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> BindingException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Mapper method &#39;&#34;</span> <span style="color:#f92672">+</span> command<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span>
+          <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; attempted to return null from a method with a primitive return type (&#34;</span> <span style="color:#f92672">+</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getReturnType</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;).&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> result<span style="color:#f92672">;</span>
+  <span style="color:#f92672">}</span>
+
+
+  <span style="color:#75715e">// 将参数转换为SQL命令参数
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">public</span> Object <span style="color:#a6e22e">convertArgsToSqlCommandParam</span><span style="color:#f92672">(</span>Object<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+      <span style="color:#75715e">// 这里有一个坑：
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// args 是Mapper方法执行的参数
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// param 是编写的SQL语句所需要的命令参数
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 它们有什么不同呢：
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 在MyBatis中你需要使用分页时可以不显式在SQL语句中使用limit命令
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 使用RowBounds对象作为Mapper的额外参数来做到数据分页
+</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 该参数不用在SQL语句中显式使用.
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> paramCount <span style="color:#f92672">=</span> params<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>
+      <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>args <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> paramCount <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//如果没参数
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>hasNamedParameters <span style="color:#f92672">&amp;&amp;</span> paramCount <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//如果只有一个参数
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> args<span style="color:#f92672">[</span>params<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">().</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">().</span><span style="color:#a6e22e">next</span><span style="color:#f92672">().</span><span style="color:#a6e22e">intValue</span><span style="color:#f92672">()];</span>
+      <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//否则，返回一个ParamMap，修改参数名，参数名就是其位置
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">final</span> Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Object<span style="color:#f92672">&gt;</span> param <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ParamMap<span style="color:#f92672">&lt;</span>Object<span style="color:#f92672">&gt;();</span>
+        <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> entry <span style="color:#f92672">:</span> params<span style="color:#f92672">.</span><span style="color:#a6e22e">entrySet</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+          <span style="color:#75715e">//1.先加一个#{0},#{1},#{2}...参数
+</span><span style="color:#75715e"></span>          param<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(),</span> args<span style="color:#f92672">[</span>entry<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">().</span><span style="color:#a6e22e">intValue</span><span style="color:#f92672">()]);</span>
+          <span style="color:#75715e">// issue #71, add param names as param1, param2...but ensure backward compatibility
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">final</span> String genericParamName <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;param&#34;</span> <span style="color:#f92672">+</span> String<span style="color:#f92672">.</span><span style="color:#a6e22e">valueOf</span><span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+          <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>param<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>genericParamName<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//2.再加一个#{param1},#{param2}...参数
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//你可以传递多个参数给一个映射器方法。如果你这样做了,
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//默认情况下它们将会以它们在参数列表中的位置来命名,比如:#{param1},#{param2}等。
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//如果你想改变参数的名称(只在多参数情况下) ,那么你可以在参数上使用@Param(“paramName”)注解。
+</span><span style="color:#75715e"></span>            param<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>genericParamName<span style="color:#f92672">,</span> args<span style="color:#f92672">[</span>entry<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">()]);</span>
+          <span style="color:#f92672">}</span>
+          i<span style="color:#f92672">++;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> param<span style="color:#f92672">;</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><p>OK, 我基本想说的都说完了。后续可能会额外补充一些内容，但是不会在本文中，会写新文章。</p>
+
+</content>
+<p>
+  
+  <a href="https://sdttttt.github.io/tags/java/">#Java</a>
+  
+</p>
+
+  </main>
+  <footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    var gitalk = new Gitalk({
+  clientID: '747ab8530477531c3d25',
+  clientSecret: 'af2cc18e4c27998636a6a3c82af0064f38574170',
+  repo: 'sdttttt.github.io',
+  owner: 'sdttttt',
+  admin: ['sdttttt'],
+  id: location.pathname,      
+  distractionFreeMode: true  
+})
+
+gitalk.render('gitalk-container')
+</script>
+
+</footer>
+
+    
+</body>
+
+</html>

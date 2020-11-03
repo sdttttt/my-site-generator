@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>log on Smelly fish Rotten shrimp 📓</title>
+    <title>log on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
     <link>https://sdttttt.github.io/tags/log/</link>
-    <description>Recent content in log on Smelly fish Rotten shrimp 📓</description>
+    <description>Recent content in log on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 03 Nov 2020 14:28:39 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/log/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 03 Nov 2020 14:28:39 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/tags/log/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>GRC 3</title>
-      <link>https://sdttttt.github.io/p/grc-3/</link>
+      <link>https://sdttttt.github.io/blog/grc-3/</link>
       <pubDate>Tue, 03 Nov 2020 14:28:39 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/grc-3/</guid>
+      <guid>https://sdttttt.github.io/blog/grc-3/</guid>
       <description>上周末算是把GRC扩展的部分开发完成了， 最开始写的时候没有遇到什么特别大的困难， 不禁感叹，我写Rust越来越顺手了已经.
 结果到星期六准备把几个模块接起来的时候， 发现出现了变量生命周期的问题，我还特地去找人问， 但根本没啥人鸟我。没办法，最后算是有意无意之间发现了解决的方法&amp;hellip;
 最后在星期六晚上总算是编写完成了已经，星期天的时候发布了。 可惜这几天的下载量都愁云惨淡&amp;hellip;</description>
@@ -21,10 +25,10 @@
     
     <item>
       <title>Log 8</title>
-      <link>https://sdttttt.github.io/p/log-8/</link>
+      <link>https://sdttttt.github.io/blog/log-8/</link>
       <pubDate>Thu, 29 Oct 2020 09:04:14 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/log-8/</guid>
+      <guid>https://sdttttt.github.io/blog/log-8/</guid>
       <description>每天上班, 先骑15分钟自行车到地铁再做20多分钟地铁, 针不戳.
 感觉体能下降的厉害.
 今天在博客仓库了增加了hugo模块。 以后看起来跟换主题会方便很多。 但是为啥有go.mod文件。这又不是一个go项目&amp;hellip;</description>
@@ -32,19 +36,19 @@
     
     <item>
       <title>Log 7</title>
-      <link>https://sdttttt.github.io/p/log-7/</link>
+      <link>https://sdttttt.github.io/blog/log-7/</link>
       <pubDate>Wed, 28 Oct 2020 09:54:22 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/log-7/</guid>
+      <guid>https://sdttttt.github.io/blog/log-7/</guid>
       <description>尝试优化一下文章创建的脚本.</description>
     </item>
     
     <item>
       <title>Log 6</title>
-      <link>https://sdttttt.github.io/p/log-6/</link>
+      <link>https://sdttttt.github.io/blog/log-6/</link>
       <pubDate>Tue, 27 Oct 2020 17:24:55 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/log-6/</guid>
+      <guid>https://sdttttt.github.io/blog/log-6/</guid>
       <description>最近仔细反思了一下, 还是去研究一些什么东西. sraft已经写的我头都大了. 我打算最近一段时间不再在Github上编写代码了.
 一方面是没有什么东西打得起我的兴趣, 另一方面还是觉得自己没有真正擅长的方面, 研究分布式系统这么长时间, 进展真的很慢, 一是我平时很懒, 不喜欢搭复杂的环境, 二是单纯的分布式方面的知识没有什么软用. 需要结合其他方面.
 潜了潜了. (当然博客还是会写www)</description>
@@ -52,10 +56,10 @@
     
     <item>
       <title>Log 5</title>
-      <link>https://sdttttt.github.io/p/log-5/</link>
+      <link>https://sdttttt.github.io/blog/log-5/</link>
       <pubDate>Fri, 23 Oct 2020 16:44:07 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/log-5/</guid>
+      <guid>https://sdttttt.github.io/blog/log-5/</guid>
       <description>今天写了一天的sraft. 本来是自信满满，但是有些地方的设计真的让我焦头烂额.
 今天把sraft的rpc的网络通信部分换成了长连接。 但是写到节点发现的部分又有问题来了，我没有写关于处理节点发现之类的模块， 至今都是按照raft论文上的基础理论来实现的。
 这一块又要怎么设计呢&amp;hellip; 果然有些地方写的还是太复杂了么.</description>
@@ -63,10 +67,10 @@
     
     <item>
       <title>Log 4</title>
-      <link>https://sdttttt.github.io/p/log-4/</link>
+      <link>https://sdttttt.github.io/blog/log-4/</link>
       <pubDate>Thu, 22 Oct 2020 09:26:05 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/log-4/</guid>
+      <guid>https://sdttttt.github.io/blog/log-4/</guid>
       <description>昨天算是完成了第一个前端上需求.来讲讲成果吧. (其实根本无关紧要)
 看了SVN记录,整个项目第一次提交是在2018年. (立项的时间感觉肯定更早)
 整体技术使用的基本时原生JS(没有ES6) + Jquery. 项目代码风格凌乱. 肯定有好几个人接手过了.
@@ -79,10 +83,10 @@
     
     <item>
       <title>Log 3</title>
-      <link>https://sdttttt.github.io/p/log-3/</link>
+      <link>https://sdttttt.github.io/blog/log-3/</link>
       <pubDate>Wed, 21 Oct 2020 08:55:36 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/log-3/</guid>
+      <guid>https://sdttttt.github.io/blog/log-3/</guid>
       <description>细心的人可能注意到我这几天都在写JS, 因为这边的公司人手其实缺乏很严重, 很多都是做后端的, 而且后端并不是全部Java, 有相当部分是Python写的.
 我在大学期间为了选择以后的WEB方向, 一狠心把当时比较前沿的WEB技术全部学了一遍, 包括前端的一些框架, 最后选择了WEB后端, 语言为Go, 或者Java. 也算半个全栈吧.
 这个公司正好是发挥了我所有的技能..不过这边的JS大部分都是原生的, 我比较习惯用ES6的写法.</description>
@@ -90,20 +94,20 @@
     
     <item>
       <title>日志</title>
-      <link>https://sdttttt.github.io/p/%E6%97%A5%E5%BF%97/</link>
+      <link>https://sdttttt.github.io/blog/log-2/</link>
       <pubDate>Sun, 11 Oct 2020 14:45:23 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/%E6%97%A5%E5%BF%97/</guid>
+      <guid>https://sdttttt.github.io/blog/log-2/</guid>
       <description>昨天骑自行车下班回来后荨麻疹又犯了, 实在是比较难受, 今天算是去了趟皮肤病医院.
 算是配了点药. 希望能好一点.</description>
     </item>
     
     <item>
       <title>Sraft (三)</title>
-      <link>https://sdttttt.github.io/p/sraft-%E4%B8%89/</link>
+      <link>https://sdttttt.github.io/blog/sraft-3/</link>
       <pubDate>Fri, 09 Oct 2020 10:52:24 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/sraft-%E4%B8%89/</guid>
+      <guid>https://sdttttt.github.io/blog/sraft-3/</guid>
       <description>经过几天思考, 我决定稍微重新分配一下各个模块的密度.
 RaftKernel中的Solt为本次的重点.对RaftKernel来说Solt为一个黑盒.Solt对外处理所有事件,但是不暴露实现. 内部的状态机转化也对RaftKernel进行隐藏.RaftKernel只要接受外界AE, 交给Solt, Solt反馈相应的事件, RaftKernel进行处理.
 挖藕, 希望这次有效.</description>
@@ -111,10 +115,10 @@ RaftKernel中的Solt为本次的重点.对RaftKernel来说Solt为一个黑盒.So
     
     <item>
       <title>Essays</title>
-      <link>https://sdttttt.github.io/p/essays/</link>
+      <link>https://sdttttt.github.io/blog/essays/</link>
       <pubDate>Tue, 06 Oct 2020 12:34:31 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/essays/</guid>
+      <guid>https://sdttttt.github.io/blog/essays/</guid>
       <description>前几天去朋友那边玩了一趟, 事实上并没有什么好玩的. 这几天什么也没做. sraft也没有什么进展.
 我又重新对Ruby on Rails 感兴趣了.但是没有一个很好的环境写这个东西.还是算了.
 还是想想下一个项目写什么比较好.</description>
@@ -122,10 +126,10 @@ RaftKernel中的Solt为本次的重点.对RaftKernel来说Solt为一个黑盒.So
     
     <item>
       <title>GRC (二)</title>
-      <link>https://sdttttt.github.io/p/grc-%E4%BA%8C/</link>
+      <link>https://sdttttt.github.io/blog/grc-2/</link>
       <pubDate>Thu, 01 Oct 2020 15:24:27 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/grc-%E4%BA%8C/</guid>
+      <guid>https://sdttttt.github.io/blog/grc-2/</guid>
       <description>昨天姑且算是完成了GRC的开发. push这个命令不是很想加,想了一下也没有必要.
 GRC的0.8.0版本昨天算是发布了, 应该也算是头一次正经的用Rust来开发软件.
 在crate.io上看起来有100的安装了. 不知道他们脸上是什么表情 wwww
@@ -137,10 +141,10 @@ GRC的0.8.0版本昨天算是发布了, 应该也算是头一次正经的用Rust
     
     <item>
       <title>GRC (一)</title>
-      <link>https://sdttttt.github.io/p/grc-%E4%B8%80/</link>
+      <link>https://sdttttt.github.io/blog/grc-1/</link>
       <pubDate>Sat, 26 Sep 2020 14:49:17 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/grc-%E4%B8%80/</guid>
+      <guid>https://sdttttt.github.io/blog/grc-1/</guid>
       <description>ooo! 一个不错的消息.
 目前GRC的commit规范的功能已经完全实现了. 之前还说要几个星期, 看来比我想得要快很多 👴勤勉 基本上已经和git-cz有着完全一致的功能. 我也已经把GRC发布在了crates.io网站上. 在crates.io上搜索grc就能看到. 同时我也在v2ex上写了关于GRC的文章.
 开发也会继续进行, GRC会在以后为你提供更方便的功能. 我也期待有人能参与到这个项目中来.
@@ -149,10 +153,10 @@ GRC的0.8.0版本昨天算是发布了, 应该也算是头一次正经的用Rust
     
     <item>
       <title>sraft (二)</title>
-      <link>https://sdttttt.github.io/p/sraft-%E4%BA%8C/</link>
+      <link>https://sdttttt.github.io/blog/sraft-2/</link>
       <pubDate>Tue, 22 Sep 2020 12:08:44 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/sraft-%E4%BA%8C/</guid>
+      <guid>https://sdttttt.github.io/blog/sraft-2/</guid>
       <description>昨天草草的完成了通信协议适配器, 至少能做到自由切换协议, 纵看整个编程模型还是有缺陷, StateMachine的内部结构比我想的要复杂的多, 多个状态实现的切换,以及对一些内部事件的触发. StateMachine模块的密度和其他模块完全不同. 反而RaftKernel存在的意义却减小了.
 经过昨天晚上和今早的考虑, 我决定将StateMachine作为一个Slot,接入到RaftKernel中去, RaftKernel现在同时也是状态机本身, Slot是可变的, 可以有Leader, Follower, Candidate三种插槽,每个Slot都有不同的扩展字段, 比如Leader会需要登记每个Node的同步日志的深度以及状态. 并且每个Slot都有自己的事件处理实现.
 没想到第一天开发结束就会遇到麻烦, 看来sraft以后的苦难还不少&amp;hellip;</description>
@@ -160,10 +164,10 @@ GRC的0.8.0版本昨天算是发布了, 应该也算是头一次正经的用Rust
     
     <item>
       <title>Sraft (一)</title>
-      <link>https://sdttttt.github.io/p/sraft-%E4%B8%80/</link>
+      <link>https://sdttttt.github.io/blog/sraft-1/</link>
       <pubDate>Mon, 21 Sep 2020 11:29:51 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/sraft-%E4%B8%80/</guid>
+      <guid>https://sdttttt.github.io/blog/sraft-1/</guid>
       <description>今天开始算是正式编写Sraft这个库, 开发的原因有两个:
  我需要通过这次开发来熟悉Raft这个协议.(以后面试或者和人攀谈也更有底气) 我的微服务框架的服务中心需要一个能达成分布式一致性的功能.  语言采用的是Go, 目前的编程模型大概也完成了, 下面我来介绍:
  本人喜欢简单并且高效的设计, 对于设计复杂难以实现的东西会感到不适(脑子不够用),
@@ -179,10 +183,10 @@ PROJECT: github.com/sdttttt/sraft</description>
     
     <item>
       <title>About Gcr</title>
-      <link>https://sdttttt.github.io/p/about-gcr/</link>
+      <link>https://sdttttt.github.io/blog/about-gcr/</link>
       <pubDate>Sun, 20 Sep 2020 13:20:06 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/about-gcr/</guid>
+      <guid>https://sdttttt.github.io/blog/about-gcr/</guid>
       <description>十多天前, 我创建了GCR这个项目, 原因比较纯粹, 我是个命令行工具爱好者, 我认为命令行能带来更好的工作效率以及收益, 我平时编码, 也是遵守Git提交规范的, 使用Node.js平台上的git-cz工具来格式化我的提交信息, 不过由于它属于Node.js这个平台, 不可避免, 你需要安装Node.js的runtime环境.
 我想要一种更加方面快速的工具, 所以我建立了GCR这个项目, 它是使用Rust编写的, 不需要安装任何环境, 比起Node, 它会更快, 而且保留了跨平台的特性. 在GCR中我还会加入一些比较个性化的元素. GCR看起来可能会是一个更好用的Git?.
 这个项目可能还需要几个星期的时间, 请期待吧.</description>
@@ -190,10 +194,10 @@ PROJECT: github.com/sdttttt/sraft</description>
     
     <item>
       <title>FAQ</title>
-      <link>https://sdttttt.github.io/p/faq/</link>
+      <link>https://sdttttt.github.io/blog/faq/</link>
       <pubDate>Sat, 19 Sep 2020 20:15:53 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/faq/</guid>
+      <guid>https://sdttttt.github.io/blog/faq/</guid>
       <description>以前一些小白经常问我的问题.
 Q: 我想自己建立一个网站, 我应该使用什么技术?
 A: Ruby on Rails.
@@ -204,10 +208,10 @@ A: Python.</description>
     
     <item>
       <title>日志</title>
-      <link>https://sdttttt.github.io/p/%E6%97%A5%E5%BF%97/</link>
+      <link>https://sdttttt.github.io/blog/log-1/</link>
       <pubDate>Sat, 19 Sep 2020 11:06:17 +0800</pubDate>
       
-      <guid>https://sdttttt.github.io/p/%E6%97%A5%E5%BF%97/</guid>
+      <guid>https://sdttttt.github.io/blog/log-1/</guid>
       <description>目前还是个5月份刚毕业的应届生, 今年还是撞到了疫情这个时间口上, 工作真是相当的难找, 6月到7月的样子, 我去尝试去考驾照, 目前还在科目二这边卡着, 中间有空也是各种找单位去面试.
 比较幸运, 我在8月初的时候收到了来自安恒信息的面试通知, 他们是一家上市公司, 规模也不小, 我也是被别人内推才有这个面试资格的, 面试一共三轮, 前两轮技术面试, 最后一轮综合面试, 第一轮技术面试大概就是问了我一些JVM原理, 以及编码思路, 还有一些我比较擅长的分布式存储的问题. 第一轮过的呢也还算惊险. 第二轮是在几天后, 问的内容基本上是一些JDK源码, 数据结构, 还有一些框架问题.我回答的还算是流畅, 也算是过了.可惜,最后一轮面试之前,因为安恒不招收985,211以外的应届生, 所以我被淘汰了.
 后面每天在晚上投简历, 大概在一个月后, 又有新的面试来了, 一家叫做郦鸣科技的公司, 面试官问的都是一些业务处理逻辑, 身为应届生的我也是吃了亏, 因为我根本没有实际的工作经验. 不过我还是以试用生的身份进去了.

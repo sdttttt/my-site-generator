@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>network protocol on Smelly fish Rotten shrimp 📓</title>
+    <title>network protocol on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
     <link>https://sdttttt.github.io/tags/network-protocol/</link>
-    <description>Recent content in network protocol on Smelly fish Rotten shrimp 📓</description>
+    <description>Recent content in network protocol on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <copyright>Copyright © 2020, SDTTTTT.</copyright><atom:link href="https://sdttttt.github.io/tags/network-protocol/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    
+	<atom:link href="https://sdttttt.github.io/tags/network-protocol/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>Socks5</title>
-      <link>https://sdttttt.github.io/p/socks5/</link>
+      <link>https://sdttttt.github.io/blog/socks5/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://sdttttt.github.io/p/socks5/</guid>
+      <guid>https://sdttttt.github.io/blog/socks5/</guid>
       <description>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&amp;quot;SOCKetS&amp;quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
 SOCKS5 协议可以分为三个部分：
  (1) 协议版本及认证方式 (2) 根据认证方式执行对应的认证 (3) 请求信息  （1）协议版本及认证方式 创建与 SOCKS5 服务器的 TCP 连接后客户端需要先发送请求来协议版本及认证方式，
