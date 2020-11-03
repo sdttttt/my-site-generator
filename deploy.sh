@@ -163,7 +163,7 @@ function deploy {
     fi
 }
 
-if [[ -z $(git diff --stat) && -z $(git status -z) ]]; then
+if [[ -z $(git diff --stat) ]]; then
     errorLog "Error" "💔 文件没有变动欸..."
     exit
 fi
