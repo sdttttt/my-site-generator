@@ -7,7 +7,11 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 13 Oct 2020 16:56:11 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 13 Oct 2020 16:56:11 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>RocketMQ 3.3.4 Broker</title>
       <link>https://sdttttt.github.io/blog/rocketmq-comments/</link>
