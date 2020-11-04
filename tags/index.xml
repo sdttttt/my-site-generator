@@ -7,7 +7,11 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 03 Nov 2020 14:28:39 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 03 Nov 2020 14:28:39 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>log</title>
       <link>https://sdttttt.github.io/tags/log/</link>

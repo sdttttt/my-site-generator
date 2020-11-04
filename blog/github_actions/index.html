@@ -32,15 +32,14 @@
 
 <meta itemprop="name" content="Github Actions">
 <meta itemprop="description" content="Github Actions 上传 Releases name: release # https://help.github.com/en/articles/workflow-syntax-for-github-actions#on on: push: tags: - &#39;*&#39; jobs: build: runs-on: ubuntu-latest steps: - uses: actions/checkout@v1 - name: &#34;find env&#34; run: | set | grep GITHUB_ | grep -v GITHUB_TOKEN zip -r pkg.zip *.md - uses: xresloader/upload-to-github-release@v1 env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} with: file: &#34;*.md;*.zip&#34; tags: true draft: false prerelease: true overwrite: true verbose: true ">
-<meta itemprop="datePublished" content="2020-03-11T00:50:00+08:00" />
-<meta itemprop="dateModified" content="2020-03-11T00:50:00+08:00" />
+<meta itemprop="datePublished" content="2020-03-11T00:50:00&#43;08:00" />
+<meta itemprop="dateModified" content="2020-03-11T00:50:00&#43;08:00" />
 <meta itemprop="wordCount" content="60">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
 
 <meta itemprop="keywords" content="" />
-
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -232,34 +231,34 @@
 
 <content>
   <h2 id="github-actions-上传-releases">Github Actions 上传 Releases</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f92672">name</span>: <span style="color:#ae81ff">release</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#66d9ef">name</span>: release
 
 <span style="color:#75715e"># https://help.github.com/en/articles/workflow-syntax-for-github-actions#on</span>
-<span style="color:#f92672">on</span>:
-  <span style="color:#f92672">push</span>:
-    <span style="color:#f92672">tags</span>:
+<span style="color:#66d9ef">on</span>:
+  <span style="color:#66d9ef">push</span>:
+    <span style="color:#66d9ef">tags</span>:
       - <span style="color:#e6db74">&#39;*&#39;</span>
 
-<span style="color:#f92672">jobs</span>:
-  <span style="color:#f92672">build</span>:
-    <span style="color:#f92672">runs-on</span>: <span style="color:#ae81ff">ubuntu-latest</span>
-    <span style="color:#f92672">steps</span>:
-    - <span style="color:#f92672">uses</span>: <span style="color:#ae81ff">actions/checkout@v1</span>
-    - <span style="color:#f92672">name</span>: <span style="color:#e6db74">&#34;find env&#34;</span>
-      <span style="color:#f92672">run</span>: <span style="color:#e6db74">|
-</span><span style="color:#e6db74">        set | grep GITHUB_ | grep -v GITHUB_TOKEN
-</span><span style="color:#e6db74">        zip -r pkg.zip *.md
-</span><span style="color:#e6db74">    - uses: xresloader/upload-to-github-release@v1
-</span><span style="color:#e6db74">      env:
-</span><span style="color:#e6db74">        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-</span><span style="color:#e6db74">      with:
-</span><span style="color:#e6db74">        file: &#34;*.md;*.zip&#34;
-</span><span style="color:#e6db74">        tags: true
-</span><span style="color:#e6db74">        draft: false
-</span><span style="color:#e6db74">        prerelease: true
-</span><span style="color:#e6db74">        overwrite: true
-</span><span style="color:#e6db74">        verbose: true
-</span></code></pre></div>
+<span style="color:#66d9ef">jobs</span>:
+  <span style="color:#66d9ef">build</span>:
+    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+    <span style="color:#66d9ef">steps</span>:
+    - <span style="color:#66d9ef">uses</span>: actions/checkout@v1
+    - <span style="color:#66d9ef">name</span>: <span style="color:#e6db74">&#34;find env&#34;</span>
+      <span style="color:#66d9ef">run</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74">        set | grep GITHUB_ | grep -v GITHUB_TOKEN</span>
+        zip -r pkg.zip <span style="color:#75715e">*.md</span>
+    - <span style="color:#66d9ef">uses</span>: xresloader/upload-to-github-release@v1
+      <span style="color:#66d9ef">env</span>:
+        <span style="color:#66d9ef">GITHUB_TOKEN</span>: ${{ secrets.GITHUB_TOKEN }}
+      <span style="color:#66d9ef">with</span>:
+        <span style="color:#66d9ef">file</span>: <span style="color:#e6db74">&#34;*.md;*.zip&#34;</span>
+        <span style="color:#66d9ef">tags</span>: <span style="color:#66d9ef">true</span>
+        <span style="color:#66d9ef">draft</span>: <span style="color:#66d9ef">false</span>
+        <span style="color:#66d9ef">prerelease</span>: <span style="color:#66d9ef">true</span>
+        <span style="color:#66d9ef">overwrite</span>: <span style="color:#66d9ef">true</span>
+        <span style="color:#66d9ef">verbose</span>: <span style="color:#66d9ef">true</span>
+</code></pre></div>
 </content>
 <p>
   

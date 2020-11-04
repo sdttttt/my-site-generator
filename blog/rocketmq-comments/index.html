@@ -60,15 +60,14 @@ public static void main(String[] args) { start(createBrokerController(args)); } 
  以上就是createBrokerController的内容，函数虽然长，但是并不复杂。
 下面为start函数的内容, 在main中的start函数实际上是去委托了BrokerController去执行.
 public void start() throws Exception { // 启动Broker的各层服务  if (this.messageStore != null) { this.messageStore.start(); } if (this.remotingServer != null) { this.remotingServer.start(); } if (this.brokerOuterAPI != null) { this.brokerOuterAPI.start(); } if (this.pullRequestHoldService != null) { this.">
-<meta itemprop="datePublished" content="2020-10-13T16:56:11+08:00" />
-<meta itemprop="dateModified" content="2020-10-13T16:56:11+08:00" />
+<meta itemprop="datePublished" content="2020-10-13T16:56:11&#43;08:00" />
+<meta itemprop="dateModified" content="2020-10-13T16:56:11&#43;08:00" />
 <meta itemprop="wordCount" content="125">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
 
 <meta itemprop="keywords" content="Java," />
-
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>

@@ -6,7 +6,11 @@
     <description>Recent content in CICD on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <copyright>Copyright © 2020, SDTTTTT.</copyright><atom:link href="https://sdttttt.github.io/tags/cicd/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    
+	<atom:link href="https://sdttttt.github.io/tags/cicd/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>Appveyor</title>
       <link>https://sdttttt.github.io/blog/appveyor/</link>
