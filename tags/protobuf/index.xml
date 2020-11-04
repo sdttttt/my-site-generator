@@ -7,11 +7,7 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Mon, 30 Mar 2020 03:05:12 +0800</lastBuildDate>
-    
-	<atom:link href="https://sdttttt.github.io/tags/protobuf/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 30 Mar 2020 03:05:12 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/protobuf/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Protubuf 原理</title>
       <link>https://sdttttt.github.io/blog/protubuf/</link>
