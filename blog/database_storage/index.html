@@ -84,14 +84,15 @@
 如果Tuple被删除,我们也只需要删除固定的Solt就行. 空出来的空间碎片,可以由数据库的空间整理功能去完成. 维护每个Tuple的成本也比较小.只需要改变Solt就可以.
  最后讲一个Demo来演示数据库的工作过程.
 假如我想要找一个叫A的人,我会先去查找索引. 从索引里我知道A的Page是123, Solt是2. 我去找管理Pages的人,让他把Page123的指针给我, 然后拿着Page的指针,找到Solt2中的偏移地址,找到了A这个人.">
-<meta itemprop="datePublished" content="2020-06-02T19:51:50&#43;08:00" />
-<meta itemprop="dateModified" content="2020-06-02T19:51:50&#43;08:00" />
+<meta itemprop="datePublished" content="2020-06-02T19:51:50+08:00" />
+<meta itemprop="dateModified" content="2020-06-02T19:51:50+08:00" />
 <meta itemprop="wordCount" content="50">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
 
 <meta itemprop="keywords" content="" />
+
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>

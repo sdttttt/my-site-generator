@@ -68,14 +68,15 @@
   然后从数据映射到的位置开始顺时针查找,将数据保存到找到的第一个服务器上。如果超过 2^32 仍然找不到服务器,就会保存到第一台 memcached 服务器上。
   从上图的状态中添加一台 memcached 服务器。余数分布式算法由于保存键的服务器会发生巨大变化 而影响缓存的命中率,但一致性Hashing 中,只有在圆(continuum)上增加服务器的地点逆时针方向 的第一台服务器上的键会受到影响。
 性质 因为考虑到整个系统的节点数量是动态的，每时每刻有新节点加入和旧节点的失效。 在这类情况下依然要保证系统的可用性，这是值得思考的，尤其是在设计分布式缓存系统的时候。 如果不采用一致性HASH算法, 客户端在计算数据的 hash 时往往要重新计算(通常这个 Hash 算法和系统中的节点数量有关), 由于 Hash 值已经改变，所以很有可能找不到在整个系统中所对应的节点，导致不可用。所以一致性HASH算法，在分布式系统中十分重要。">
-<meta itemprop="datePublished" content="2020-04-27T10:05:10&#43;08:00" />
-<meta itemprop="dateModified" content="2020-04-27T10:05:10&#43;08:00" />
+<meta itemprop="datePublished" content="2020-04-27T10:05:10+08:00" />
+<meta itemprop="dateModified" content="2020-04-27T10:05:10+08:00" />
 <meta itemprop="wordCount" content="134">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
 
 <meta itemprop="keywords" content="distrbuted system," />
+
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
