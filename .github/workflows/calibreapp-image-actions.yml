@@ -1,6 +1,5 @@
 name: Compress Images
 on:
-  push:
   schedule:
     - cron: '00 23 * * 0'
 
