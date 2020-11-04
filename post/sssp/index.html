@@ -52,15 +52,14 @@ push ax ;将寄存器ax中的数据送入栈顶 pop ax ;将栈顶的数据送入
 任意时刻，SS:SP都指向栈顶元素。push和pop指令执行时CPU将从SS和SP中获得栈顶的地址。
 push 有2步:
  SP -= 2 SS:SP指向栈顶前面的单元，以这个位置为新栈。 将AX中的内容送入 SS:SP 所指的位置.  10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| 1000EH |__23___| &lt;= SS:SP 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| &lt;= SS:SP: 换个位置 |_______| 1000EH |__23___| 1000FH |__01___| 10000H |_______| |_______| |_______| |_______| |_______| |_______| |_______| |_______| ;来自ax寄存器的数据 |__54___| &lt;= SS:SP: 换个位置 |__11___| 1000EH |__23___| 1000FH |__01___|  假设 10000H -&gt; 1000FH 这段空间是栈，那么栈空时，SS:SP在呐？">
-<meta itemprop="datePublished" content="2020-04-06T16:38:01+08:00" />
-<meta itemprop="dateModified" content="2020-04-06T16:38:01+08:00" />
+<meta itemprop="datePublished" content="2020-04-06T16:38:01&#43;08:00" />
+<meta itemprop="dateModified" content="2020-04-06T16:38:01&#43;08:00" />
 <meta itemprop="wordCount" content="136">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
 
 <meta itemprop="keywords" content="assembly," />
-
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
