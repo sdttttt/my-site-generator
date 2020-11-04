@@ -6,7 +6,11 @@
     <description>Recent content in Rails on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <copyright>Copyright © 2020, SDTTTTT.</copyright><atom:link href="https://sdttttt.github.io/tags/rails/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    
+	<atom:link href="https://sdttttt.github.io/tags/rails/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>Rails Development</title>
       <link>https://sdttttt.github.io/blog/rails_development/</link>

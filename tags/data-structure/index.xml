@@ -7,7 +7,11 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Sun, 30 Aug 2020 20:41:54 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/data-structure/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 30 Aug 2020 20:41:54 +0800</lastBuildDate>
+    
+	<atom:link href="https://sdttttt.github.io/tags/data-structure/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>B Tree</title>
       <link>https://sdttttt.github.io/blog/btree/</link>

@@ -9,13 +9,13 @@
 <title>SQL Injection | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
 <meta name="title" content="SQL Injection" />
 <meta name="description" content="DVWA SQL Injection 过关秘籍.
-LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input  $id = $_REQUEST[ &#39;id&#39; ]; // Check database  $query = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 并没有做什么注入防护  // 尝试构造：  // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1;  // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2;  // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1;  $result = mysql_query( $query ) or die( &#39;&lt;pre&gt;&#39; ." />
+LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input $id = $_REQUEST[ &#39;id&#39; ]; // Check database $query = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 并没有做什么注入防护 // 尝试构造： // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1; // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2; // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1; $result = mysql_query( $query ) or die( &#39;&lt;pre&gt;&#39; ." />
 <meta name="keywords" content="penetration test," />
 
 
 <meta property="og:title" content="SQL Injection" />
 <meta property="og:description" content="DVWA SQL Injection 过关秘籍.
-LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input  $id = $_REQUEST[ &#39;id&#39; ]; // Check database  $query = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 并没有做什么注入防护  // 尝试构造：  // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1;  // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2;  // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1;  $result = mysql_query( $query ) or die( &#39;&lt;pre&gt;&#39; ." />
+LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input $id = $_REQUEST[ &#39;id&#39; ]; // Check database $query = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 并没有做什么注入防护 // 尝试构造： // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1; // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2; // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1; $result = mysql_query( $query ) or die( &#39;&lt;pre&gt;&#39; ." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://sdttttt.github.io/blog/sql_injection/" />
 <meta property="og:image" content="https://sdttttt.github.io/static/me.jpg"/>
@@ -29,22 +29,21 @@ LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input  $id = $_REQUEST
 
 <meta name="twitter:title" content="SQL Injection"/>
 <meta name="twitter:description" content="DVWA SQL Injection 过关秘籍.
-LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input  $id = $_REQUEST[ &#39;id&#39; ]; // Check database  $query = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 并没有做什么注入防护  // 尝试构造：  // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1;  // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2;  // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1;  $result = mysql_query( $query ) or die( &#39;&lt;pre&gt;&#39; ."/>
+LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input $id = $_REQUEST[ &#39;id&#39; ]; // Check database $query = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 并没有做什么注入防护 // 尝试构造： // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1; // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2; // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1; $result = mysql_query( $query ) or die( &#39;&lt;pre&gt;&#39; ."/>
 
 
 
 <meta itemprop="name" content="SQL Injection">
 <meta itemprop="description" content="DVWA SQL Injection 过关秘籍.
-LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input  $id = $_REQUEST[ &#39;id&#39; ]; // Check database  $query = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 并没有做什么注入防护  // 尝试构造：  // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1;  // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2;  // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1;  $result = mysql_query( $query ) or die( &#39;&lt;pre&gt;&#39; .">
-<meta itemprop="datePublished" content="2020-04-10T10:54:47+08:00" />
-<meta itemprop="dateModified" content="2020-04-10T10:54:47+08:00" />
+LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input $id = $_REQUEST[ &#39;id&#39; ]; // Check database $query = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;; // 并没有做什么注入防护 // 尝试构造： // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1; // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2; // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1; $result = mysql_query( $query ) or die( &#39;&lt;pre&gt;&#39; .">
+<meta itemprop="datePublished" content="2020-04-10T10:54:47&#43;08:00" />
+<meta itemprop="dateModified" content="2020-04-10T10:54:47&#43;08:00" />
 <meta itemprop="wordCount" content="589">
 <meta itemprop="image" content="https://sdttttt.github.io/static/me.jpg"/>
 
 
 
 <meta itemprop="keywords" content="penetration test," />
-
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -237,141 +236,141 @@ LOW if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) { // Get input  $id = $_REQUEST
 <content>
   <p>DVWA SQL Injection 过关秘籍.</p>
 <h3 id="low">LOW</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP"><span style="color:#66d9ef">if</span>( <span style="color:#a6e22e">isset</span>( $_REQUEST[ <span style="color:#e6db74">&#39;Submit&#39;</span> ] ) ) {
-    <span style="color:#75715e">// Get input
-</span><span style="color:#75715e"></span>    $id <span style="color:#f92672">=</span> $_REQUEST[ <span style="color:#e6db74">&#39;id&#39;</span> ];
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) {
+    // Get input
+    $id = $_REQUEST[ &#39;id&#39; ];
 
-    <span style="color:#75715e">// Check database
-</span><span style="color:#75715e"></span>    $query  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span style="color:#e6db74">$id</span><span style="color:#e6db74">&#39;;&#34;</span>;
-    <span style="color:#75715e">// 并没有做什么注入防护
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 尝试构造：
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1;
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2;
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1;
-</span><span style="color:#75715e"></span>
-    $result <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_query</span>( $query ) <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">die</span>( <span style="color:#e6db74">&#39;&lt;pre&gt;&#39;</span> <span style="color:#f92672">.</span> <span style="color:#a6e22e">mysql_error</span>() <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;&lt;/pre&gt;&#39;</span> );
+    // Check database
+    $query  = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&#34;;
+    // 并没有做什么注入防护
+    // 尝试构造：
+    // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1;
+    // select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2;
+    // select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1;
 
-    <span style="color:#75715e">// Get results
-</span><span style="color:#75715e"></span>    $num <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_numrows</span>( $result );
-    $i   <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">while</span>( $i <span style="color:#f92672">&lt;</span> $num ) {
-        <span style="color:#75715e">// Get values
-</span><span style="color:#75715e"></span>        $first <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_result</span>( $result, $i, <span style="color:#e6db74">&#34;first_name&#34;</span> );
-        $last  <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_result</span>( $result, $i, <span style="color:#e6db74">&#34;last_name&#34;</span> );
+    $result = mysql_query( $query ) or die( &#39;&lt;<span style="color:#f92672">pre</span>&gt;&#39; . mysql_error() . &#39;&lt;/<span style="color:#f92672">pre</span>&gt;&#39; );
 
-        <span style="color:#75715e">// Feedback for end user
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;&lt;pre&gt;ID: </span><span style="color:#e6db74">{</span>$id<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;br /&gt;First name: </span><span style="color:#e6db74">{</span>$first<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;br /&gt;Surname: </span><span style="color:#e6db74">{</span>$last<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/pre&gt;&#34;</span>;
+    // Get results
+    $num = mysql_numrows( $result );
+    $i   = 0;
+    while( $i <span style="color:#960050;background-color:#1e0010">&lt;</span> $num ) {
+        // Get values
+        $first = mysql_result( $result, $i, &#34;first_name&#34; );
+        $last  = mysql_result( $result, $i, &#34;last_name&#34; );
 
-        <span style="color:#75715e">// Increase loop count
-</span><span style="color:#75715e"></span>        $i<span style="color:#f92672">++</span>;
+        // Feedback for end user
+        echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;ID: {$id}&lt;<span style="color:#f92672">br</span> /&gt;First name: {$first}&lt;<span style="color:#f92672">br</span> /&gt;Surname: {$last}&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+
+        // Increase loop count
+        $i++;
     }
 
-    <span style="color:#a6e22e">mysql_close</span>();
+    mysql_close();
 }
 </code></pre></div><h3 id="medium">Medium</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#66d9ef">if</span>( <span style="color:#a6e22e">isset</span>( $_POST[ <span style="color:#e6db74">&#39;Submit&#39;</span> ] ) ) {
-    <span style="color:#75715e">// Get input
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">// 换成了Post 这也太普通了
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 使用一些网络请求工具照样改，比如BurpSuite，PostMan，curl.
-</span><span style="color:#75715e"></span>    $id <span style="color:#f92672">=</span> $_POST[ <span style="color:#e6db74">&#39;id&#39;</span> ];
-    $id <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_real_escape_string</span>( $id );
-    <span style="color:#75715e">// mysql_real_escape_string 可以对以下字符进行转义
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// \x00, \n, \r, \, &#39;, &#34; 和 \x1a.
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 值得注意的是 mysql_real_escape_string 函数所在的MYSQL扩展在
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// PHP 5.5.0 起已废弃，并在自 PHP 7.0.0 开始被移除。
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">// Check database
-</span><span style="color:#75715e"></span>    $query  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SELECT first_name, last_name FROM users WHERE user_id = </span><span style="color:#e6db74">$id</span><span style="color:#e6db74">;&#34;</span>;
-    <span style="color:#75715e">// 尝试构造:
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// SELECT first_name, last_name FROM users WHERE user_id = 1 or 1=1;
-</span><span style="color:#75715e"></span>
-    $result <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_query</span>( $query ) <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">die</span>( <span style="color:#e6db74">&#39;&lt;pre&gt;&#39;</span> <span style="color:#f92672">.</span> <span style="color:#a6e22e">mysql_error</span>() <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;&lt;/pre&gt;&#39;</span> );
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">if( isset( $_POST[ &#39;Submit&#39; ] ) ) {
+    // Get input
 
-    <span style="color:#75715e">// Get results
-</span><span style="color:#75715e"></span>    $num <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_numrows</span>( $result );
-    $i   <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">while</span>( $i <span style="color:#f92672">&lt;</span> $num ) {
-        <span style="color:#75715e">// Display values
-</span><span style="color:#75715e"></span>        $first <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_result</span>( $result, $i, <span style="color:#e6db74">&#34;first_name&#34;</span> );
-        $last  <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_result</span>( $result, $i, <span style="color:#e6db74">&#34;last_name&#34;</span> );
+    // 换成了Post 这也太普通了
+    // 使用一些网络请求工具照样改，比如BurpSuite，PostMan，curl.
+    $id = $_POST[ &#39;id&#39; ];
+    $id = mysql_real_escape_string( $id );
+    // mysql_real_escape_string 可以对以下字符进行转义
+    // \x00, \n, \r, \, &#39;, &#34; 和 \x1a.
+    // 值得注意的是 mysql_real_escape_string 函数所在的MYSQL扩展在
+    // PHP 5.5.0 起已废弃，并在自 PHP 7.0.0 开始被移除。
 
-        <span style="color:#75715e">// Feedback for end user
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;&lt;pre&gt;ID: </span><span style="color:#e6db74">{</span>$id<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;br /&gt;First name: </span><span style="color:#e6db74">{</span>$first<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;br /&gt;Surname: </span><span style="color:#e6db74">{</span>$last<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/pre&gt;&#34;</span>;
+    // Check database
+    $query  = &#34;SELECT first_name, last_name FROM users WHERE user_id = $id;&#34;;
+    // 尝试构造:
+    // SELECT first_name, last_name FROM users WHERE user_id = 1 or 1=1;
 
-        <span style="color:#75715e">// Increase loop count
-</span><span style="color:#75715e"></span>        $i<span style="color:#f92672">++</span>;
+    $result = mysql_query( $query ) or die( &#39;&lt;<span style="color:#f92672">pre</span>&gt;&#39; . mysql_error() . &#39;&lt;/<span style="color:#f92672">pre</span>&gt;&#39; );
+
+    // Get results
+    $num = mysql_numrows( $result );
+    $i   = 0;
+    while( $i <span style="color:#960050;background-color:#1e0010">&lt;</span> $num ) {
+        // Display values
+        $first = mysql_result( $result, $i, &#34;first_name&#34; );
+        $last  = mysql_result( $result, $i, &#34;last_name&#34; );
+
+        // Feedback for end user
+        echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;ID: {$id}&lt;<span style="color:#f92672">br</span> /&gt;First name: {$first}&lt;<span style="color:#f92672">br</span> /&gt;Surname: {$last}&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+
+        // Increase loop count
+        $i++;
     }
 
-    <span style="color:#75715e">//mysql_close();
-</span><span style="color:#75715e"></span>}
+    //mysql_close();
+}
 
 </code></pre></div><h3 id="high">High</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP"><span style="color:#66d9ef">if</span>( <span style="color:#a6e22e">isset</span>( $_SESSION [ <span style="color:#e6db74">&#39;id&#39;</span> ] ) ) {
-    <span style="color:#75715e">// Get input
-</span><span style="color:#75715e"></span>    $id <span style="color:#f92672">=</span> $_SESSION[ <span style="color:#e6db74">&#39;id&#39;</span> ];
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_SESSION [ &#39;id&#39; ] ) ) {
+    // Get input
+    $id = $_SESSION[ &#39;id&#39; ];
 
-    <span style="color:#75715e">// Check database
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 看起来做了返回条目限制
-</span><span style="color:#75715e"></span>    $query  <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span style="color:#e6db74">$id</span><span style="color:#e6db74">&#39; LIMIT 1;&#34;</span>;
-    <span style="color:#75715e">// 没什么套路
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// SELECT first_name, last_name FROM users WHERE user_id = &#39;1&#39; or 1=1 # &#39; LIMIT 1;
-</span><span style="color:#75715e"></span>
-    $result <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_query</span>( $query ) <span style="color:#66d9ef">or</span> <span style="color:#66d9ef">die</span>( <span style="color:#e6db74">&#39;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#39;</span> );
+    // Check database
+    // 看起来做了返回条目限制
+    $query  = &#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39; LIMIT 1;&#34;;
+    // 没什么套路
+    // SELECT first_name, last_name FROM users WHERE user_id = &#39;1&#39; or 1=1 # &#39; LIMIT 1;
 
-    <span style="color:#75715e">// Get results
-</span><span style="color:#75715e"></span>    $num <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_numrows</span>( $result );
-    $i   <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-    <span style="color:#66d9ef">while</span>( $i <span style="color:#f92672">&lt;</span> $num ) {
-        <span style="color:#75715e">// Get values
-</span><span style="color:#75715e"></span>        $first <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_result</span>( $result, $i, <span style="color:#e6db74">&#34;first_name&#34;</span> );
-        $last  <span style="color:#f92672">=</span> <span style="color:#a6e22e">mysql_result</span>( $result, $i, <span style="color:#e6db74">&#34;last_name&#34;</span> );
+    $result = mysql_query( $query ) or die( &#39;&lt;<span style="color:#f92672">pre</span>&gt;Something went wrong.&lt;/<span style="color:#f92672">pre</span>&gt;&#39; );
 
-        <span style="color:#75715e">// Feedback for end user
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;&lt;pre&gt;ID: </span><span style="color:#e6db74">{</span>$id<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;br /&gt;First name: </span><span style="color:#e6db74">{</span>$first<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;br /&gt;Surname: </span><span style="color:#e6db74">{</span>$last<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/pre&gt;&#34;</span>;
+    // Get results
+    $num = mysql_numrows( $result );
+    $i   = 0;
+    while( $i <span style="color:#960050;background-color:#1e0010">&lt;</span> $num ) {
+        // Get values
+        $first = mysql_result( $result, $i, &#34;first_name&#34; );
+        $last  = mysql_result( $result, $i, &#34;last_name&#34; );
 
-        <span style="color:#75715e">// Increase loop count
-</span><span style="color:#75715e"></span>        $i<span style="color:#f92672">++</span>;
+        // Feedback for end user
+        echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;ID: {$id}&lt;<span style="color:#f92672">br</span> /&gt;First name: {$first}&lt;<span style="color:#f92672">br</span> /&gt;Surname: {$last}&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
+
+        // Increase loop count
+        $i++;
     }
 
-    <span style="color:#a6e22e">mysql_close</span>();
+    mysql_close();
 }
 </code></pre></div><h3 id="impossible">impossible</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP"><span style="color:#66d9ef">if</span>( <span style="color:#a6e22e">isset</span>( $_GET[ <span style="color:#e6db74">&#39;Submit&#39;</span> ] ) ) {
-    <span style="color:#75715e">// Check Anti-CSRF token
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">checkToken</span>( $_REQUEST[ <span style="color:#e6db74">&#39;user_token&#39;</span> ], $_SESSION[ <span style="color:#e6db74">&#39;session_token&#39;</span> ], <span style="color:#e6db74">&#39;index.php&#39;</span> );
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP">if( isset( $_GET[ &#39;Submit&#39; ] ) ) {
+    // Check Anti-CSRF token
+    checkToken( $_REQUEST[ &#39;user_token&#39; ], $_SESSION[ &#39;session_token&#39; ], &#39;index.php&#39; );
 
-    <span style="color:#75715e">// Get input
-</span><span style="color:#75715e"></span>    $id <span style="color:#f92672">=</span> $_GET[ <span style="color:#e6db74">&#39;id&#39;</span> ];
+    // Get input
+    $id = $_GET[ &#39;id&#39; ];
 
-    <span style="color:#75715e">// Was a number entered?
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">is_numeric</span>( $id )) {
-        <span style="color:#75715e">// Check the database
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 这是！PDO!
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// PDO 是一种PHP中比较先进的面向对象形式的数据库访问技术
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 不过即使是面向对象它还是事务脚本形式的。
-</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 提供了防SQL注入的功能。
-</span><span style="color:#75715e"></span>        $data <span style="color:#f92672">=</span> $db<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">prepare</span>( <span style="color:#e6db74">&#39;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#39;</span> );
-        <span style="color:#75715e">// 无法注入
-</span><span style="color:#75715e"></span>
-        $data<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bindParam</span>( <span style="color:#e6db74">&#39;:id&#39;</span>, $id, <span style="color:#a6e22e">PDO</span><span style="color:#f92672">::</span><span style="color:#a6e22e">PARAM_INT</span> );
-        $data<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">execute</span>();
-        $row <span style="color:#f92672">=</span> $data<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">fetch</span>();
+    // Was a number entered?
+    if(is_numeric( $id )) {
+        // Check the database
+        // 这是！PDO!
+        // PDO 是一种PHP中比较先进的面向对象形式的数据库访问技术
+        // 不过即使是面向对象它还是事务脚本形式的。
+        // 提供了防SQL注入的功能。
+        $data = $db-&gt;prepare( &#39;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#39; );
+        // 无法注入
 
-        <span style="color:#75715e">// Make sure only 1 result is returned
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span>( $data<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">rowCount</span>() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> ) {
-            <span style="color:#75715e">// Get values
-</span><span style="color:#75715e"></span>            $first <span style="color:#f92672">=</span> $row[ <span style="color:#e6db74">&#39;first_name&#39;</span> ];
-            $last  <span style="color:#f92672">=</span> $row[ <span style="color:#e6db74">&#39;last_name&#39;</span> ];
+        $data-&gt;bindParam( &#39;:id&#39;, $id, PDO::PARAM_INT );
+        $data-&gt;execute();
+        $row = $data-&gt;fetch();
 
-            <span style="color:#75715e">// Feedback for end user
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;&lt;pre&gt;ID: </span><span style="color:#e6db74">{</span>$id<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;br /&gt;First name: </span><span style="color:#e6db74">{</span>$first<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;br /&gt;Surname: </span><span style="color:#e6db74">{</span>$last<span style="color:#e6db74">}</span><span style="color:#e6db74">&lt;/pre&gt;&#34;</span>;
+        // Make sure only 1 result is returned
+        if( $data-&gt;rowCount() == 1 ) {
+            // Get values
+            $first = $row[ &#39;first_name&#39; ];
+            $last  = $row[ &#39;last_name&#39; ];
+
+            // Feedback for end user
+            echo &#34;&lt;<span style="color:#f92672">pre</span>&gt;ID: {$id}&lt;<span style="color:#f92672">br</span> /&gt;First name: {$first}&lt;<span style="color:#f92672">br</span> /&gt;Surname: {$last}&lt;/<span style="color:#f92672">pre</span>&gt;&#34;;
         }
     }
 }
 
-<span style="color:#75715e">// Generate Anti-CSRF tsoken
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">generateSessionToken</span>();
+// Generate Anti-CSRF tsoken
+generateSessionToken();
 </code></pre></div><h2 id="extension">Extension</h2>
 <p><strong>二次注入:</strong></p>
 <p>网站有管理员<code>admin</code>.</p>
@@ -389,7 +388,7 @@ username = &lsquo;$username&rsquo; and password &lsquo;$password&rsquo;</p>
 <p>update from users
 set password = #{password}
 where
-username = &lsquo;admin&rsquo;#' and password = &lsquo;$password&rsquo;</p>
+username = &lsquo;admin&rsquo;#&rsquo; and password = &lsquo;$password&rsquo;</p>
 </blockquote>
 <p>注意<code>#</code> 后面的语句被注释掉了, 所以真正被执行的只有.</p>
 <blockquote>
