@@ -27,9 +27,13 @@ code_address_gitee="git@gitee.com:sdttttt/sdttttt.gitee.io" # Hugo 项目地址 
 
 IMGTIME=`date --rfc-3339="ns"`
 
-commit_message="☕ $IMGTIME"
-
 dir=$(pwd)
+
+emoji=("☕" "🚀" "🔧" "🗃" "🛠" "🌈" "💦" "🪔" "🚚" "📚")
+
+emo_index=$((RANDOM % 10))
+
+commit_message="$IMGTIME ${emoji[emo_index]}"
 
 function envClean() {
     if [ -d "./public" ]; then
