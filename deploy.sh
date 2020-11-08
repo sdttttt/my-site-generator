@@ -27,7 +27,7 @@ code_address_gitee="git@gitee.com:sdttttt/sdttttt.gitee.io" # Hugo 项目地址 
 
 IMGTIME=`date --rfc-3339="ns"`
 
-dir=$(pwd)
+dir=`pwd`
 
 emoji=("☕" "🚀" "🔧" "🗃" "🛠" "🌈" "💦" "🪔" "🚚" "📚")
 
