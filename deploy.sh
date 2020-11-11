@@ -50,19 +50,19 @@ function envClean() {
 }
 
 function errorLog {
-    echo -e "\033[31m==> $1 \033[0m \n  >--> $2"
+    echo -e "\033[31m==> $1 \033[0m \n  ~> $2"
 }
 
 function warnLog {
-    echo -e "\033[33m==> $1 \033[0m \n  >--> $2"
+    echo -e "\033[33m==> $1 \033[0m \n  ~> $2"
 }
 
 function successLog {
-    echo -e "\033[32m==> $1 \033[0m \n  >--> $2"
+    echo -e "\033[32m==> $1 \033[0m \n  ~> $2"
 }
 
 function stateLog {
-    echo -e "\033[34m==> $1 \033[0m \n  >--> $2"
+    echo -e "\033[34m==> $1 \033[0m \n  ~> $2"
 }
 
 function cleanWork {
