@@ -50,7 +50,7 @@ function envClean() {
 }
 
 function errorLog {
-    echo -e "\033[31m==> $1 \033[0m \n - $2"
+    echo -e "\033[31m==> $1 \033[0m \n -> $2"
 }
 
 function warnLog {
