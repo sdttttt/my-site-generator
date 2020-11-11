@@ -62,7 +62,7 @@ function successLog {
 }
 
 function stateLog {
-    echo -e "\033[34m==> $1 ><\033[0m \n  >--> $2"
+    echo -e "\033[34m==> $1 \033[0m \n  >--> $2"
 }
 
 function cleanWork {
