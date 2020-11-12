@@ -1,15 +1,13 @@
 ---
 title: "Impl and Dyn on Rust"
 date: 2020-11-12T09:46:53+08:00
-description: ""
+description: "这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序."
 featured: "me.jpg"
 languages: Chinese
 tags: ["Rust"]
 author: sdttttt
 draft: false
 ---
-
-这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序.
 
 我们先来看这样一段代码:
 
