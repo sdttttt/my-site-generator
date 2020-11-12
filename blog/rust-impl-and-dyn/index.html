@@ -241,8 +241,8 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Rust" data-lang="Rust">
 <span style="color:#e6db74">/// 这种代码实际上会让人感到疑惑. View究竟是个特性还是一个对象.
 </span><span style="color:#e6db74">/// 这里的View是一个类型, 所以我们需要写成 `impl View`.
-</span><span style="color:#e6db74"></span><span style="color:#75715e">//  不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">something</span>() -&gt; <span style="color:#a6e22e">View</span> {
+</span><span style="color:#e6db74">/// 不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参.
+</span><span style="color:#e6db74"></span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">something</span>() -&gt; <span style="color:#a6e22e">View</span> {
     <span style="color:#66d9ef">if</span> ... {
         Button { ... }
     } <span style="color:#66d9ef">else</span> {
