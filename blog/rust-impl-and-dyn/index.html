@@ -8,20 +8,12 @@
 <link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
 <title>Impl and Dyn on Rust | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
 <meta name="title" content="Impl and Dyn on Rust" />
-<meta name="description" content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序.
-我们先来看这样一段代码:
-impl View for Button { ... } impl View for Text { ... } 我们看到Button和Text都实现了View属性, 抽象是一种不错的设计程序的方法, 帮助我们透明化的使用外部提供的API. 然后我们可能会下意识的写出下面的代码:
-/// 这种代码实际上会让人感到疑惑. View究竟是个特性还是一个对象. /// 这里的View是一个类型, 所以我们需要写成 `impl View`. // 不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参. pub fn something() -&gt; View { if ... { Button { ... } } else { Text { ... } } } 这段代码无法通过编译, 原因就是返回值View需要在编译器确认大小. 我们需要把它装成一个胖指针.
-pub fn something() -&gt; Box&lt;View&gt; {...} 嗯,这样就好很多. 但是编译器会爆种, 提出一个警告, 希望你把Box&lt;View&gt;改为Box&lt;dyn View&gt;." />
+<meta name="description" content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序." />
 <meta name="keywords" content="Rust," />
 
 
 <meta property="og:title" content="Impl and Dyn on Rust" />
-<meta property="og:description" content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序.
-我们先来看这样一段代码:
-impl View for Button { ... } impl View for Text { ... } 我们看到Button和Text都实现了View属性, 抽象是一种不错的设计程序的方法, 帮助我们透明化的使用外部提供的API. 然后我们可能会下意识的写出下面的代码:
-/// 这种代码实际上会让人感到疑惑. View究竟是个特性还是一个对象. /// 这里的View是一个类型, 所以我们需要写成 `impl View`. // 不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参. pub fn something() -&gt; View { if ... { Button { ... } } else { Text { ... } } } 这段代码无法通过编译, 原因就是返回值View需要在编译器确认大小. 我们需要把它装成一个胖指针.
-pub fn something() -&gt; Box&lt;View&gt; {...} 嗯,这样就好很多. 但是编译器会爆种, 提出一个警告, 希望你把Box&lt;View&gt;改为Box&lt;dyn View&gt;." />
+<meta property="og:description" content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://sdttttt.github.io/blog/rust-impl-and-dyn/" />
 <meta property="og:image" content="https://sdttttt.github.io/me.jpg"/>
@@ -34,23 +26,15 @@ pub fn something() -&gt; Box&lt;View&gt; {...} 嗯,这样就好很多. 但是编
 <meta name="twitter:image" content="https://sdttttt.github.io/me.jpg"/>
 
 <meta name="twitter:title" content="Impl and Dyn on Rust"/>
-<meta name="twitter:description" content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序.
-我们先来看这样一段代码:
-impl View for Button { ... } impl View for Text { ... } 我们看到Button和Text都实现了View属性, 抽象是一种不错的设计程序的方法, 帮助我们透明化的使用外部提供的API. 然后我们可能会下意识的写出下面的代码:
-/// 这种代码实际上会让人感到疑惑. View究竟是个特性还是一个对象. /// 这里的View是一个类型, 所以我们需要写成 `impl View`. // 不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参. pub fn something() -&gt; View { if ... { Button { ... } } else { Text { ... } } } 这段代码无法通过编译, 原因就是返回值View需要在编译器确认大小. 我们需要把它装成一个胖指针.
-pub fn something() -&gt; Box&lt;View&gt; {...} 嗯,这样就好很多. 但是编译器会爆种, 提出一个警告, 希望你把Box&lt;View&gt;改为Box&lt;dyn View&gt;."/>
+<meta name="twitter:description" content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序."/>
 
 
 
 <meta itemprop="name" content="Impl and Dyn on Rust">
-<meta itemprop="description" content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序.
-我们先来看这样一段代码:
-impl View for Button { ... } impl View for Text { ... } 我们看到Button和Text都实现了View属性, 抽象是一种不错的设计程序的方法, 帮助我们透明化的使用外部提供的API. 然后我们可能会下意识的写出下面的代码:
-/// 这种代码实际上会让人感到疑惑. View究竟是个特性还是一个对象. /// 这里的View是一个类型, 所以我们需要写成 `impl View`. // 不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参. pub fn something() -&gt; View { if ... { Button { ... } } else { Text { ... } } } 这段代码无法通过编译, 原因就是返回值View需要在编译器确认大小. 我们需要把它装成一个胖指针.
-pub fn something() -&gt; Box&lt;View&gt; {...} 嗯,这样就好很多. 但是编译器会爆种, 提出一个警告, 希望你把Box&lt;View&gt;改为Box&lt;dyn View&gt;.">
+<meta itemprop="description" content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序.">
 <meta itemprop="datePublished" content="2020-11-12T09:46:53+08:00" />
 <meta itemprop="dateModified" content="2020-11-12T09:46:53+08:00" />
-<meta itemprop="wordCount" content="115">
+<meta itemprop="wordCount" content="113">
 <meta itemprop="image" content="https://sdttttt.github.io/me.jpg"/>
 
 
@@ -247,8 +231,7 @@ pub fn something() -&gt; Box&lt;View&gt; {...} 嗯,这样就好很多. 但是编
 </p>
 
 <content>
-  <p>这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序.</p>
-<p>我们先来看这样一段代码:</p>
+  <p>我们先来看这样一段代码:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rust" data-lang="rust">
 <span style="color:#66d9ef">impl</span> View <span style="color:#66d9ef">for</span> Button { ... }
 
