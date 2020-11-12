@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Thu, 12 Nov 2020 09:46:53 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 12 Nov 2020 14:07:47 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GRC 4</title>
+      <link>https://sdttttt.github.io/blog/grc-4/</link>
+      <pubDate>Thu, 12 Nov 2020 14:07:47 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/grc-4/</guid>
+      <description>啊哈, 我的新键盘已经到了, 这周周末(11.13-11.15)我会尽快修复目前GRC中的一些问题:
+ #25 Did not check type. #28 [Feature request] Create a template gcr.toml when the install is made with cargo #30 env GIT_AUTHOR_NAME is not used  希望有更多人使用GRC.</description>
+    </item>
+    
     <item>
       <title>Impl and Dyn on Rust</title>
       <link>https://sdttttt.github.io/blog/rust-impl-and-dyn/</link>
