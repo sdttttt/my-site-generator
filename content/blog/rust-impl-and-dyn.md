@@ -25,7 +25,7 @@ impl View for Text { ... }
 
 /// 这种代码实际上会让人感到疑惑. View究竟是个特性还是一个对象.
 /// 这里的View是一个类型, 所以我们需要写成 `impl View`.
-//  不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参.
+/// 不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参.
 pub fn something() -> View {
     if ... {
         Button { ... }
