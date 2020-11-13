@@ -7,7 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Thu, 12 Nov 2020 14:07:47 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 13 Nov 2020 15:31:53 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go的map的个什么结构</title>
+      <link>https://sdttttt.github.io/blog/go-map/</link>
+      <pubDate>Fri, 13 Nov 2020 15:31:53 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/go-map/</guid>
+      <description>实际上Go的map和Java7之前的HashMap, 非常相似。都是Array + LinkedTable的结构。
+结构 map数据结构由runtime/map.go/hmap定义:
+type hmap struct { count int // 当前保存的元素个数  ... B uint8 // 指示bucket数组的大小  ... buckets unsafe.Pointer // bucket数组指针，数组的大小为2^B  ... } bucket数据结构由runtime/map.go/bmap定义：
+type bmap struct { tophash [8]uint8 //存储哈希值的高8位  data byte[1] //key value数据:key/key/key/.../value/value/value...  overflow *bmap //溢出bucket的地址 } 这里使用的数组对齐方式来存放数据。overflow指向下一个bucket.
+工作流程 首先通过key计算Hash值，通过Hash的低位，计算出该元素需要存放在buckets中的哪一个bucket. 如果Hash冲突，也就是当前bucket已经有人进去了。那么就使用该bucket的overflow指向自己的bucket.
+查找元素也是大同小异。</description>
+    </item>
+    
     <item>
       <title>GRC 4</title>
       <link>https://sdttttt.github.io/blog/grc-4/</link>
