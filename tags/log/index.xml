@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Thu, 12 Nov 2020 14:07:47 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/log/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 17 Nov 2020 15:08:13 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/log/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GRC 5</title>
+      <link>https://sdttttt.github.io/blog/grc-5/</link>
+      <pubDate>Tue, 17 Nov 2020 15:08:13 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/grc-5/</guid>
+      <description>很有趣, 上个星期有人在GRC中和我提了一个问题, GIT很多操作是要使用环境变量来控制.
+我平时根本不使用环境变量来控制GIT, 这个特性可能会在以后支持吧.</description>
+    </item>
+    
     <item>
       <title>GRC 4</title>
       <link>https://sdttttt.github.io/blog/grc-4/</link>
