@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
+<title>Sql Optimize | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+<meta name="title" content="Sql Optimize" />
+<meta name="description" content="本文主要讲关于SELECT语句的优化问题. 会涉及到一些关于表索引的知识.
+性能 很简单, 你每建立一个索引, 数据库就会根据索引类型，帮你建立一个索引数据结构（B&#43;树非常常用）.
+ NOTE:B&#43;树
+ B&#43;树对范围查询和直接查询都很在行. 直接查询的时间复杂度均为O(log), 也就是用的二分法, 具体为什么就去看B&#43;树的数据结构, 在看B&#43;树之前最好先看B树, 不然东西太多消化不了.
+  不过每次插入数据和删除数据就需要重构索引树的结构, 滥用索引反而会降低写入效率.
+设计 索引有好几种, 最常用的有:
+ 主键索引: 比如用户表的ID字段 唯一索引: 比如不可重复的用户名 组合索引: 需要经常被一起查询的字段, 比如用户名, 密码 普通索引: 这个怎么用就仁者见仁智者见智了.  索引一经创建不能修改，如果要修改索引，只能删除重建. 具体怎么创建就baidu吧。
+如果要查看一张表的索引, 如下:
+mysql&gt; SHOW INDEX FROM users; &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43; | Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43; | users | 0 | PRIMARY | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | id_UNIQUE | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | username | 1 | username | A | 9847 | NULL | NULL | | BTREE | | | &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43;  3 rows in set (0." />
+<meta name="keywords" content="" />
+
+
+<meta property="og:title" content="Sql Optimize" />
+<meta property="og:description" content="本文主要讲关于SELECT语句的优化问题. 会涉及到一些关于表索引的知识.
+性能 很简单, 你每建立一个索引, 数据库就会根据索引类型，帮你建立一个索引数据结构（B&#43;树非常常用）.
+ NOTE:B&#43;树
+ B&#43;树对范围查询和直接查询都很在行. 直接查询的时间复杂度均为O(log), 也就是用的二分法, 具体为什么就去看B&#43;树的数据结构, 在看B&#43;树之前最好先看B树, 不然东西太多消化不了.
+  不过每次插入数据和删除数据就需要重构索引树的结构, 滥用索引反而会降低写入效率.
+设计 索引有好几种, 最常用的有:
+ 主键索引: 比如用户表的ID字段 唯一索引: 比如不可重复的用户名 组合索引: 需要经常被一起查询的字段, 比如用户名, 密码 普通索引: 这个怎么用就仁者见仁智者见智了.  索引一经创建不能修改，如果要修改索引，只能删除重建. 具体怎么创建就baidu吧。
+如果要查看一张表的索引, 如下:
+mysql&gt; SHOW INDEX FROM users; &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43; | Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43; | users | 0 | PRIMARY | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | id_UNIQUE | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | username | 1 | username | A | 9847 | NULL | NULL | | BTREE | | | &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43;  3 rows in set (0." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/blog/sql-optimize/" />
+<meta property="og:image" content="https://sdttttt.github.io/me.jpg"/>
+<meta property="article:published_time" content="2020-11-19T13:10:52+08:00" />
+<meta property="article:modified_time" content="2020-11-19T13:10:52+08:00" /><meta property="og:site_name" content="SDTTTTT" />
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sdttttt.github.io/me.jpg"/>
+
+<meta name="twitter:title" content="Sql Optimize"/>
+<meta name="twitter:description" content="本文主要讲关于SELECT语句的优化问题. 会涉及到一些关于表索引的知识.
+性能 很简单, 你每建立一个索引, 数据库就会根据索引类型，帮你建立一个索引数据结构（B&#43;树非常常用）.
+ NOTE:B&#43;树
+ B&#43;树对范围查询和直接查询都很在行. 直接查询的时间复杂度均为O(log), 也就是用的二分法, 具体为什么就去看B&#43;树的数据结构, 在看B&#43;树之前最好先看B树, 不然东西太多消化不了.
+  不过每次插入数据和删除数据就需要重构索引树的结构, 滥用索引反而会降低写入效率.
+设计 索引有好几种, 最常用的有:
+ 主键索引: 比如用户表的ID字段 唯一索引: 比如不可重复的用户名 组合索引: 需要经常被一起查询的字段, 比如用户名, 密码 普通索引: 这个怎么用就仁者见仁智者见智了.  索引一经创建不能修改，如果要修改索引，只能删除重建. 具体怎么创建就baidu吧。
+如果要查看一张表的索引, 如下:
+mysql&gt; SHOW INDEX FROM users; &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43; | Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43; | users | 0 | PRIMARY | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | id_UNIQUE | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | username | 1 | username | A | 9847 | NULL | NULL | | BTREE | | | &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43;  3 rows in set (0."/>
+
+
+
+<meta itemprop="name" content="Sql Optimize">
+<meta itemprop="description" content="本文主要讲关于SELECT语句的优化问题. 会涉及到一些关于表索引的知识.
+性能 很简单, 你每建立一个索引, 数据库就会根据索引类型，帮你建立一个索引数据结构（B&#43;树非常常用）.
+ NOTE:B&#43;树
+ B&#43;树对范围查询和直接查询都很在行. 直接查询的时间复杂度均为O(log), 也就是用的二分法, 具体为什么就去看B&#43;树的数据结构, 在看B&#43;树之前最好先看B树, 不然东西太多消化不了.
+  不过每次插入数据和删除数据就需要重构索引树的结构, 滥用索引反而会降低写入效率.
+设计 索引有好几种, 最常用的有:
+ 主键索引: 比如用户表的ID字段 唯一索引: 比如不可重复的用户名 组合索引: 需要经常被一起查询的字段, 比如用户名, 密码 普通索引: 这个怎么用就仁者见仁智者见智了.  索引一经创建不能修改，如果要修改索引，只能删除重建. 具体怎么创建就baidu吧。
+如果要查看一张表的索引, 如下:
+mysql&gt; SHOW INDEX FROM users; &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43; | Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43; | users | 0 | PRIMARY | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | id_UNIQUE | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | username | 1 | username | A | 9847 | NULL | NULL | | BTREE | | | &#43;-------&#43;------------&#43;-----------&#43;--------------&#43;-------------&#43;-----------&#43;-------------&#43;----------&#43;--------&#43;------&#43;------------&#43;---------&#43;---------------&#43;  3 rows in set (0.">
+<meta itemprop="datePublished" content="2020-11-19T13:10:52+08:00" />
+<meta itemprop="dateModified" content="2020-11-19T13:10:52+08:00" />
+<meta itemprop="wordCount" content="294">
+<meta itemprop="image" content="https://sdttttt.github.io/me.jpg"/>
+
+
+
+<meta itemprop="keywords" content="" />
+
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+     
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #f2f2f2;
+  }
+
+  pre code {
+    color: #222;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #222;
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
+  }
+
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>Sql Optimize</h1>
+<p>
+  <i>
+    <time datetime='2020-11-19' pubdate>
+      19 Nov, 2020
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>本文主要讲关于<code>SELECT</code>语句的优化问题. 会涉及到一些关于表索引的知识.</p>
+<h3 id="性能">性能</h3>
+<p>很简单, 你每建立一个索引, 数据库就会根据索引类型，帮你建立一个索引数据结构（B+树非常常用）.</p>
+<blockquote>
+<p><strong>NOTE:</strong><code>B+树</code></p>
+<blockquote>
+<p>B+树对范围查询和直接查询都很在行. 直接查询的时间复杂度均为O(log), 也就是用的二分法, 具体为什么就去看<code>B+树</code>的数据结构, 在看B+树之前最好先看B树, 不然东西太多消化不了.</p>
+</blockquote>
+</blockquote>
+<p>不过每次插入数据和删除数据就需要重构索引树的结构, 滥用索引反而会降低<strong>写入效率</strong>.</p>
+<h3 id="设计">设计</h3>
+<p>索引有好几种, 最常用的有:</p>
+<ul>
+<li><strong>主键索引</strong>: 比如用户表的ID字段</li>
+<li><strong>唯一索引</strong>: 比如不可重复的用户名</li>
+<li><strong>组合索引</strong>: 需要经常被一起查询的字段, 比如用户名, 密码</li>
+<li><strong>普通索引</strong>: 这个怎么用就仁者见仁智者见智了.</li>
+</ul>
+<p>索引一经创建不能修改，如果要修改索引，只能删除重建. 具体怎么创建就<code>baidu</code>吧。</p>
+<p>如果要查看一张表的索引, 如下:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-SQL" data-lang="SQL">mysql<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">SHOW</span> <span style="color:#66d9ef">INDEX</span> <span style="color:#66d9ef">FROM</span> users;
+
+<span style="color:#f92672">+</span><span style="color:#75715e">-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+</span><span style="color:#75715e"></span><span style="color:#f92672">|</span> <span style="color:#66d9ef">Table</span> <span style="color:#f92672">|</span> Non_unique <span style="color:#f92672">|</span> Key_name  <span style="color:#f92672">|</span> Seq_in_index <span style="color:#f92672">|</span> <span style="color:#66d9ef">Column_name</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">Collation</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">Cardinality</span> <span style="color:#f92672">|</span> Sub_part <span style="color:#f92672">|</span> Packed <span style="color:#f92672">|</span> <span style="color:#66d9ef">Null</span> <span style="color:#f92672">|</span> Index_type <span style="color:#f92672">|</span> <span style="color:#66d9ef">Comment</span> <span style="color:#f92672">|</span> Index_comment <span style="color:#f92672">|</span>
+<span style="color:#f92672">+</span><span style="color:#75715e">-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+</span><span style="color:#75715e"></span><span style="color:#f92672">|</span> users <span style="color:#f92672">|</span>          <span style="color:#ae81ff">0</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">PRIMARY</span>   <span style="color:#f92672">|</span>            <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> id          <span style="color:#f92672">|</span> A         <span style="color:#f92672">|</span>        <span style="color:#ae81ff">9847</span> <span style="color:#f92672">|</span>     <span style="color:#66d9ef">NULL</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">NULL</span>   <span style="color:#f92672">|</span>      <span style="color:#f92672">|</span> BTREE      <span style="color:#f92672">|</span>         <span style="color:#f92672">|</span>               <span style="color:#f92672">|</span>
+<span style="color:#f92672">|</span> users <span style="color:#f92672">|</span>          <span style="color:#ae81ff">0</span> <span style="color:#f92672">|</span> id_UNIQUE <span style="color:#f92672">|</span>            <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> id          <span style="color:#f92672">|</span> A         <span style="color:#f92672">|</span>        <span style="color:#ae81ff">9847</span> <span style="color:#f92672">|</span>     <span style="color:#66d9ef">NULL</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">NULL</span>   <span style="color:#f92672">|</span>      <span style="color:#f92672">|</span> BTREE      <span style="color:#f92672">|</span>         <span style="color:#f92672">|</span>               <span style="color:#f92672">|</span>
+<span style="color:#f92672">|</span> users <span style="color:#f92672">|</span>          <span style="color:#ae81ff">0</span> <span style="color:#f92672">|</span> username  <span style="color:#f92672">|</span>            <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> username    <span style="color:#f92672">|</span> A         <span style="color:#f92672">|</span>        <span style="color:#ae81ff">9847</span> <span style="color:#f92672">|</span>     <span style="color:#66d9ef">NULL</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">NULL</span>   <span style="color:#f92672">|</span>      <span style="color:#f92672">|</span> BTREE      <span style="color:#f92672">|</span>         <span style="color:#f92672">|</span>               <span style="color:#f92672">|</span>
+<span style="color:#f92672">+</span><span style="color:#75715e">-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+</span><span style="color:#75715e"></span>
+<span style="color:#ae81ff">3</span> <span style="color:#66d9ef">rows</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">set</span> (<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">00</span> sec)
+</code></pre></div><p>不重要的就不说了。</p>
+<ul>
+<li><strong>Non_unique</strong>: 能不能重复，不能为0，可以为1.</li>
+<li><strong>Seq_in_index</strong>: 组合索引的一个位置。等会就知道。</li>
+<li><strong>Sub_part</strong>: 前置索引长度，不使用前置索引则为NULL。</li>
+<li><strong>Cardinality</strong>: 基数，是否做为索引的最重要的因素，基数越大说明重复性越低，越有可能查询时触发索引。</li>
+<li><strong>Index_type</strong>: 索引类型，常用的有<code>FULLTEXT</code>(用与搜索技术，主要解决模糊查询效率低下的问题)，和<code>BTREE</code>（就是树形数据结构存储），还有<code>Hash</code>（由于Hash的特点，只能判断值相等，不能判断值范围）。</li>
+</ul>
+<blockquote>
+<p><strong>QUESION:</strong> 什么是前置索引？</p>
+<blockquote>
+<p>对于一些特殊字段比如<code>TEXT</code>，或者<code>VARCHAR(255)</code>这种很大的字段，建立的索引树会非常肥，这样的索引非常慢，我们对与这种字段会采用它们的前几个字符做为索引。选择几个字符的诀窍就是要保证要极高的非重复性，和尽量短的字符，来节省空间。</p>
+</blockquote>
+<p><strong>NOTE:</strong> 关于基数</p>
+<blockquote>
+<p>通常我们在选择索引时会尽可能选择基数大的列做为索引。
+因为MySQL在执行查询时，<strong>基数对比总数是是否触发索引的一个判断条件</strong>，这个值大概在30%左右。</p>
+</blockquote>
+</blockquote>
+<h3 id="调优">调优</h3>
+<p>查看一次<strong>SELECT</strong>在MySQL使用了哪些策略，我们可以通过在SQL语句前加上<code>EXPLAIN</code>来做到。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-SQL" data-lang="SQL">mysql<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">EXPLAIN</span> <span style="color:#66d9ef">SELECT</span> id, username <span style="color:#66d9ef">FROM</span> users <span style="color:#66d9ef">WHERE</span> username <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;sdttttt&#39;</span>;
+<span style="color:#f92672">+</span><span style="color:#75715e">----+-------------+-------+------------+-------+---------------+----------+---------+-------+------+----------+-------------+
+</span><span style="color:#75715e"></span><span style="color:#f92672">|</span> id <span style="color:#f92672">|</span> select_type <span style="color:#f92672">|</span> <span style="color:#66d9ef">table</span> <span style="color:#f92672">|</span> partitions <span style="color:#f92672">|</span> <span style="color:#66d9ef">type</span>  <span style="color:#f92672">|</span> possible_keys <span style="color:#f92672">|</span> <span style="color:#66d9ef">key</span>      <span style="color:#f92672">|</span> key_len <span style="color:#f92672">|</span> <span style="color:#66d9ef">ref</span>   <span style="color:#f92672">|</span> <span style="color:#66d9ef">rows</span> <span style="color:#f92672">|</span> filtered <span style="color:#f92672">|</span> Extra       <span style="color:#f92672">|</span>
+<span style="color:#f92672">+</span><span style="color:#75715e">----+-------------+-------+------------+-------+---------------+----------+---------+-------+------+----------+-------------+
+</span><span style="color:#75715e"></span><span style="color:#f92672">|</span>  <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">SIMPLE</span>      <span style="color:#f92672">|</span> users <span style="color:#f92672">|</span> <span style="color:#66d9ef">NULL</span>       <span style="color:#f92672">|</span> const <span style="color:#f92672">|</span> username      <span style="color:#f92672">|</span> username <span style="color:#f92672">|</span> <span style="color:#ae81ff">50</span>      <span style="color:#f92672">|</span> const <span style="color:#f92672">|</span>    <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span>   <span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">00</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">Using</span> <span style="color:#66d9ef">index</span> <span style="color:#f92672">|</span>
+<span style="color:#f92672">+</span><span style="color:#75715e">----+-------------+-------+------------+-------+---------------+----------+---------+-------+------+----------+-------------+
+</span><span style="color:#75715e"></span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">row</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">set</span>, <span style="color:#ae81ff">1</span> warning (<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">00</span> sec)
+</code></pre></div><ul>
+<li><strong>possible_keys</strong>: 可能触发的索引。</li>
+<li><strong>key</strong>: 本次SQL执行触发的索引。</li>
+<li><strong>filtered</strong>: 过滤了多少数据，单位：百分比。</li>
+<li><strong>Extra</strong>: 执行策略。</li>
+</ul>
+<p>下面说一下<code>Extra</code>，这个比较重要：</p>
+<p><strong>Using index</strong></p>
+<p>查询的列被索引覆盖，并且<code>where</code>筛选条件是索引的是前导列，<code>Extra</code>中为<code>Using index</code>。</p>
+<p><strong>Using where Using index</strong></p>
+<ol>
+<li>查询的列被索引覆盖，<strong>并且<code>where</code>筛选条件是索引列之一, 但是不是索引的不是前导列</strong>，<code>Extra</code>中为<code>Using where</code>; <code>Using index</code>，意味着无法直接通过索引查找来查询到符合条件的数据。</li>
+<li>查询的列被索引覆盖，并且<code>where</code>筛选条件是索引列前导列的一个范围，同样意味着无法直接通过索引查找查询到符合条件的数据。</li>
+</ol>
+<p><em>(查询的列被索引覆盖，这种情况是不会发生回表的，只是进行索引扫描罢了)</em></p>
+<p><strong>NULL</strong></p>
+<p><em>（既没有<code>Using index</code>，也没有<code>Using where Using index</code>，也没有<code>using where</code>）</em></p>
+<p>1，查询的列未被索引覆盖，并且<code>where</code>筛选条件是索引的前导列，意味着用到了索引，但是部分字段未被索引覆盖，必须通过“回表”来实现，不是纯粹地用到了索引，也不是完全没用到索引，<code>Extra</code>中为NULL(没有信息)。</p>
+<p><strong>Using where</strong></p>
+<p>1，查询的列未被索引覆盖，<code>where</code>筛选条件非索引的前导列，<code>Extra</code>中为<code>Using where</code>.</p>
+<p><em>（<code>using where</code> 意味着通过索引或者表扫描的方式进程<code>where</code>条件的过滤，
+反过来说，也就是没有可用的索引查找，这里的type都是all，说明MySQL认为全表扫描是一种比较低的代价。）</em></p>
+<blockquote>
+<p><strong>EXT:</strong> ICP(Index Condition Pushdown)</p>
+<p>这个是<code>MySQL5.6</code>新加入的特新，MySQL的设计分为两层，服务层和存储引擎。</p>
+<p>在没有的ICP的时候，你对索引执行过滤：首先SE（Storage Engine）将一条条索引数据取出，并且一条条给服务层看，由服务层来对照where条件。</p>
+<p>在使用ICP后，你对索引执行过滤：首先SE（Storage Engine）将一条条索引数据取出，并且对照下推的索引条件，如果满足条件，就返回给服务层，服务层下推到没有被SE执行的where条件。</p>
+<blockquote>
+<p>你是不是觉得很绕？其实就是索引的where条件SE帮服务层做了，服务层不&gt;用去管索引的Where条件了。</p>
+<p>说实话我对这个功能还是挺迷的，服务层的执行速度是不如SE么？为什么ICP能提高速度？MySQL中的秘密还挺多。</p>
+</blockquote>
+</blockquote>
+<h3 id="all-in-all">All in All</h3>
+<p>在设计数据表的时候需要考虑这个表的读写情况，根据字段来适当的增加索引。</p>
+<p>在编写SQL语句时，尽可能使用索引。能调优就尽量调优。</p>
+
+</content>
+<p>
+  
+</p>
+
+  </main>
+  <footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    var gitalk = new Gitalk({
+  clientID: '747ab8530477531c3d25',
+  clientSecret: 'af2cc18e4c27998636a6a3c82af0064f38574170',
+  repo: 'sdttttt.github.io',
+  owner: 'sdttttt',
+  admin: ['sdttttt'],
+  id: location.pathname,      
+  distractionFreeMode: true  
+})
+
+gitalk.render('gitalk-container')
+</script>
+
+</footer>
+
+    
+</body>
+
+</html>

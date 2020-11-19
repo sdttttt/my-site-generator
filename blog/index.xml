@@ -7,7 +7,24 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 17 Nov 2020 15:08:13 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 19 Nov 2020 13:10:52 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Sql Optimize</title>
+      <link>https://sdttttt.github.io/blog/sql-optimize/</link>
+      <pubDate>Thu, 19 Nov 2020 13:10:52 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/sql-optimize/</guid>
+      <description>本文主要讲关于SELECT语句的优化问题. 会涉及到一些关于表索引的知识.
+性能 很简单, 你每建立一个索引, 数据库就会根据索引类型，帮你建立一个索引数据结构（B+树非常常用）.
+ NOTE:B+树
+ B+树对范围查询和直接查询都很在行. 直接查询的时间复杂度均为O(log), 也就是用的二分法, 具体为什么就去看B+树的数据结构, 在看B+树之前最好先看B树, 不然东西太多消化不了.
+  不过每次插入数据和删除数据就需要重构索引树的结构, 滥用索引反而会降低写入效率.
+设计 索引有好几种, 最常用的有:
+ 主键索引: 比如用户表的ID字段 唯一索引: 比如不可重复的用户名 组合索引: 需要经常被一起查询的字段, 比如用户名, 密码 普通索引: 这个怎么用就仁者见仁智者见智了.  索引一经创建不能修改，如果要修改索引，只能删除重建. 具体怎么创建就baidu吧。
+如果要查看一张表的索引, 如下:
+mysql&amp;gt; SHOW INDEX FROM users; +-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+ | Table | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | +-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+ | users | 0 | PRIMARY | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | id_UNIQUE | 1 | id | A | 9847 | NULL | NULL | | BTREE | | | | users | 0 | username | 1 | username | A | 9847 | NULL | NULL | | BTREE | | | +-------+------------+-----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+  3 rows in set (0.</description>
+    </item>
+    
     <item>
       <title>GRC 5</title>
       <link>https://sdttttt.github.io/blog/grc-5/</link>
