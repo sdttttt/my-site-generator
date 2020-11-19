@@ -52,6 +52,7 @@
       "language-Java",
       "language-PHP",
       "language-Rust",
+      "language-SQL",
       "language-asm",
       "language-go",
       "language-golang",
@@ -80,6 +81,7 @@
       "3请求信息",
       "4最后将信息进行转发即可",
       "6个常用be形容词from结构",
+      "all-in-all",
       "appveyoryml-reference",
       "b-tree",
       "data-log-synchronizer",
@@ -128,6 +130,7 @@
       "容易误用作不及物动词的8个及物动词",
       "容易误用作及物动词的9个不及物动词",
       "工作流程",
+      "性能",
       "性质",
       "抉择",
       "接不定式作宾补的36个常用动词",
@@ -138,7 +141,9 @@
       "接现在分词作宾补的20个常用动词",
       "算法背景",
       "结构",
-      "虚拟节点"
+      "虚拟节点",
+      "设计",
+      "调优"
     ]
   }
 }
