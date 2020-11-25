@@ -9,6 +9,16 @@
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
     <lastBuildDate>Wed, 04 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://sdttttt.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Log 10</title>
+      <link>https://sdttttt.github.io/blog/log-10/</link>
+      <pubDate>Wed, 25 Nov 2020 11:25:47 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/log-10/</guid>
+      <description>昨天一大早就跑去余杭, 去新园区面试. 真的挺麻烦的. 希望这种事越少越好.
+害得我昨天都没有commit.</description>
+    </item>
+    
+    <item>
       <title>Sql Optimize</title>
       <link>https://sdttttt.github.io/blog/sql-optimize/</link>
       <pubDate>Thu, 19 Nov 2020 13:10:52 +0800</pubDate>
