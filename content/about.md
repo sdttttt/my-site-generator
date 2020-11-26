@@ -8,6 +8,8 @@ featured: "me.jpg"
 Hi! 我是SDTTTTT, 我是一个热情好客的臭鱼烂虾开发工程师, 我常常和网络编程打交道. 
 我没有特别擅长的编程语言, 但是我不写`Python`和`PHP`.
 
+在下的`coding`目标并不是在技术上什么的追求极致, 只是为了编写和分享开源软件, 还有探究组成现在互联网的现代魔法. 为此, 会学习很多不同领域的知识(不同的语言, 不同的平台, 无论是应用还是系统). 不过以后应该会去做独立游戏.
+
 这个博客的构建源自我的[**hugo-blog-tool-man**](https://github.com/sdttttt/hugo-blog-tool-man)工具.
 我在这个博客里记录一些知识的或者是一些心情.
 
@@ -20,6 +22,5 @@ Hi! 我是SDTTTTT, 我是一个热情好客的臭鱼烂虾开发工程师, 我�
 
 ---
 <iframe src="https://discordapp.com/widget?id=724268905555558400&theme=dark" width="730" height="300" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
-
 
 <img src="https://imgsa.baidu.com/forum/w%3D580/sign=a3bf12530e4f78f0800b9afb49310a83/cbeaabdcd100baa19543cbbc4a10b912c9fc2ea5.jpg" />
