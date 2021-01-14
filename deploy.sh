@@ -23,7 +23,7 @@ set -e
 START_TIME=`date +%s`
 
 code_address="git@github.com:sdttttt/sdttttt.github.io"     # Hugo 项目地址
-code_address_gitee="git@gitee.com:talulah/talulah.gitee.io" # Hugo 项目地址 Gitee
+code_address_gitee="git@gitee.com:talulah/sdttttt.gitee.io" # Hugo 项目地址 Gitee
 
 IMGTIME=`date --rfc-email`
 
