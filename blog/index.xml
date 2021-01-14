@@ -7,7 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Mon, 21 Dec 2020 09:05:08 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 14 Jan 2021 10:29:36 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Composition Api</title>
+      <link>https://sdttttt.github.io/blog/composition-api/</link>
+      <pubDate>Thu, 14 Jan 2021 10:29:36 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/composition-api/</guid>
+      <description>最近一直在写 Vue, 在公司的项目里使用的是Composition Api + Vue2 的组合. (因为公司里考虑到同事的技能树, 没有用vue3和Typescipt).
+CA 是 Vue3 追加的全新 API. 用到 Vue2 里可能有点怪怪的.
+不过 CA 是以 Vue-Plugin 的方式提供的 API, 所以使用起来非常方便. 同时也鼓励更多人使用这个API.
+首先是关于这个API的使用方式, 以前的代码需要将方法卸载method区块中, 每个变量和方法之间的关系很模糊暧昧.
+需要开发者自己去找关于每个方法和变量之间的关系, 用CA之后可以写出类似ReactHook风格的代码.
+// OA (Option API 原版的API是这样称呼的) { data: { count: 1 }, methods: { sub(num: number) { // ...  }, add(num: number) { // ...  } } } // CA const count = ref(1); const { add, sub } = useCount(); add(1); sub(2); function useCount(count: Ref&amp;lt;number&amp;gt;) { function sub(num: number) { // .</description>
+    </item>
+    
     <item>
       <title>Log 13</title>
       <link>https://sdttttt.github.io/blog/log-13/</link>
