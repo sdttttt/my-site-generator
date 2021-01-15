@@ -49,6 +49,23 @@ function useCount(count: Ref<number>) {
         // ...
     }
 }
+
+// 当然你也可以像ReactHook那样写， 完全没有问题，看你的个人口味
+const { count, add, sub } = useCount(0);
+
+add(1);
+sub(2);
+
+function useCount(count: number) {
+    const count = ref(count);
+    function sub(num: number) {
+            // ...
+        },
+    function add(num: number) {
+        // ...
+    }
+}
+
 ```
 
 我目前写CA大概就是这样编写的. 根据一个响应数据的关系编写改变它的一系列动作.
