@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
+<title>节流与防抖 | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+<meta name="title" content="节流与防抖" />
+<meta name="description" content="闲来无事在网上翻一些关于 Javascript 的一些搞基技巧，就发现了节流与防抖这两种设计模式。
+上个星期在编写搜索框的时候就已经写过类似的代码 （搜索框输入关键词会实时去服务器上搜索，考虑到服务器压力就把代码加了限制，每 500ms 最多搜索一次，实际上这就是类似防抖的设计，只是我还不知道这个叫防抖&hellip;）
+下面是搜索框的限制代码：
+watch(searchText, (newVal) =&gt; { clearTimeout(searchTimer); searchTimer = setTimeout( () =&gt; //...需要限制的逻辑  ), 500 ); }); 原理非常简单，通过定时器实现，一旦现有状态改变就说明有新的输入，然后清除老的定时器，新设置定时器。
+ 今天在网上冲浪又学到了一种新的设计：节流
+直接看代码吧：
+watch(searchText, (newVal) =&gt; { if(isStop) { return } isStop = true; setTimeout( () =&gt; { //...需要限制的逻辑  isStop = false } ), 500 ); emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 （好吧，看了几遍其实发现差不多）
+原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。
+节流主要作用就是限制执行频率。
+硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。" />
+<meta name="keywords" content="Javascript," />
+
+
+<meta property="og:title" content="节流与防抖" />
+<meta property="og:description" content="闲来无事在网上翻一些关于 Javascript 的一些搞基技巧，就发现了节流与防抖这两种设计模式。
+上个星期在编写搜索框的时候就已经写过类似的代码 （搜索框输入关键词会实时去服务器上搜索，考虑到服务器压力就把代码加了限制，每 500ms 最多搜索一次，实际上这就是类似防抖的设计，只是我还不知道这个叫防抖&hellip;）
+下面是搜索框的限制代码：
+watch(searchText, (newVal) =&gt; { clearTimeout(searchTimer); searchTimer = setTimeout( () =&gt; //...需要限制的逻辑  ), 500 ); }); 原理非常简单，通过定时器实现，一旦现有状态改变就说明有新的输入，然后清除老的定时器，新设置定时器。
+ 今天在网上冲浪又学到了一种新的设计：节流
+直接看代码吧：
+watch(searchText, (newVal) =&gt; { if(isStop) { return } isStop = true; setTimeout( () =&gt; { //...需要限制的逻辑  isStop = false } ), 500 ); emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 （好吧，看了几遍其实发现差不多）
+原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。
+节流主要作用就是限制执行频率。
+硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://sdttttt.github.io/blog/js-1/" />
+<meta property="og:image" content="https://sdttttt.github.io/me.jpg"/>
+<meta property="article:published_time" content="2021-01-18T16:49:35+08:00" />
+<meta property="article:modified_time" content="2021-01-18T16:49:35+08:00" /><meta property="og:site_name" content="SDTTTTT" />
+
+
+
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://sdttttt.github.io/me.jpg"/>
+
+<meta name="twitter:title" content="节流与防抖"/>
+<meta name="twitter:description" content="闲来无事在网上翻一些关于 Javascript 的一些搞基技巧，就发现了节流与防抖这两种设计模式。
+上个星期在编写搜索框的时候就已经写过类似的代码 （搜索框输入关键词会实时去服务器上搜索，考虑到服务器压力就把代码加了限制，每 500ms 最多搜索一次，实际上这就是类似防抖的设计，只是我还不知道这个叫防抖&hellip;）
+下面是搜索框的限制代码：
+watch(searchText, (newVal) =&gt; { clearTimeout(searchTimer); searchTimer = setTimeout( () =&gt; //...需要限制的逻辑  ), 500 ); }); 原理非常简单，通过定时器实现，一旦现有状态改变就说明有新的输入，然后清除老的定时器，新设置定时器。
+ 今天在网上冲浪又学到了一种新的设计：节流
+直接看代码吧：
+watch(searchText, (newVal) =&gt; { if(isStop) { return } isStop = true; setTimeout( () =&gt; { //...需要限制的逻辑  isStop = false } ), 500 ); emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 （好吧，看了几遍其实发现差不多）
+原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。
+节流主要作用就是限制执行频率。
+硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。"/>
+
+
+
+<meta itemprop="name" content="节流与防抖">
+<meta itemprop="description" content="闲来无事在网上翻一些关于 Javascript 的一些搞基技巧，就发现了节流与防抖这两种设计模式。
+上个星期在编写搜索框的时候就已经写过类似的代码 （搜索框输入关键词会实时去服务器上搜索，考虑到服务器压力就把代码加了限制，每 500ms 最多搜索一次，实际上这就是类似防抖的设计，只是我还不知道这个叫防抖&hellip;）
+下面是搜索框的限制代码：
+watch(searchText, (newVal) =&gt; { clearTimeout(searchTimer); searchTimer = setTimeout( () =&gt; //...需要限制的逻辑  ), 500 ); }); 原理非常简单，通过定时器实现，一旦现有状态改变就说明有新的输入，然后清除老的定时器，新设置定时器。
+ 今天在网上冲浪又学到了一种新的设计：节流
+直接看代码吧：
+watch(searchText, (newVal) =&gt; { if(isStop) { return } isStop = true; setTimeout( () =&gt; { //...需要限制的逻辑  isStop = false } ), 500 ); emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 （好吧，看了几遍其实发现差不多）
+原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。
+节流主要作用就是限制执行频率。
+硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。">
+<meta itemprop="datePublished" content="2021-01-18T16:49:35+08:00" />
+<meta itemprop="dateModified" content="2021-01-18T16:49:35+08:00" />
+<meta itemprop="wordCount" content="55">
+<meta itemprop="image" content="https://sdttttt.github.io/me.jpg"/>
+
+
+
+<meta itemprop="keywords" content="Javascript," />
+
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  body {
+    font-family: Verdana, sans-serif;
+    margin: auto;
+    padding: 20px;
+    max-width: 720px;
+    text-align: left;
+    background-color: #fff;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  strong,
+  b {
+    color: #222;
+  }
+
+  a {
+    color: #3273dc;
+     
+  }
+
+  .title {
+    text-decoration: none;
+    border: 0;
+  }
+
+  .title span {
+    font-weight: 400;
+  }
+
+  nav a {
+    margin-right: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    padding: 2px 5px;
+    background-color: #f2f2f2;
+  }
+
+  pre code {
+    color: #222;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: #222;
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px;
+    text-align: center;
+  }
+
+  .helptext {
+    color: #777;
+    font-size: small;
+  }
+
+  .errorlist {
+    color: #eba613;
+    font-size: small;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: #8b6fcb;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #333;
+      color: #ddd;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    strong,
+    b {
+      color: #eee;
+    }
+
+    a {
+      color: #8cc2dd;
+    }
+
+    code {
+      background-color: #777;
+    }
+
+    pre code {
+      color: #ddd;
+    }
+
+    blockquote {
+      color: #ccc;
+    }
+
+    textarea,
+    input {
+      background-color: #252525;
+      color: #ddd;
+    }
+
+    .helptext {
+      color: #aaa;
+    }
+  }
+
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>节流与防抖</h1>
+<p>
+  <i>
+    <time datetime='2021-01-18' pubdate>
+      18 Jan, 2021
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>闲来无事在网上翻一些关于 Javascript 的一些搞基技巧，就发现了节流与防抖这两种设计模式。</p>
+<p>上个星期在编写搜索框的时候就已经写过类似的代码 <em>（搜索框输入关键词会实时去服务器上搜索，考虑到服务器压力就把代码加了限制，每 500ms 最多搜索一次，实际上这就是类似防抖的设计，只是我还不知道这个叫防抖&hellip;）</em></p>
+<p>下面是搜索框的限制代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">watch</span>(<span style="color:#a6e22e">searchText</span>, (<span style="color:#a6e22e">newVal</span>) =&gt; {
+    <span style="color:#a6e22e">clearTimeout</span>(<span style="color:#a6e22e">searchTimer</span>);
+    <span style="color:#a6e22e">searchTimer</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">setTimeout</span>(
+        () =&gt; <span style="color:#75715e">//...需要限制的逻辑
+</span><span style="color:#75715e"></span>            ),
+        <span style="color:#ae81ff">500</span>
+    );
+});
+</code></pre></div><p>原理非常简单，通过定时器实现，一旦现有状态改变就说明有新的输入，然后清除老的定时器，新设置定时器。</p>
+<hr>
+<p>今天在网上冲浪又学到了一种新的设计：<strong>节流</strong></p>
+<p>直接看代码吧：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">watch</span>(<span style="color:#a6e22e">searchText</span>, (<span style="color:#a6e22e">newVal</span>) =&gt; {
+
+    <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isStop</span>) {
+        <span style="color:#66d9ef">return</span>
+    }
+
+    <span style="color:#a6e22e">isStop</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+
+    <span style="color:#a6e22e">setTimeout</span>(
+        () =&gt; {
+            <span style="color:#75715e">//...需要限制的逻辑
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">isStop</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>
+        }
+    ),
+    <span style="color:#ae81ff">500</span>
+);
+</code></pre></div><p>emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 <em>（好吧，看了几遍其实发现差不多）</em></p>
+<p>原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。</p>
+<p>节流主要作用就是限制执行频率。</p>
+<p>硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。</p>
+
+</content>
+<p>
+  
+  <a href="https://sdttttt.github.io/tags/javascript/">#Javascript</a>
+  
+</p>
+
+  </main>
+  <footer>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
+  <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+    var gitalk = new Gitalk({
+  clientID: '747ab8530477531c3d25',
+  clientSecret: 'af2cc18e4c27998636a6a3c82af0064f38574170',
+  repo: 'sdttttt.github.io',
+  owner: 'sdttttt',
+  admin: ['sdttttt'],
+  id: location.pathname,      
+  distractionFreeMode: true  
+})
+
+gitalk.render('gitalk-container')
+</script>
+
+</footer>
+
+    
+</body>
+
+</html>
