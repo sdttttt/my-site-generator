@@ -54,7 +54,7 @@ CA 是 Vue3 追加的全新 API. 用到 Vue2 里可能有点怪怪的.
 // OA (Option API 原版的API是这样称呼的) { data: { count: 1 }, methods: { sub(num: number) { // ...  }, add(num: number) { // ...  } } } // CA const count = ref(1); const { add, sub } = useCount(); add(1); sub(2); function useCount(count: Ref&lt;number&gt;) { function sub(num: number) { // .">
 <meta itemprop="datePublished" content="2021-01-14T10:29:36+08:00" />
 <meta itemprop="dateModified" content="2021-01-14T10:29:36+08:00" />
-<meta itemprop="wordCount" content="150">
+<meta itemprop="wordCount" content="183">
 <meta itemprop="image" content="https://sdttttt.github.io/me.jpg"/>
 
 
@@ -318,6 +318,22 @@ CA 是 Vue3 追加的全新 API. 用到 Vue2 里可能有点怪怪的.
 </li>
 </ul>
 <p>开发项目的时候还踩了很多坑, 不过都是一些智商问题&hellip; 比如JS的对象传递传递的是<code>Reference</code>, 基本类型是<code>Clone</code>. 因为这个原因有几个视图之间的数据没法实时同步, 害我浪费了一个下午.</p>
+<h3 id="关于-watcheffect">关于 watchEffect</h3>
+<p>这个函数的实现和React Hook中的useEffect有异曲同工之妙,
+监听回调函数内依赖的响应式数据的变化来执行回调函数.</p>
+<p>对,没错, 它能监听函数内变化的响应数据并且自动执行回调函数! 是不是很魔法!
+连反射都做不到监听函数内依赖的外部变量.</p>
+<p>举个例子:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">ref</span>(<span style="color:#ae81ff">0</span>)
+<span style="color:#a6e22e">watchEffect</span>(() =&gt; <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">count</span>))
+
+<span style="color:#75715e">// 当count数据发送变化的时候会执行watchEffect内的回调函数
+</span></code></pre></div><p>还有一个watch函数也可以做到类似的操作, 不过需要手动在第一个参数指定监听的响应式数据.
+watch的原理就比较容易懂了. 指定了依赖就可以通过挂钩子来实现监听变化执行回调了.</p>
+<p>问题就在watchEffect是怎么做到不指定依赖就能知道回调内依赖了哪个响应式数据?并且自动执行的?</p>
+<p>这个魔法的原理我想破头也没有想出来. 看了一些关于副作用的文章之后才开始理解这个魔法的本质.</p>
+<p><code>watch</code> 和 <code>watchEffect</code> 有一个区别就在于, watchEffect在页面渲染后会首次执行一次.
+这个动作就是魔法的秘密了, 执行后watchEffect就能看到那些响应式数数据收到了回调的影响.(不一定是数据的变化)</p>
 
 </content>
 <p>
