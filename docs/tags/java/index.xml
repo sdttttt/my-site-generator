@@ -5,6 +5,7 @@ gradle的出现比maven晚, 它们都是用来构建运行在JVM上的应用使�
 ...jar: 没有主清单属性 总之我在网上查了半天都没发现解决方法. 最后把目光转向代码, 最后发现在代码中都没有声明包路径&amp;hellip;
 (嘶&amp;hellip;.这厮在README里是怎么打包的???我怀疑有这B留了一手)
 最后用宇宙第一IDE(IDEA)重构了整个包的代码, 补上了包路径. 再次尝试gradle build,终于看到了工程文件.
+总之, 还好老子技高一筹.
 写完了, 摸了.</description></item><item><title>RocketMQ 3.3.4 Broker</title><link>https://sdttttt.github.io/blog/rocketmq-comments/</link><pubDate>Tue, 13 Oct 2020 16:56:11 +0800</pubDate><guid>https://sdttttt.github.io/blog/rocketmq-comments/</guid><description>差不多可以看消息队列的源码了。 在下从gitee上找到了rocketmq的早期版本（3.2.2）， 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难. 好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。
 我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：
 先从初始化开始：

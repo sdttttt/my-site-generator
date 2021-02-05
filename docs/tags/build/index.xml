@@ -5,4 +5,5 @@ gradle的出现比maven晚, 它们都是用来构建运行在JVM上的应用使�
 ...jar: 没有主清单属性 总之我在网上查了半天都没发现解决方法. 最后把目光转向代码, 最后发现在代码中都没有声明包路径&amp;hellip;
 (嘶&amp;hellip;.这厮在README里是怎么打包的???我怀疑有这B留了一手)
 最后用宇宙第一IDE(IDEA)重构了整个包的代码, 补上了包路径. 再次尝试gradle build,终于看到了工程文件.
+总之, 还好老子技高一筹.
 写完了, 摸了.</description></item></channel></rss>
