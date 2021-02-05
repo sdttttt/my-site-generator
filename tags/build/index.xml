@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>build on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
+    <link>https://sdttttt.github.io/tags/build/</link>
+    <description>Recent content in build on SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <copyright>Copyright © 2020, SDTTTTT.</copyright>
+    <lastBuildDate>Fri, 05 Feb 2021 10:57:31 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/tags/build/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>记录一次Gradle构建的困难</title>
+      <link>https://sdttttt.github.io/blog/gradle-build-for-idiotc4t/</link>
+      <pubDate>Fri, 05 Feb 2021 10:57:31 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/gradle-build-for-idiotc4t/</guid>
+      <description>受@idiotc4t所托, 我拿到了一个Java项目, 目的是要把这玩意编译出来, 最初我还以为和以前的Java项目类似, 只要mvn build 就能一了百了, 没想到这次拿到的是一个使用gradle构建的项目.
+ gradle的出现比maven晚, 它们都是用来构建运行在JVM上的应用使用的, gradle可以使用编程语言来自定义你的构建流程, 类似C的makefile(这个比喻不太好其实), 或者是JavaScript的gulp. gradle解决了maven的一些特点, 比如xml的配置繁琐, 看着就头大, 以及构建步骤的灵活控制. 总之很牛逼就是了, 也比较难上手.
+ 由于我以前使用过一段时间的gradle, 所以我知道用gradle打jar包的困难. (gradle这个工具通常都是给Android开发者用的, 默认没有提供打成Jar包的选项, 所以打出来什么包, 得看缘分.)
+当我运行gradle build后, 光速构建完成, 我定神一看, 没有工程文件目录, 倒是有一个jar包 ,这个jar包就14KB, 好家伙, 肯定没构建成功. (正常的java程序绝对不会这么小, 一般肯定是1MB以上) 输入java -jar一看, 果然:
+...jar: 没有主清单属性 总之我在网上查了半天都没发现解决方法. 最后把目光转向代码, 最后发现在代码中都没有声明包路径&amp;hellip;
+ (嘶&amp;hellip;.这厮在README里是怎么打包的???我怀疑有这B留了一手)
+ 最后用宇宙第一IDE(IDEA)重构了整个包的代码, 补上了包路径. 再次尝试gradle build,终于看到了工程文件.
+写完了, 摸了.</description>
+    </item>
+    
+  </channel>
+</rss>
