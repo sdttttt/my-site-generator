@@ -25,7 +25,8 @@ Hi! 俺是SDTTTTT, 一个热情好客的臭鱼烂虾开发工程师, 俺常常�
 
 ---
 
-<img src="https://streamkit.kaiheila.cn/overlay/status/2772391338278501?show_online=true&show_icon=true&show_invite=true&invite_mode=id&invite_link=&open_id=&theme=dark" />
+<iframe src="https://streamkit.kaiheila.cn/overlay/status/2772391338278501?show_online=true&show_icon=true&show_invite=true&invite_mode=id&invite_link=&open_id=&theme=dark" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+
 
 <iframe src="https://discordapp.com/widget?id=724268905555558400&theme=dark" width="730" height="300" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
 
