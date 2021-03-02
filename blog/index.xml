@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Sat, 20 Feb 2021 11:13:45 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Mar 2021 10:36:48 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Log 14</title>
+      <link>https://sdttttt.github.io/blog/log-14/</link>
+      <pubDate>Tue, 02 Mar 2021 10:36:48 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/log-14/</guid>
+      <description>最近不想让服务器多余的资源吃灰, 就在服务器上做了种, 提供一些下载资源的速度. 不过带宽确实是太小了, 这个玩意总共就1m带宽, 如果边做种我再边用RSS的话, 这个速度我都怀疑这玩意是不是done了?
+所以平时白天做种的速度只能限制再100KB/s以下, 不如RSS的速度真的太感人. 晚上的话, 龟速模式就会解除, 做种速度能提升大概3-4倍的样子.
+如果有机会还是想白嫖带宽大一点的服务器锕.</description>
+    </item>
+    
     <item>
       <title>RSS 好耶!</title>
       <link>https://sdttttt.github.io/blog/new-rss/</link>
