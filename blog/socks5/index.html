@@ -1,258 +1,32 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
+<title>Socks5 | SDTTTTT&#39;s Log</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.75.0" />
+<meta name="description" content="Hugo ---sdttttt">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://sdttttt.github.io/css/index.css">
+<link rel="canonical" href="https://sdttttt.github.io/blog/socks5/">
+<link rel="alternate" type="application/rss+xml" href="" title="SDTTTTT&#39;s Log">
 
-<head>
-  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="shortcut icon" href="https://sdttttt.github.io/favicon.ico" />
-<title>Socks5 | SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</title>
-<meta name="title" content="Socks5" />
-<meta name="description" content="SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&quot;SOCKetS&quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
-SOCKS5 协议可以分为三个部分：
- (1) 协议版本及认证方式 (2) 根据认证方式执行对应的认证 (3) 请求信息  （1）协议版本及认证方式 创建与 SOCKS5 服务器的 TCP 连接后客户端需要先发送请求来协议版本及认证方式，
-   VER NMETHODS METHODS     1 1 1-255      VER 是 SOCKS 版本，这里应该是 0x05；
-  NMETHODS 是 METHODS 部分的长度；
-  METHODS 是客户端支持的认证方式列表，每个方法占 1 字节。当前的定义是：
- 0x00 不需要认证 0x01 GSSAPI 0x02 用户名、密码认证 0x03 - 0x7F 由 IANA 分配（保留） 0x80 - 0xFE 为私人方法保留 0xFF 无可接受的方法    服务器回复客户端可用方法：" />
-<meta name="keywords" content="network protocol," />
-
-
-<meta property="og:title" content="Socks5" />
-<meta property="og:description" content="SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&quot;SOCKetS&quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
-SOCKS5 协议可以分为三个部分：
- (1) 协议版本及认证方式 (2) 根据认证方式执行对应的认证 (3) 请求信息  （1）协议版本及认证方式 创建与 SOCKS5 服务器的 TCP 连接后客户端需要先发送请求来协议版本及认证方式，
-   VER NMETHODS METHODS     1 1 1-255      VER 是 SOCKS 版本，这里应该是 0x05；
-  NMETHODS 是 METHODS 部分的长度；
-  METHODS 是客户端支持的认证方式列表，每个方法占 1 字节。当前的定义是：
- 0x00 不需要认证 0x01 GSSAPI 0x02 用户名、密码认证 0x03 - 0x7F 由 IANA 分配（保留） 0x80 - 0xFE 为私人方法保留 0xFF 无可接受的方法    服务器回复客户端可用方法：" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://sdttttt.github.io/blog/socks5/" />
-<meta property="og:image" content="https://sdttttt.github.io/me.jpg"/>
-<meta property="og:site_name" content="SDTTTTT" />
-
-
-
-<meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:image" content="https://sdttttt.github.io/me.jpg"/>
-
-<meta name="twitter:title" content="Socks5"/>
-<meta name="twitter:description" content="SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&quot;SOCKetS&quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
-SOCKS5 协议可以分为三个部分：
- (1) 协议版本及认证方式 (2) 根据认证方式执行对应的认证 (3) 请求信息  （1）协议版本及认证方式 创建与 SOCKS5 服务器的 TCP 连接后客户端需要先发送请求来协议版本及认证方式，
-   VER NMETHODS METHODS     1 1 1-255      VER 是 SOCKS 版本，这里应该是 0x05；
-  NMETHODS 是 METHODS 部分的长度；
-  METHODS 是客户端支持的认证方式列表，每个方法占 1 字节。当前的定义是：
- 0x00 不需要认证 0x01 GSSAPI 0x02 用户名、密码认证 0x03 - 0x7F 由 IANA 分配（保留） 0x80 - 0xFE 为私人方法保留 0xFF 无可接受的方法    服务器回复客户端可用方法："/>
-
-
-
-<meta itemprop="name" content="Socks5">
-<meta itemprop="description" content="SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&quot;SOCKetS&quot;的缩写。 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。
-SOCKS5 协议可以分为三个部分：
- (1) 协议版本及认证方式 (2) 根据认证方式执行对应的认证 (3) 请求信息  （1）协议版本及认证方式 创建与 SOCKS5 服务器的 TCP 连接后客户端需要先发送请求来协议版本及认证方式，
-   VER NMETHODS METHODS     1 1 1-255      VER 是 SOCKS 版本，这里应该是 0x05；
-  NMETHODS 是 METHODS 部分的长度；
-  METHODS 是客户端支持的认证方式列表，每个方法占 1 字节。当前的定义是：
- 0x00 不需要认证 0x01 GSSAPI 0x02 用户名、密码认证 0x03 - 0x7F 由 IANA 分配（保留） 0x80 - 0xFE 为私人方法保留 0xFF 无可接受的方法    服务器回复客户端可用方法：">
-
-<meta itemprop="wordCount" content="618">
-<meta itemprop="image" content="https://sdttttt.github.io/me.jpg"/>
-
-
-
-<meta itemprop="keywords" content="network protocol," />
-
-<meta name="referrer" content="no-referrer-when-downgrade" />
-
-  <style>
-  body {
-    font-family: Verdana, sans-serif;
-    margin: auto;
-    padding: 20px;
-    max-width: 720px;
-    text-align: left;
-    background-color: #fff;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    line-height: 1.5;
-    color: #444;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  strong,
-  b {
-    color: #222;
-  }
-
-  a {
-    color: #3273dc;
-     
-  }
-
-  .title {
-    text-decoration: none;
-    border: 0;
-  }
-
-  .title span {
-    font-weight: 400;
-  }
-
-  nav a {
-    margin-right: 10px;
-  }
-
-  textarea {
-    width: 100%;
-    font-size: 16px;
-  }
-
-  input {
-    font-size: 16px;
-  }
-
-  content {
-    line-height: 1.6;
-  }
-
-  table {
-    width: 100%;
-  }
-
-  img {
-    max-width: 100%;
-  }
-
-  code {
-    padding: 2px 5px;
-    background-color: #f2f2f2;
-  }
-
-  pre code {
-    color: #222;
-    display: block;
-    padding: 20px;
-    white-space: pre-wrap;
-    font-size: 14px;
-  }
-
-  blockquote {
-    border-left: 1px solid #999;
-    color: #222;
-    padding-left: 20px;
-    font-style: italic;
-  }
-
-  footer {
-    padding: 25px;
-    text-align: center;
-  }
-
-  .helptext {
-    color: #777;
-    font-size: small;
-  }
-
-  .errorlist {
-    color: #eba613;
-    font-size: small;
-  }
-
-   
-  ul.blog-posts {
-    list-style-type: none;
-    padding: unset;
-  }
-
-  ul.blog-posts li {
-    display: flex;
-  }
-
-  ul.blog-posts li span {
-    flex: 0 0 130px;
-  }
-
-  ul.blog-posts li a:visited {
-    color: #8b6fcb;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    body {
-      background-color: #333;
-      color: #ddd;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    strong,
-    b {
-      color: #eee;
-    }
-
-    a {
-      color: #8cc2dd;
-    }
-
-    code {
-      background-color: #777;
-    }
-
-    pre code {
-      color: #ddd;
-    }
-
-    blockquote {
-      color: #ccc;
-    }
-
-    textarea,
-    input {
-      background-color: #252525;
-      color: #ddd;
-    }
-
-    .helptext {
-      color: #aaa;
-    }
-  }
-
-</style>
-
-</head>
-
-<body>
-  <header><a href="/" class="title">
-  <h2>SDTTTTT&#39;s Smelly fish Rotten shrimp 📓</h2>
-</a>
-<nav><a href="/">Home</a>
-
-
-<a href="/blog">Blog</a>
-
-</nav>
+<header>
+  
+    <a href="https://sdttttt.github.io/" class="title">SDTTTTT&#39;s Log</a>
+  
+  
+    <nav>
+    
+      <a href="/about/">About</a>
+    
+    </nav>
+  
 </header>
-  <main>
 
-<h1>Socks5</h1>
-<p>
-  <i>
-    <time datetime='0001-01-01' pubdate>
-      01 Jan, 0001
-    </time>
-  </i>
-</p>
-
-<content>
+<article>
+  <header>
+    <h1>Socks5</h1>
+    
+  </header>
   <p>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是&quot;SOCKetS&quot;的缩写。
 SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。</p>
 <p>SOCKS5 协议可以分为三个部分：</p>
@@ -583,20 +357,15 @@ SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。</p
 
     <span style="color:#a6e22e">wg</span>.<span style="color:#a6e22e">Wait</span>()
 </code></pre></div>
-</content>
-<p>
-  
-  <a href="https://sdttttt.github.io/tags/network-protocol/">#network protocol</a>
-  
-</p>
+</article>
 
-  </main>
-  <footer>
+
+
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css">
   <script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js"></script>
 
-<div id="gitalk-container"></div>
+<div id="gitalk-container" style="margin: auto" ></div>
 
 <script>
     var gitalk = new Gitalk({
@@ -611,10 +380,5 @@ SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。</p
 
 gitalk.render('gitalk-container')
 </script>
-
-</footer>
-
-    
-</body>
 
 </html>
