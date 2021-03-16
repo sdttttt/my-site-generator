@@ -16,5 +16,4 @@
 </span><span style=color:#75715e></span>}
 
 </code></pre></div><p>这里使用的数组对齐方式来存放数据。<code>overflow</code>指向下一个<code>bucket</code>.</p><h3 id=工作流程>工作流程</h3><p>首先通过<code>key</code>计算Hash值，通过Hash的低位，计算出该元素需要存放在<code>buckets</code>中的哪一个<code>bucket</code>.
-如果Hash冲突，也就是当前<code>bucket</code>已经有人进去了。那么就使用该<code>bucket</code>的<code>overflow</code>指向自己的<code>bucket</code>.</p><p>查找元素也是大同小异。</p></article><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css><script src=https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js></script><div id=gitalk-container style=margin:auto></div><script>var gitalk=new Gitalk({clientID:'747ab8530477531c3d25',clientSecret:'af2cc18e4c27998636a6a3c82af0064f38574170',repo:'sdttttt.github.io',owner:'sdttttt',admin:['sdttttt'],id:location.pathname,distractionFreeMode:true})
-gitalk.render('gitalk-container')</script></html>
+如果Hash冲突，也就是当前<code>bucket</code>已经有人进去了。那么就使用该<code>bucket</code>的<code>overflow</code>指向自己的<code>bucket</code>.</p><p>查找元素也是大同小异。</p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>

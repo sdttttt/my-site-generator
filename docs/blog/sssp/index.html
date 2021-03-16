@@ -64,5 +64,4 @@ pop ax ;将栈顶的数据送入ax
 10010H  |_______| &lt;= SS:SP: 其实爷在这里。
 </code></pre><p>至于为什么只要想想 <code>SP -= 2</code> 你就知道了。</p><h1 id=关于爆栈>关于爆栈</h1><p>栈一旦爆了，SS:SP就会指到别的地方去。
 这么一想CPU应该会知道栈顶在哪里。</p><p>每次<code>push</code>,<code>pop</code>都会检查栈顶和栈底的位置，保证栈不会超。这么一想美滋滋。</p><p>然而，8086CPU并没有做这样的设计。
-它只知道栈顶在哪里。不知道栈有多大。</p><p>换个说法就是：<strong>只知道下一条指令在哪里，而不知道要处理的指令有多少条。</strong></p></article><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css><script src=https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js></script><div id=gitalk-container style=margin:auto></div><script>var gitalk=new Gitalk({clientID:'747ab8530477531c3d25',clientSecret:'af2cc18e4c27998636a6a3c82af0064f38574170',repo:'sdttttt.github.io',owner:'sdttttt',admin:['sdttttt'],id:location.pathname,distractionFreeMode:true})
-gitalk.render('gitalk-container')</script></html>
+它只知道栈顶在哪里。不知道栈有多大。</p><p>换个说法就是：<strong>只知道下一条指令在哪里，而不知道要处理的指令有多少条。</strong></p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>

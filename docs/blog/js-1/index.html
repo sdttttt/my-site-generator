@@ -22,5 +22,4 @@
     ),
     <span style=color:#ae81ff>500</span>
 );
-</code></pre></div><p>emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 <em>（好吧，看了几遍其实发现差不多）</em></p><p>原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。</p><p>节流主要作用就是限制执行频率。</p><p>硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。</p></article><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css><script src=https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js></script><div id=gitalk-container style=margin:auto></div><script>var gitalk=new Gitalk({clientID:'747ab8530477531c3d25',clientSecret:'af2cc18e4c27998636a6a3c82af0064f38574170',repo:'sdttttt.github.io',owner:'sdttttt',admin:['sdttttt'],id:location.pathname,distractionFreeMode:true})
-gitalk.render('gitalk-container')</script></html>
+</code></pre></div><p>emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 <em>（好吧，看了几遍其实发现差不多）</em></p><p>原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。</p><p>节流主要作用就是限制执行频率。</p><p>硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。</p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>

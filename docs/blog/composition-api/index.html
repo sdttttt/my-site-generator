@@ -55,5 +55,4 @@
 <span style=color:#75715e>// 当count数据发送变化的时候会执行watchEffect内的回调函数
 </span></code></pre></div><p>还有一个watch函数也可以做到类似的操作, 不过需要手动在第一个参数指定监听的响应式数据.
 watch的原理就比较容易懂了. 指定了依赖就可以通过挂钩子来实现监听变化执行回调了.</p><p>问题就在watchEffect是怎么做到不指定依赖就能知道回调内依赖了哪个响应式数据?并且自动执行的?</p><p>这个魔法的原理我想破头也没有想出来. 看了一些关于副作用的文章之后才开始理解这个魔法的本质.</p><p><code>watch</code> 和 <code>watchEffect</code> 有一个区别就在于, watchEffect在页面渲染后会首次执行一次.
-这个动作就是魔法的秘密了, 执行后watchEffect就能看到那些响应式数数据收到了回调的影响.(不一定是数据的变化)</p></article><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.css><script src=https://cdn.jsdelivr.net/npm/gitalk@1.7.0/dist/gitalk.min.js></script><div id=gitalk-container style=margin:auto></div><script>var gitalk=new Gitalk({clientID:'747ab8530477531c3d25',clientSecret:'af2cc18e4c27998636a6a3c82af0064f38574170',repo:'sdttttt.github.io',owner:'sdttttt',admin:['sdttttt'],id:location.pathname,distractionFreeMode:true})
-gitalk.render('gitalk-container')</script></html>
+这个动作就是魔法的秘密了, 执行后watchEffect就能看到那些响应式数数据收到了回调的影响.(不一定是数据的变化)</p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
