@@ -1,3 +1,4 @@
 github.com/janraasch/hugo-bearblog v0.0.0-20201002141919-bfb56d74712b h1:5Xbw1mD8vCicIftw22T4XlDftH+ynw4KAWvQTmy4OuY=
 github.com/janraasch/hugo-bearblog v0.0.0-20201002141919-bfb56d74712b/go.mod h1:qVJ3S3qhkRf6smf5f8vveeV/QX3ui8poHckF6Ykt9AU=
-
+github.com/nodejh/hugo-theme-mini v0.0.0-20210302142307-8628c19610c7 h1:8mII5YCbONqi+T7cpbfeHRtjOb3VtVBk8IXNUl54EYA=
+github.com/nodejh/hugo-theme-mini v0.0.0-20210302142307-8628c19610c7/go.mod h1:+Rl6qKesH3DeBOjXcmPXB1L/LwD3RqXzopTzon/jv5Q=

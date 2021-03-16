@@ -1,8 +1,8 @@
 baseURL = "https://sdttttt.github.io/"
 languageCode = "zh-cn"
-title = "SDTTTTT's Smelly fish Rotten shrimp 📓"
+title = "SDTTTTT's Log"
 
-theme = [ "github.com/janraasch/hugo-bearblog"]
+theme = [ "contrast-hugo" ]
 
 paginate = 5
 
@@ -21,6 +21,13 @@ copyright = "Copyright © 2020, SDTTTTT."
 [markup.goldmark]
 [markup.goldmark.renderer]
 unsafe = true
+
+[menu]
+  [[menu.main]]
+    identifier = "about"
+    name = "About"
+    url = "/about/"
+    weight = 10
 
 [params]
 
@@ -42,7 +49,3 @@ unsafe = true
   # opengraph structured data template.
   # See https://ogp.me/ and https://gohugo.io/templates/internal#open-graph.
   title = "SDTTTTT"
-
-[module]
-  [[module.imports]]
-    path = "github.com/janraasch/hugo-bearblog"
