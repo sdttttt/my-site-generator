@@ -4,7 +4,7 @@ date: {{ .Date }}
 description: ""
 featured: "me.jpg"
 languages: Chinese
-tags: []
+tags: ["Log"]
 author: sdttttt
 draft: false
 ---
