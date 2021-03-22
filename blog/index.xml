@@ -7,7 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Tue, 16 Mar 2021 16:52:51 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 22 Mar 2021 11:16:33 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Log 17</title>
+      <link>https://sdttttt.github.io/blog/log-17/</link>
+      <pubDate>Mon, 22 Mar 2021 11:16:33 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/log-17/</guid>
+      <description>最近工作虽然忙，但是强摸还是能摸出一些时间来，GRC又有了新的需求，要增加GPG的提交签名。
+一开始我以为很简单，因为看起来我原本使用的git2-rs这个库提供了签名的实现，有一个commit_sign方法。
+实际这个方法里面没有实现签名的生成，没办法只好去开源社区里找找了，issue里有有好心人提供了链接，我大概看了看，
+最后把目光转向到了gpgme这个库上，但是这个玩意是一个对FFI的包装库，并不是原生实现，编译的时候需要依赖一些C/C++的链接库。我佛了。
+这就意味这在Windows上的运行会出现麻烦。后来又找了别的库，但是都很底层，API文档看的我一脸愣逼。 这个问题，还真的得拖一段时间。
+希望有带佬能搞一个Rust原生又方便的GPG签名库. 如果实在没有，我亲自上也不是不行&amp;hellip;emmmm (逃)</description>
+    </item>
+    
     <item>
       <title>Log 16</title>
       <link>https://sdttttt.github.io/blog/log-16/</link>
