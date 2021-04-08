@@ -7,7 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>Copyright © 2020, SDTTTTT.</copyright>
-    <lastBuildDate>Thu, 08 Apr 2021 14:22:05 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 08 Apr 2021 17:26:07 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go Unsafe</title>
+      <link>https://sdttttt.github.io/blog/go-unsafe/</link>
+      <pubDate>Thu, 08 Apr 2021 17:26:07 +0800</pubDate>
+      
+      <guid>https://sdttttt.github.io/blog/go-unsafe/</guid>
+      <description>看了一些关于unsafe包的文章,长话短说:
+unsafe.Pointer就是一个纯指针, 它很聪明, 如果对象改变了地址它也会自动改变.并且保持对对象的引用, 这样对象不会被回收.
+uintptr就是一个比较大的整型, 能容下任何指针地址, 但是这个不会跟随对象改变地址&amp;hellip;而且对象还会被回收&amp;hellip;</description>
+    </item>
+    
     <item>
       <title>Log 20</title>
       <link>https://sdttttt.github.io/blog/log-20/</link>

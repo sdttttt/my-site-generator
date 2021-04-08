@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<title>Go Unsafe | SDTTTTT&#39;s Log</title>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.75.0" />
+<meta name="description" content="Hugo ---sdttttt">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://sdttttt.github.io/css/index.css">
+<link rel="canonical" href="https://sdttttt.github.io/blog/go-unsafe/">
+<link rel="alternate" type="application/rss+xml" href="" title="SDTTTTT&#39;s Log">
+
+<header>
+  
+    <a href="https://sdttttt.github.io/" class="title">SDTTTTT&#39;s Log</a>
+  
+  
+    <nav>
+    
+      <a href="/about/">About</a>
+    
+    </nav>
+  
+</header>
+
+<article>
+  <header>
+    <h1>Go Unsafe</h1>
+    <time datetime="2021-04-08T17:26:07&#43;08:00">April 08, 2021</time>
+  </header>
+  <p>看了一些关于unsafe包的文章,长话短说:</p>
+<p>unsafe.Pointer就是一个纯指针, 它很聪明, 如果对象改变了地址它也会自动改变.并且保持对对象的引用, 这样对象不会被回收.</p>
+<p>uintptr就是一个比较大的整型, 能容下任何指针地址, 但是这个不会跟随对象改变地址&hellip;而且对象还会被回收&hellip;</p>
+
+</article>
+
+
+
+<script src="https://utteranc.es/client.js"
+        repo="sdttttt/sdttttt.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+</html>
