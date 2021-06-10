@@ -1,136 +1,268 @@
-<!doctype html><html lang=zh-cn><title>SQL Injection | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/sql_injection/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>SQL Injection</h1><time datetime=2020-04-10T10:54:47+08:00>April 10, 2020</time></header><p>DVWA SQL Injection 过关秘籍.</p><h3 id=low>LOW</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_REQUEST[ <span style=color:#e6db74>&#39;Submit&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Get input
-</span><span style=color:#75715e></span>    $id <span style=color:#f92672>=</span> $_REQUEST[ <span style=color:#e6db74>&#39;id&#39;</span> ];
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>SQL Injection | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>SQL Injection</h1><div class=post-meta><div>By on <time>April 10, 2020</time></div><div class=tags><a href=/tags/penetration-test/>penetration test</a></div></div></div></div></header></article><div class=article-post><p>DVWA SQL Injection 过关秘籍.</p><h3 id=low>LOW</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_REQUEST</span><span class=p>[</span> <span class=s1>&#39;Submit&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Get input
+</span><span class=c1></span>    <span class=nv>$id</span> <span class=o>=</span> <span class=nv>$_REQUEST</span><span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Check database
-</span><span style=color:#75715e></span>    $query  <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span style=color:#e6db74>$id</span><span style=color:#e6db74>&#39;;&#34;</span>;
-    <span style=color:#75715e>// 并没有做什么注入防护
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 尝试构造：
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1;
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2;
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1;
-</span><span style=color:#75715e></span>
-    $result <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_query</span>( $query ) <span style=color:#66d9ef>or</span> <span style=color:#66d9ef>die</span>( <span style=color:#e6db74>&#39;&lt;pre&gt;&#39;</span> <span style=color:#f92672>.</span> <span style=color:#a6e22e>mysql_error</span>() <span style=color:#f92672>.</span> <span style=color:#e6db74>&#39;&lt;/pre&gt;&#39;</span> );
+    <span class=c1>// Check database
+</span><span class=c1></span>    <span class=nv>$query</span>  <span class=o>=</span> <span class=s2>&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span class=si>$id</span><span class=s2>&#39;;&#34;</span><span class=p>;</span>
+    <span class=c1>// 并没有做什么注入防护
+</span><span class=c1></span>    <span class=c1>// 尝试构造：
+</span><span class=c1></span>    <span class=c1>// select first_name, last_name from from users where user_id = &#39;1&#39; and 1=1;
+</span><span class=c1></span>    <span class=c1>// select first_name, last_name from from users where user_id = &#39;1&#39; and 1=2;
+</span><span class=c1></span>    <span class=c1>// select first_name, last_name from from users where user_id = &#39;1&#39; or 1=1;
+</span><span class=c1></span>
+    <span class=nv>$result</span> <span class=o>=</span> <span class=nx>mysql_query</span><span class=p>(</span> <span class=nv>$query</span> <span class=p>)</span> <span class=k>or</span> <span class=k>die</span><span class=p>(</span> <span class=s1>&#39;&lt;pre&gt;&#39;</span> <span class=o>.</span> <span class=nx>mysql_error</span><span class=p>()</span> <span class=o>.</span> <span class=s1>&#39;&lt;/pre&gt;&#39;</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// Get results
-</span><span style=color:#75715e></span>    $num <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_numrows</span>( $result );
-    $i   <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-    <span style=color:#66d9ef>while</span>( $i <span style=color:#f92672>&lt;</span> $num ) {
-        <span style=color:#75715e>// Get values
-</span><span style=color:#75715e></span>        $first <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_result</span>( $result, $i, <span style=color:#e6db74>&#34;first_name&#34;</span> );
-        $last  <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_result</span>( $result, $i, <span style=color:#e6db74>&#34;last_name&#34;</span> );
+    <span class=c1>// Get results
+</span><span class=c1></span>    <span class=nv>$num</span> <span class=o>=</span> <span class=nx>mysql_numrows</span><span class=p>(</span> <span class=nv>$result</span> <span class=p>);</span>
+    <span class=nv>$i</span>   <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=k>while</span><span class=p>(</span> <span class=nv>$i</span> <span class=o>&lt;</span> <span class=nv>$num</span> <span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// Get values
+</span><span class=c1></span>        <span class=nv>$first</span> <span class=o>=</span> <span class=nx>mysql_result</span><span class=p>(</span> <span class=nv>$result</span><span class=p>,</span> <span class=nv>$i</span><span class=p>,</span> <span class=s2>&#34;first_name&#34;</span> <span class=p>);</span>
+        <span class=nv>$last</span>  <span class=o>=</span> <span class=nx>mysql_result</span><span class=p>(</span> <span class=nv>$result</span><span class=p>,</span> <span class=nv>$i</span><span class=p>,</span> <span class=s2>&#34;last_name&#34;</span> <span class=p>);</span>
 
-        <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;ID: </span><span style=color:#e6db74>{</span>$id<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;First name: </span><span style=color:#e6db74>{</span>$first<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;Surname: </span><span style=color:#e6db74>{</span>$last<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/pre&gt;&#34;</span>;
+        <span class=c1>// Feedback for end user
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;ID: </span><span class=si>{</span><span class=nv>$id</span><span class=si>}</span><span class=s2>&lt;br /&gt;First name: </span><span class=si>{</span><span class=nv>$first</span><span class=si>}</span><span class=s2>&lt;br /&gt;Surname: </span><span class=si>{</span><span class=nv>$last</span><span class=si>}</span><span class=s2>&lt;/pre&gt;&#34;</span><span class=p>;</span>
 
-        <span style=color:#75715e>// Increase loop count
-</span><span style=color:#75715e></span>        $i<span style=color:#f92672>++</span>;
-    }
+        <span class=c1>// Increase loop count
+</span><span class=c1></span>        <span class=nv>$i</span><span class=o>++</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>mysql_close</span>();
-}
-</code></pre></div><h3 id=medium>Medium</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_POST[ <span style=color:#e6db74>&#39;Submit&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Get input
-</span><span style=color:#75715e></span>
-    <span style=color:#75715e>// 换成了Post 这也太普通了
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 使用一些网络请求工具照样改，比如BurpSuite，PostMan，curl.
-</span><span style=color:#75715e></span>    $id <span style=color:#f92672>=</span> $_POST[ <span style=color:#e6db74>&#39;id&#39;</span> ];
-    $id <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_real_escape_string</span>( $id );
-    <span style=color:#75715e>// mysql_real_escape_string 可以对以下字符进行转义
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// \x00, \n, \r, \, &#39;, &#34; 和 \x1a.
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 值得注意的是 mysql_real_escape_string 函数所在的MYSQL扩展在
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// PHP 5.5.0 起已废弃，并在自 PHP 7.0.0 开始被移除。
-</span><span style=color:#75715e></span>
-    <span style=color:#75715e>// Check database
-</span><span style=color:#75715e></span>    $query  <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;SELECT first_name, last_name FROM users WHERE user_id = </span><span style=color:#e6db74>$id</span><span style=color:#e6db74>;&#34;</span>;
-    <span style=color:#75715e>// 尝试构造:
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// SELECT first_name, last_name FROM users WHERE user_id = 1 or 1=1;
-</span><span style=color:#75715e></span>
-    $result <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_query</span>( $query ) <span style=color:#66d9ef>or</span> <span style=color:#66d9ef>die</span>( <span style=color:#e6db74>&#39;&lt;pre&gt;&#39;</span> <span style=color:#f92672>.</span> <span style=color:#a6e22e>mysql_error</span>() <span style=color:#f92672>.</span> <span style=color:#e6db74>&#39;&lt;/pre&gt;&#39;</span> );
+    <span class=nx>mysql_close</span><span class=p>();</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=medium>Medium</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-php data-lang=php><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;Submit&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Get input
+</span><span class=c1></span>
+    <span class=c1>// 换成了Post 这也太普通了
+</span><span class=c1></span>    <span class=c1>// 使用一些网络请求工具照样改，比如BurpSuite，PostMan，curl.
+</span><span class=c1></span>    <span class=nv>$id</span> <span class=o>=</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>];</span>
+    <span class=nv>$id</span> <span class=o>=</span> <span class=nx>mysql_real_escape_string</span><span class=p>(</span> <span class=nv>$id</span> <span class=p>);</span>
+    <span class=c1>// mysql_real_escape_string 可以对以下字符进行转义
+</span><span class=c1></span>    <span class=c1>// \x00, \n, \r, \, &#39;, &#34; 和 \x1a.
+</span><span class=c1></span>    <span class=c1>// 值得注意的是 mysql_real_escape_string 函数所在的MYSQL扩展在
+</span><span class=c1></span>    <span class=c1>// PHP 5.5.0 起已废弃，并在自 PHP 7.0.0 开始被移除。
+</span><span class=c1></span>
+    <span class=c1>// Check database
+</span><span class=c1></span>    <span class=nv>$query</span>  <span class=o>=</span> <span class=s2>&#34;SELECT first_name, last_name FROM users WHERE user_id = </span><span class=si>$id</span><span class=s2>;&#34;</span><span class=p>;</span>
+    <span class=c1>// 尝试构造:
+</span><span class=c1></span>    <span class=c1>// SELECT first_name, last_name FROM users WHERE user_id = 1 or 1=1;
+</span><span class=c1></span>
+    <span class=nv>$result</span> <span class=o>=</span> <span class=nx>mysql_query</span><span class=p>(</span> <span class=nv>$query</span> <span class=p>)</span> <span class=k>or</span> <span class=k>die</span><span class=p>(</span> <span class=s1>&#39;&lt;pre&gt;&#39;</span> <span class=o>.</span> <span class=nx>mysql_error</span><span class=p>()</span> <span class=o>.</span> <span class=s1>&#39;&lt;/pre&gt;&#39;</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// Get results
-</span><span style=color:#75715e></span>    $num <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_numrows</span>( $result );
-    $i   <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-    <span style=color:#66d9ef>while</span>( $i <span style=color:#f92672>&lt;</span> $num ) {
-        <span style=color:#75715e>// Display values
-</span><span style=color:#75715e></span>        $first <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_result</span>( $result, $i, <span style=color:#e6db74>&#34;first_name&#34;</span> );
-        $last  <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_result</span>( $result, $i, <span style=color:#e6db74>&#34;last_name&#34;</span> );
+    <span class=c1>// Get results
+</span><span class=c1></span>    <span class=nv>$num</span> <span class=o>=</span> <span class=nx>mysql_numrows</span><span class=p>(</span> <span class=nv>$result</span> <span class=p>);</span>
+    <span class=nv>$i</span>   <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=k>while</span><span class=p>(</span> <span class=nv>$i</span> <span class=o>&lt;</span> <span class=nv>$num</span> <span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// Display values
+</span><span class=c1></span>        <span class=nv>$first</span> <span class=o>=</span> <span class=nx>mysql_result</span><span class=p>(</span> <span class=nv>$result</span><span class=p>,</span> <span class=nv>$i</span><span class=p>,</span> <span class=s2>&#34;first_name&#34;</span> <span class=p>);</span>
+        <span class=nv>$last</span>  <span class=o>=</span> <span class=nx>mysql_result</span><span class=p>(</span> <span class=nv>$result</span><span class=p>,</span> <span class=nv>$i</span><span class=p>,</span> <span class=s2>&#34;last_name&#34;</span> <span class=p>);</span>
 
-        <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;ID: </span><span style=color:#e6db74>{</span>$id<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;First name: </span><span style=color:#e6db74>{</span>$first<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;Surname: </span><span style=color:#e6db74>{</span>$last<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/pre&gt;&#34;</span>;
+        <span class=c1>// Feedback for end user
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;ID: </span><span class=si>{</span><span class=nv>$id</span><span class=si>}</span><span class=s2>&lt;br /&gt;First name: </span><span class=si>{</span><span class=nv>$first</span><span class=si>}</span><span class=s2>&lt;br /&gt;Surname: </span><span class=si>{</span><span class=nv>$last</span><span class=si>}</span><span class=s2>&lt;/pre&gt;&#34;</span><span class=p>;</span>
 
-        <span style=color:#75715e>// Increase loop count
-</span><span style=color:#75715e></span>        $i<span style=color:#f92672>++</span>;
-    }
+        <span class=c1>// Increase loop count
+</span><span class=c1></span>        <span class=nv>$i</span><span class=o>++</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span style=color:#75715e>//mysql_close();
-</span><span style=color:#75715e></span>}
+    <span class=c1>//mysql_close();
+</span><span class=c1></span><span class=p>}</span>
 
-</code></pre></div><h3 id=high>High</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_SESSION [ <span style=color:#e6db74>&#39;id&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Get input
-</span><span style=color:#75715e></span>    $id <span style=color:#f92672>=</span> $_SESSION[ <span style=color:#e6db74>&#39;id&#39;</span> ];
+</code></pre></td></tr></table></div></div><h3 id=high>High</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_SESSION</span> <span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Get input
+</span><span class=c1></span>    <span class=nv>$id</span> <span class=o>=</span> <span class=nv>$_SESSION</span><span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Check database
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 看起来做了返回条目限制
-</span><span style=color:#75715e></span>    $query  <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span style=color:#e6db74>$id</span><span style=color:#e6db74>&#39; LIMIT 1;&#34;</span>;
-    <span style=color:#75715e>// 没什么套路
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// SELECT first_name, last_name FROM users WHERE user_id = &#39;1&#39; or 1=1 # &#39; LIMIT 1;
-</span><span style=color:#75715e></span>
-    $result <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_query</span>( $query ) <span style=color:#66d9ef>or</span> <span style=color:#66d9ef>die</span>( <span style=color:#e6db74>&#39;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#39;</span> );
+    <span class=c1>// Check database
+</span><span class=c1></span>    <span class=c1>// 看起来做了返回条目限制
+</span><span class=c1></span>    <span class=nv>$query</span>  <span class=o>=</span> <span class=s2>&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span class=si>$id</span><span class=s2>&#39; LIMIT 1;&#34;</span><span class=p>;</span>
+    <span class=c1>// 没什么套路
+</span><span class=c1></span>    <span class=c1>// SELECT first_name, last_name FROM users WHERE user_id = &#39;1&#39; or 1=1 # &#39; LIMIT 1;
+</span><span class=c1></span>
+    <span class=nv>$result</span> <span class=o>=</span> <span class=nx>mysql_query</span><span class=p>(</span> <span class=nv>$query</span> <span class=p>)</span> <span class=k>or</span> <span class=k>die</span><span class=p>(</span> <span class=s1>&#39;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#39;</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// Get results
-</span><span style=color:#75715e></span>    $num <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_numrows</span>( $result );
-    $i   <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-    <span style=color:#66d9ef>while</span>( $i <span style=color:#f92672>&lt;</span> $num ) {
-        <span style=color:#75715e>// Get values
-</span><span style=color:#75715e></span>        $first <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_result</span>( $result, $i, <span style=color:#e6db74>&#34;first_name&#34;</span> );
-        $last  <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_result</span>( $result, $i, <span style=color:#e6db74>&#34;last_name&#34;</span> );
+    <span class=c1>// Get results
+</span><span class=c1></span>    <span class=nv>$num</span> <span class=o>=</span> <span class=nx>mysql_numrows</span><span class=p>(</span> <span class=nv>$result</span> <span class=p>);</span>
+    <span class=nv>$i</span>   <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=k>while</span><span class=p>(</span> <span class=nv>$i</span> <span class=o>&lt;</span> <span class=nv>$num</span> <span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// Get values
+</span><span class=c1></span>        <span class=nv>$first</span> <span class=o>=</span> <span class=nx>mysql_result</span><span class=p>(</span> <span class=nv>$result</span><span class=p>,</span> <span class=nv>$i</span><span class=p>,</span> <span class=s2>&#34;first_name&#34;</span> <span class=p>);</span>
+        <span class=nv>$last</span>  <span class=o>=</span> <span class=nx>mysql_result</span><span class=p>(</span> <span class=nv>$result</span><span class=p>,</span> <span class=nv>$i</span><span class=p>,</span> <span class=s2>&#34;last_name&#34;</span> <span class=p>);</span>
 
-        <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;ID: </span><span style=color:#e6db74>{</span>$id<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;First name: </span><span style=color:#e6db74>{</span>$first<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;Surname: </span><span style=color:#e6db74>{</span>$last<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/pre&gt;&#34;</span>;
+        <span class=c1>// Feedback for end user
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;ID: </span><span class=si>{</span><span class=nv>$id</span><span class=si>}</span><span class=s2>&lt;br /&gt;First name: </span><span class=si>{</span><span class=nv>$first</span><span class=si>}</span><span class=s2>&lt;br /&gt;Surname: </span><span class=si>{</span><span class=nv>$last</span><span class=si>}</span><span class=s2>&lt;/pre&gt;&#34;</span><span class=p>;</span>
 
-        <span style=color:#75715e>// Increase loop count
-</span><span style=color:#75715e></span>        $i<span style=color:#f92672>++</span>;
-    }
+        <span class=c1>// Increase loop count
+</span><span class=c1></span>        <span class=nv>$i</span><span class=o>++</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>mysql_close</span>();
-}
-</code></pre></div><h3 id=impossible>impossible</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_GET[ <span style=color:#e6db74>&#39;Submit&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Check Anti-CSRF token
-</span><span style=color:#75715e></span>    <span style=color:#a6e22e>checkToken</span>( $_REQUEST[ <span style=color:#e6db74>&#39;user_token&#39;</span> ], $_SESSION[ <span style=color:#e6db74>&#39;session_token&#39;</span> ], <span style=color:#e6db74>&#39;index.php&#39;</span> );
+    <span class=nx>mysql_close</span><span class=p>();</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=impossible>impossible</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_GET</span><span class=p>[</span> <span class=s1>&#39;Submit&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Check Anti-CSRF token
+</span><span class=c1></span>    <span class=nx>checkToken</span><span class=p>(</span> <span class=nv>$_REQUEST</span><span class=p>[</span> <span class=s1>&#39;user_token&#39;</span> <span class=p>],</span> <span class=nv>$_SESSION</span><span class=p>[</span> <span class=s1>&#39;session_token&#39;</span> <span class=p>],</span> <span class=s1>&#39;index.php&#39;</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// Get input
-</span><span style=color:#75715e></span>    $id <span style=color:#f92672>=</span> $_GET[ <span style=color:#e6db74>&#39;id&#39;</span> ];
+    <span class=c1>// Get input
+</span><span class=c1></span>    <span class=nv>$id</span> <span class=o>=</span> <span class=nv>$_GET</span><span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Was a number entered?
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>is_numeric</span>( $id )) {
-        <span style=color:#75715e>// Check the database
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// 这是！PDO!
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// PDO 是一种PHP中比较先进的面向对象形式的数据库访问技术
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// 不过即使是面向对象它还是事务脚本形式的。
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// 提供了防SQL注入的功能。
-</span><span style=color:#75715e></span>        $data <span style=color:#f92672>=</span> $db<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>prepare</span>( <span style=color:#e6db74>&#39;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#39;</span> );
-        <span style=color:#75715e>// 无法注入
-</span><span style=color:#75715e></span>
-        $data<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>bindParam</span>( <span style=color:#e6db74>&#39;:id&#39;</span>, $id, <span style=color:#a6e22e>PDO</span><span style=color:#f92672>::</span><span style=color:#a6e22e>PARAM_INT</span> );
-        $data<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>execute</span>();
-        $row <span style=color:#f92672>=</span> $data<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>fetch</span>();
+    <span class=c1>// Was a number entered?
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span><span class=nx>is_numeric</span><span class=p>(</span> <span class=nv>$id</span> <span class=p>))</span> <span class=p>{</span>
+        <span class=c1>// Check the database
+</span><span class=c1></span>        <span class=c1>// 这是！PDO!
+</span><span class=c1></span>        <span class=c1>// PDO 是一种PHP中比较先进的面向对象形式的数据库访问技术
+</span><span class=c1></span>        <span class=c1>// 不过即使是面向对象它还是事务脚本形式的。
+</span><span class=c1></span>        <span class=c1>// 提供了防SQL注入的功能。
+</span><span class=c1></span>        <span class=nv>$data</span> <span class=o>=</span> <span class=nv>$db</span><span class=o>-&gt;</span><span class=na>prepare</span><span class=p>(</span> <span class=s1>&#39;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#39;</span> <span class=p>);</span>
+        <span class=c1>// 无法注入
+</span><span class=c1></span>
+        <span class=nv>$data</span><span class=o>-&gt;</span><span class=na>bindParam</span><span class=p>(</span> <span class=s1>&#39;:id&#39;</span><span class=p>,</span> <span class=nv>$id</span><span class=p>,</span> <span class=nx>PDO</span><span class=o>::</span><span class=na>PARAM_INT</span> <span class=p>);</span>
+        <span class=nv>$data</span><span class=o>-&gt;</span><span class=na>execute</span><span class=p>();</span>
+        <span class=nv>$row</span> <span class=o>=</span> <span class=nv>$data</span><span class=o>-&gt;</span><span class=na>fetch</span><span class=p>();</span>
 
-        <span style=color:#75715e>// Make sure only 1 result is returned
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span>( $data<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>rowCount</span>() <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span> ) {
-            <span style=color:#75715e>// Get values
-</span><span style=color:#75715e></span>            $first <span style=color:#f92672>=</span> $row[ <span style=color:#e6db74>&#39;first_name&#39;</span> ];
-            $last  <span style=color:#f92672>=</span> $row[ <span style=color:#e6db74>&#39;last_name&#39;</span> ];
+        <span class=c1>// Make sure only 1 result is returned
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span> <span class=nv>$data</span><span class=o>-&gt;</span><span class=na>rowCount</span><span class=p>()</span> <span class=o>==</span> <span class=mi>1</span> <span class=p>)</span> <span class=p>{</span>
+            <span class=c1>// Get values
+</span><span class=c1></span>            <span class=nv>$first</span> <span class=o>=</span> <span class=nv>$row</span><span class=p>[</span> <span class=s1>&#39;first_name&#39;</span> <span class=p>];</span>
+            <span class=nv>$last</span>  <span class=o>=</span> <span class=nv>$row</span><span class=p>[</span> <span class=s1>&#39;last_name&#39;</span> <span class=p>];</span>
 
-            <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;ID: </span><span style=color:#e6db74>{</span>$id<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;First name: </span><span style=color:#e6db74>{</span>$first<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;Surname: </span><span style=color:#e6db74>{</span>$last<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/pre&gt;&#34;</span>;
-        }
-    }
-}
+            <span class=c1>// Feedback for end user
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;ID: </span><span class=si>{</span><span class=nv>$id</span><span class=si>}</span><span class=s2>&lt;br /&gt;First name: </span><span class=si>{</span><span class=nv>$first</span><span class=si>}</span><span class=s2>&lt;br /&gt;Surname: </span><span class=si>{</span><span class=nv>$last</span><span class=si>}</span><span class=s2>&lt;/pre&gt;&#34;</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 
-<span style=color:#75715e>// Generate Anti-CSRF tsoken
-</span><span style=color:#75715e></span><span style=color:#a6e22e>generateSessionToken</span>();
-</code></pre></div><h2 id=extension>Extension</h2><p><strong>二次注入:</strong></p><p>网站有管理员<code>admin</code>.</p><p>一位恶意用户注册了<code>admin'#</code>用户.</p><p>恶意用户更新了自己的密码.</p><p>更新SQL:</p><blockquote><p>update from users
+<span class=c1>// Generate Anti-CSRF tsoken
+</span><span class=c1></span><span class=nx>generateSessionToken</span><span class=p>();</span>
+</code></pre></td></tr></table></div></div><h2 id=extension>Extension</h2><p><strong>二次注入:</strong></p><p>网站有管理员<code>admin</code>.</p><p>一位恶意用户注册了<code>admin'#</code>用户.</p><p>恶意用户更新了自己的密码.</p><p>更新SQL:</p><blockquote><p>update from users
 set password = &lsquo;$password&rsquo;
 where
 username = &lsquo;$username&rsquo; and password &lsquo;$password&rsquo;</p></blockquote><p>替换为恶意用户写入的数据:</p><blockquote><p>update from users
@@ -139,4 +271,7 @@ where
 username = &lsquo;admin&rsquo;#' and password = &lsquo;$password&rsquo;</p></blockquote><p>注意<code>#</code> 后面的语句被注释掉了, 所以真正被执行的只有.</p><blockquote><p>update from users
 set password = #{password}
 where
-username = &lsquo;admin&rsquo;</p></blockquote><p>恶意用户可以无视管理员<code>admin</code>的密码验证，直接修改密码。</p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+username = &lsquo;admin&rsquo;</p></blockquote><p>恶意用户可以无视管理员<code>admin</code>的密码验证，直接修改密码。</p></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/library_and_framework/ title="Previous post (older)"><span>Previous</span>
+The Framework a good design?</a>
+<a rel=next href=/blog/sql_injection_blind/ title="Next post (newer)"><span>Next</span>
+Sql Injection Blind</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

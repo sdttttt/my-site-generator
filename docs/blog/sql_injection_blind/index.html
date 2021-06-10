@@ -1,119 +1,239 @@
-<!doctype html><html lang=zh-cn><title>Sql Injection Blind | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/sql_injection_blind/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>Sql Injection Blind</h1><time datetime=2020-04-10T11:11:22+08:00>April 10, 2020</time></header><p>返回的结果集无法看到，只能通过一些页面显示或状态来判断。
-像瞎子一样。</p><p>DVWA SQL Injection blind 过关秘籍.</p><h3 id=low>Low</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>isset</span>( $_GET[ <span style=color:#e6db74>&#39;Submit&#39;</span> ])) {
-    <span style=color:#75715e>// Get input
-</span><span style=color:#75715e></span>    $id <span style=color:#f92672>=</span> $_GET[ <span style=color:#e6db74>&#39;id&#39;</span> ];
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>Sql Injection Blind | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>Sql Injection Blind</h1><div class=post-meta><div>By on <time>April 10, 2020</time></div><div class=tags><a href=/tags/penetration-test/>penetration test</a></div></div></div></div></header></article><div class=article-post><p>返回的结果集无法看到，只能通过一些页面显示或状态来判断。
+像瞎子一样。</p><p>DVWA SQL Injection blind 过关秘籍.</p><h3 id=low>Low</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span><span class=nx>isset</span><span class=p>(</span> <span class=nv>$_GET</span><span class=p>[</span> <span class=s1>&#39;Submit&#39;</span> <span class=p>]))</span> <span class=p>{</span>
+    <span class=c1>// Get input
+</span><span class=c1></span>    <span class=nv>$id</span> <span class=o>=</span> <span class=nv>$_GET</span><span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Check database
-</span><span style=color:#75715e></span>    $getid  <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span style=color:#e6db74>$id</span><span style=color:#e6db74>&#39;;&#34;</span>;
-    <span style=color:#75715e>// 没有一点点防备
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;;
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// User ID exists in the database. &lt;存在注入漏洞&gt;
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;;
-</span><span style=color:#75715e></span>
-    $result <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_query</span>( $getid ); <span style=color:#75715e>// Removed &#39;or die&#39; to suppress mysql errors
-</span><span style=color:#75715e></span>
-    <span style=color:#75715e>// Get results
-</span><span style=color:#75715e></span>    $num <span style=color:#f92672>=</span> <span style=color:#f92672>@</span><span style=color:#a6e22e>mysql_numrows</span>( $result ); <span style=color:#75715e>// The &#39;@&#39; character suppresses errors
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>( $num <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span> ) {
-        <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#39;</span>;
-    }
-    <span style=color:#66d9ef>else</span> {
-        <span style=color:#75715e>// User wasn&#39;t found, so the page wasn&#39;t!
-</span><span style=color:#75715e></span>        <span style=color:#a6e22e>header</span>( $_SERVER[ <span style=color:#e6db74>&#39;SERVER_PROTOCOL&#39;</span> ] <span style=color:#f92672>.</span> <span style=color:#e6db74>&#39; 404 Not Found&#39;</span> );
+    <span class=c1>// Check database
+</span><span class=c1></span>    <span class=nv>$getid</span>  <span class=o>=</span> <span class=s2>&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span class=si>$id</span><span class=s2>&#39;;&#34;</span><span class=p>;</span>
+    <span class=c1>// 没有一点点防备
+</span><span class=c1></span>    <span class=c1>// 尝试构造: (由于看不到结果集，所以脱裤子的语句是无效)
+</span><span class=c1></span>    <span class=c1>// SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,2 # &#39;;
+</span><span class=c1></span>    <span class=c1>// User ID exists in the database. &lt;存在注入漏洞&gt;
+</span><span class=c1></span>    <span class=c1>// SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length( database())=4,sleep(4),2) # &#39;;
+</span><span class=c1></span>
+    <span class=nv>$result</span> <span class=o>=</span> <span class=nx>mysql_query</span><span class=p>(</span> <span class=nv>$getid</span> <span class=p>);</span> <span class=c1>// Removed &#39;or die&#39; to suppress mysql errors
+</span><span class=c1></span>
+    <span class=c1>// Get results
+</span><span class=c1></span>    <span class=nv>$num</span> <span class=o>=</span> <span class=o>@</span><span class=nx>mysql_numrows</span><span class=p>(</span> <span class=nv>$result</span> <span class=p>);</span> <span class=c1>// The &#39;@&#39; character suppresses errors
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span> <span class=nv>$num</span> <span class=o>&gt;</span> <span class=mi>0</span> <span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// Feedback for end user
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+        <span class=c1>// User wasn&#39;t found, so the page wasn&#39;t!
+</span><span class=c1></span>        <span class=nx>header</span><span class=p>(</span> <span class=nv>$_SERVER</span><span class=p>[</span> <span class=s1>&#39;SERVER_PROTOCOL&#39;</span> <span class=p>]</span> <span class=o>.</span> <span class=s1>&#39; 404 Not Found&#39;</span> <span class=p>);</span>
 
-        <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#39;</span>;
-    }
+        <span class=c1>// Feedback for end user
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>mysql_close</span>();
-}
-</code></pre></div><h3 id=miedum>MIEDUM</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_POST[ <span style=color:#e6db74>&#39;Submit&#39;</span> ]  ) ) {
-    <span style=color:#75715e>// Get input
-</span><span style=color:#75715e></span>    $id <span style=color:#f92672>=</span> $_POST[ <span style=color:#e6db74>&#39;id&#39;</span> ];
-    $id <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_real_escape_string</span>( $id );
+    <span class=nx>mysql_close</span><span class=p>();</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=miedum>MIEDUM</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;Submit&#39;</span> <span class=p>]</span>  <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Get input
+</span><span class=c1></span>    <span class=nv>$id</span> <span class=o>=</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>];</span>
+    <span class=nv>$id</span> <span class=o>=</span> <span class=nx>mysql_real_escape_string</span><span class=p>(</span> <span class=nv>$id</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// Check database
-</span><span style=color:#75715e></span>    $getid  <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;SELECT first_name, last_name FROM users WHERE user_id = </span><span style=color:#e6db74>$id</span><span style=color:#e6db74>;&#34;</span>;
-    <span style=color:#75715e>// 尝试构造:
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// SELECT first_name, last_name FROM users WHERE user_id = 0 union select 1,2;
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 以上判断存在注入漏洞
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// SELECT first_name, last_name FROM users WHERE user_id = 0 union select 1,if(length(database()) &gt; 4, sleep(3), 2)
-</span><span style=color:#75715e></span>
-    $result <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_query</span>( $getid ); <span style=color:#75715e>// Removed &#39;or die&#39; to suppress mysql errors
-</span><span style=color:#75715e></span>
-    <span style=color:#75715e>// Get results
-</span><span style=color:#75715e></span>    $num <span style=color:#f92672>=</span> <span style=color:#f92672>@</span><span style=color:#a6e22e>mysql_numrows</span>( $result ); <span style=color:#75715e>// The &#39;@&#39; character suppresses errors
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>( $num <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span> ) {
-        <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#39;</span>;
-    }
-    <span style=color:#66d9ef>else</span> {
-        <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#39;</span>;
-    }
+    <span class=c1>// Check database
+</span><span class=c1></span>    <span class=nv>$getid</span>  <span class=o>=</span> <span class=s2>&#34;SELECT first_name, last_name FROM users WHERE user_id = </span><span class=si>$id</span><span class=s2>;&#34;</span><span class=p>;</span>
+    <span class=c1>// 尝试构造:
+</span><span class=c1></span>    <span class=c1>// SELECT first_name, last_name FROM users WHERE user_id = 0 union select 1,2;
+</span><span class=c1></span>    <span class=c1>// 以上判断存在注入漏洞
+</span><span class=c1></span>    <span class=c1>// SELECT first_name, last_name FROM users WHERE user_id = 0 union select 1,if(length(database()) &gt; 4, sleep(3), 2)
+</span><span class=c1></span>
+    <span class=nv>$result</span> <span class=o>=</span> <span class=nx>mysql_query</span><span class=p>(</span> <span class=nv>$getid</span> <span class=p>);</span> <span class=c1>// Removed &#39;or die&#39; to suppress mysql errors
+</span><span class=c1></span>
+    <span class=c1>// Get results
+</span><span class=c1></span>    <span class=nv>$num</span> <span class=o>=</span> <span class=o>@</span><span class=nx>mysql_numrows</span><span class=p>(</span> <span class=nv>$result</span> <span class=p>);</span> <span class=c1>// The &#39;@&#39; character suppresses errors
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span> <span class=nv>$num</span> <span class=o>&gt;</span> <span class=mi>0</span> <span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// Feedback for end user
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+        <span class=c1>// Feedback for end user
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span style=color:#75715e>//mysql_close();
-</span><span style=color:#75715e></span>}
-</code></pre></div><h3 id=high>High</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_SESSION[<span style=color:#e6db74>&#39;id&#39;</span>])){
-    <span style=color:#75715e>// Get input
-</span><span style=color:#75715e></span>    $id <span style=color:#f92672>=</span> $_SESSION[ <span style=color:#e6db74>&#39;id&#39;</span> ];
+    <span class=c1>//mysql_close();
+</span><span class=c1></span><span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=high>High</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_SESSION</span><span class=p>[</span><span class=s1>&#39;id&#39;</span><span class=p>])){</span>
+    <span class=c1>// Get input
+</span><span class=c1></span>    <span class=nv>$id</span> <span class=o>=</span> <span class=nv>$_SESSION</span><span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Check database
-</span><span style=color:#75715e></span>    $query  <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span style=color:#e6db74>$id</span><span style=color:#e6db74>&#39; LIMIT 1;&#34;</span>;
-    <span style=color:#75715e>// 没有新花样，只限制输出条目是无法拦住我们的
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 尝试构造:
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length(database()) = 4, sleep(3), 2) # LIMIT 1;
-</span><span style=color:#75715e></span>    $result <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_query</span>( $query ) <span style=color:#66d9ef>or</span> <span style=color:#66d9ef>die</span>( <span style=color:#e6db74>&#39;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#39;</span> );
+    <span class=c1>// Check database
+</span><span class=c1></span>    <span class=nv>$query</span>  <span class=o>=</span> <span class=s2>&#34;SELECT first_name, last_name FROM users WHERE user_id = &#39;</span><span class=si>$id</span><span class=s2>&#39; LIMIT 1;&#34;</span><span class=p>;</span>
+    <span class=c1>// 没有新花样，只限制输出条目是无法拦住我们的
+</span><span class=c1></span>    <span class=c1>// 尝试构造:
+</span><span class=c1></span>    <span class=c1>// SELECT first_name, last_name FROM users WHERE user_id = &#39;0&#39; union select 1,if(length(database()) = 4, sleep(3), 2) # LIMIT 1;
+</span><span class=c1></span>    <span class=nv>$result</span> <span class=o>=</span> <span class=nx>mysql_query</span><span class=p>(</span> <span class=nv>$query</span> <span class=p>)</span> <span class=k>or</span> <span class=k>die</span><span class=p>(</span> <span class=s1>&#39;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#39;</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// Get results
-</span><span style=color:#75715e></span>    $num <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_numrows</span>( $result );
-    $i   <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;
-    <span style=color:#66d9ef>while</span>( $i <span style=color:#f92672>&lt;</span> $num ) {
-        <span style=color:#75715e>// Get values
-</span><span style=color:#75715e></span>        $first <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_result</span>( $result, $i, <span style=color:#e6db74>&#34;first_name&#34;</span> );
-        $last  <span style=color:#f92672>=</span> <span style=color:#a6e22e>mysql_result</span>( $result, $i, <span style=color:#e6db74>&#34;last_name&#34;</span> );
+    <span class=c1>// Get results
+</span><span class=c1></span>    <span class=nv>$num</span> <span class=o>=</span> <span class=nx>mysql_numrows</span><span class=p>(</span> <span class=nv>$result</span> <span class=p>);</span>
+    <span class=nv>$i</span>   <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=k>while</span><span class=p>(</span> <span class=nv>$i</span> <span class=o>&lt;</span> <span class=nv>$num</span> <span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// Get values
+</span><span class=c1></span>        <span class=nv>$first</span> <span class=o>=</span> <span class=nx>mysql_result</span><span class=p>(</span> <span class=nv>$result</span><span class=p>,</span> <span class=nv>$i</span><span class=p>,</span> <span class=s2>&#34;first_name&#34;</span> <span class=p>);</span>
+        <span class=nv>$last</span>  <span class=o>=</span> <span class=nx>mysql_result</span><span class=p>(</span> <span class=nv>$result</span><span class=p>,</span> <span class=nv>$i</span><span class=p>,</span> <span class=s2>&#34;last_name&#34;</span> <span class=p>);</span>
 
-        <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;ID: </span><span style=color:#e6db74>{</span>$id<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;First name: </span><span style=color:#e6db74>{</span>$first<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;br /&gt;Surname: </span><span style=color:#e6db74>{</span>$last<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/pre&gt;&#34;</span>;
+        <span class=c1>// Feedback for end user
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;ID: </span><span class=si>{</span><span class=nv>$id</span><span class=si>}</span><span class=s2>&lt;br /&gt;First name: </span><span class=si>{</span><span class=nv>$first</span><span class=si>}</span><span class=s2>&lt;br /&gt;Surname: </span><span class=si>{</span><span class=nv>$last</span><span class=si>}</span><span class=s2>&lt;/pre&gt;&#34;</span><span class=p>;</span>
 
-        <span style=color:#75715e>// Increase loop count
-</span><span style=color:#75715e></span>        $i<span style=color:#f92672>++</span>;
-    }
+        <span class=c1>// Increase loop count
+</span><span class=c1></span>        <span class=nv>$i</span><span class=o>++</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>mysql_close</span>();
-}
-</code></pre></div><h3 id=high-1>High</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_GET[ <span style=color:#e6db74>&#39;Submit&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Check Anti-CSRF token
-</span><span style=color:#75715e></span>    <span style=color:#a6e22e>checkToken</span>( $_REQUEST[ <span style=color:#e6db74>&#39;user_token&#39;</span> ], $_SESSION[ <span style=color:#e6db74>&#39;session_token&#39;</span> ], <span style=color:#e6db74>&#39;index.php&#39;</span> );
+    <span class=nx>mysql_close</span><span class=p>();</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=high-1>High</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_GET</span><span class=p>[</span> <span class=s1>&#39;Submit&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Check Anti-CSRF token
+</span><span class=c1></span>    <span class=nx>checkToken</span><span class=p>(</span> <span class=nv>$_REQUEST</span><span class=p>[</span> <span class=s1>&#39;user_token&#39;</span> <span class=p>],</span> <span class=nv>$_SESSION</span><span class=p>[</span> <span class=s1>&#39;session_token&#39;</span> <span class=p>],</span> <span class=s1>&#39;index.php&#39;</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// Get input
-</span><span style=color:#75715e></span>    $id <span style=color:#f92672>=</span> $_GET[ <span style=color:#e6db74>&#39;id&#39;</span> ];
+    <span class=c1>// Get input
+</span><span class=c1></span>    <span class=nv>$id</span> <span class=o>=</span> <span class=nv>$_GET</span><span class=p>[</span> <span class=s1>&#39;id&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Was a number entered?
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>is_numeric</span>( $id )) {
-        <span style=color:#75715e>// Check the database
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// PDO 无法注入
-</span><span style=color:#75715e></span>        $data <span style=color:#f92672>=</span> $db<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>prepare</span>( <span style=color:#e6db74>&#39;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#39;</span> );
-        $data<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>bindParam</span>( <span style=color:#e6db74>&#39;:id&#39;</span>, $id, <span style=color:#a6e22e>PDO</span><span style=color:#f92672>::</span><span style=color:#a6e22e>PARAM_INT</span> );
-        $data<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>execute</span>();
+    <span class=c1>// Was a number entered?
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span><span class=nx>is_numeric</span><span class=p>(</span> <span class=nv>$id</span> <span class=p>))</span> <span class=p>{</span>
+        <span class=c1>// Check the database
+</span><span class=c1></span>        <span class=c1>// PDO 无法注入
+</span><span class=c1></span>        <span class=nv>$data</span> <span class=o>=</span> <span class=nv>$db</span><span class=o>-&gt;</span><span class=na>prepare</span><span class=p>(</span> <span class=s1>&#39;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#39;</span> <span class=p>);</span>
+        <span class=nv>$data</span><span class=o>-&gt;</span><span class=na>bindParam</span><span class=p>(</span> <span class=s1>&#39;:id&#39;</span><span class=p>,</span> <span class=nv>$id</span><span class=p>,</span> <span class=nx>PDO</span><span class=o>::</span><span class=na>PARAM_INT</span> <span class=p>);</span>
+        <span class=nv>$data</span><span class=o>-&gt;</span><span class=na>execute</span><span class=p>();</span>
 
-        <span style=color:#75715e>// Get results
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span>( $data<span style=color:#f92672>-&gt;</span><span style=color:#a6e22e>rowCount</span>() <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span> ) {
-            <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#39;</span>;
-        }
-        <span style=color:#66d9ef>else</span> {
-            <span style=color:#75715e>// User wasn&#39;t found, so the page wasn&#39;t!
-</span><span style=color:#75715e></span>            <span style=color:#a6e22e>header</span>( $_SERVER[ <span style=color:#e6db74>&#39;SERVER_PROTOCOL&#39;</span> ] <span style=color:#f92672>.</span> <span style=color:#e6db74>&#39; 404 Not Found&#39;</span> );
+        <span class=c1>// Get results
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span> <span class=nv>$data</span><span class=o>-&gt;</span><span class=na>rowCount</span><span class=p>()</span> <span class=o>==</span> <span class=mi>1</span> <span class=p>)</span> <span class=p>{</span>
+            <span class=c1>// Feedback for end user
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+        <span class=p>}</span>
+        <span class=k>else</span> <span class=p>{</span>
+            <span class=c1>// User wasn&#39;t found, so the page wasn&#39;t!
+</span><span class=c1></span>            <span class=nx>header</span><span class=p>(</span> <span class=nv>$_SERVER</span><span class=p>[</span> <span class=s1>&#39;SERVER_PROTOCOL&#39;</span> <span class=p>]</span> <span class=o>.</span> <span class=s1>&#39; 404 Not Found&#39;</span> <span class=p>);</span>
 
-            <span style=color:#75715e>// Feedback for end user
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#39;</span>;
-        }
-    }
-}
+            <span class=c1>// Feedback for end user
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 
-<span style=color:#75715e>// Generate Anti-CSRF token
-</span><span style=color:#75715e></span><span style=color:#a6e22e>generateSessionToken</span>();
-</code></pre></div></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+<span class=c1>// Generate Anti-CSRF token
+</span><span class=c1></span><span class=nx>generateSessionToken</span><span class=p>();</span>
+</code></pre></td></tr></table></div></div></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/sql_injection/ title="Previous post (older)"><span>Previous</span>
+SQL Injection</a>
+<a rel=next href=/blog/file_upload/ title="Next post (newer)"><span>Next</span>
+File Upload</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

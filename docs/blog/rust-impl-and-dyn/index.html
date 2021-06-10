@@ -1,31 +1,64 @@
-<!doctype html><html lang=zh-cn><title>Impl and Dyn on Rust | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="这篇文章会讲解关于Rust中impl和dyn这两个关键词的作用. 帮助你更好的编写Rust程序."><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/rust-impl-and-dyn/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>Impl and Dyn on Rust</h1><time datetime=2020-11-12T09:46:53+08:00>November 12, 2020</time></header><p>我们先来看这样一段代码:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust>
-<span style=color:#66d9ef>impl</span> View <span style=color:#66d9ef>for</span> Button { ... }
-
-<span style=color:#66d9ef>impl</span> View <span style=color:#66d9ef>for</span> Text { ... }
-
-</code></pre></div><p>我们看到<code>Button</code>和<code>Text</code>都实现了<code>View</code>属性, 抽象是一种不错的设计程序的方法, 帮助我们透明化的使用外部提供的API. 然后我们可能会下意识的写出下面的代码:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Rust data-lang=Rust>
-<span style=color:#e6db74>/// 这种代码实际上会让人感到疑惑. View究竟是个特性还是一个对象.
-</span><span style=color:#e6db74>/// 这里的View是一个类型, 所以我们需要写成 `impl View`.
-</span><span style=color:#e6db74>/// 不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参.
-</span><span style=color:#e6db74></span><span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>something</span>() -&gt; <span style=color:#a6e22e>View</span> {
-    <span style=color:#66d9ef>if</span> ... {
-        Button { ... }
-    } <span style=color:#66d9ef>else</span> {
-        Text { ... }
-    }
-}
-
-</code></pre></div><p>这段代码无法通过编译, 原因就是返回值<code>View</code>需要在编译器确认大小. 我们需要把它装成一个胖指针.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust>
-<span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>something</span>() -&gt; Box<span style=color:#f92672>&lt;</span>View<span style=color:#f92672>&gt;</span> {...}
-
-</code></pre></div><p>嗯,这样就好很多. 但是编译器会爆种, 提出一个警告, 希望你把<code>Box&lt;View></code>改为<code>Box&lt;dyn View></code>.</p><p>这又是什么意思?</p><p><code>dyn</code> 是动态的缩写, 意义其实很明显. 使用<code>dyn</code>修饰的类型, 会在程序执行期动态分发. 会有一定的RUNTIME开销.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust>
-<span style=color:#66d9ef>pub</span> <span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>something</span>() -&gt; Box<span style=color:#f92672>&lt;</span>dyn View<span style=color:#f92672>&gt;</span> {...}
-
-</code></pre></div><p>现在我们把代码改成这样, 好多了.</p><p>接下来说说<code>impl</code>, 这个语法是个语法糖其实.怎么个语法糖呢?</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust>
-<span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>something</span><span style=color:#f92672>&lt;</span>T: <span style=color:#a6e22e>View</span><span style=color:#f92672>&gt;</span>(v: <span style=color:#a6e22e>T</span>) { ... }
-
-<span style=color:#75715e>// ------------- 用 impl 之后 ------------------
-</span><span style=color:#75715e></span>
-<span style=color:#66d9ef>fn</span> <span style=color:#a6e22e>something</span>(v: <span style=color:#a6e22e>impl</span> View) { ... }
-
-</code></pre></div><p>真的就这么简单.</p><p>第二次说一遍, 这种<code>T(泛型)</code>写法在入参可以这么做, 但是返回值不行. 除非你的返回值只返回一个<code>T</code>实现. 两种以上请<code>重载 (我乱说的,rust可能不支持)</code>或者使用<code>dyn</code>.</p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>Impl and Dyn on Rust | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>Impl and Dyn on Rust</h1><div class=post-meta><div>By sdttttt on <time>November 12, 2020</time></div><div class=tags><a href=/tags/rust/>Rust</a></div></div></div></div></header></article><div class=article-post><p>我们先来看这样一段代码:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-rust data-lang=rust><span class=w>
+</span><span class=w></span><span class=k>impl</span><span class=w> </span><span class=n>View</span><span class=w> </span><span class=k>for</span><span class=w> </span><span class=n>Button</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=p>...</span><span class=w> </span><span class=p>}</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=k>impl</span><span class=w> </span><span class=n>View</span><span class=w> </span><span class=k>for</span><span class=w> </span><span class=n>Text</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=p>...</span><span class=w> </span><span class=p>}</span><span class=w>
+</span><span class=w>
+</span></code></pre></td></tr></table></div></div><p>我们看到<code>Button</code>和<code>Text</code>都实现了<code>View</code>属性, 抽象是一种不错的设计程序的方法, 帮助我们透明化的使用外部提供的API. 然后我们可能会下意识的写出下面的代码:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Rust data-lang=Rust><span class=w>
+</span><span class=w></span><span class=sd>/// 这种代码实际上会让人感到疑惑. View究竟是个特性还是一个对象.
+</span><span class=sd>/// 这里的View是一个类型, 所以我们需要写成 `impl View`.
+</span><span class=sd>/// 不过`impl View` 不能用于多个trait实现的返回. 但是可以作为入参.
+</span><span class=sd></span><span class=k>pub</span><span class=w> </span><span class=k>fn</span> <span class=nf>something</span><span class=p>()</span><span class=w> </span>-&gt; <span class=nc>View</span><span class=w> </span><span class=p>{</span><span class=w>
+</span><span class=w>    </span><span class=k>if</span><span class=w> </span><span class=p>...</span><span class=w> </span><span class=p>{</span><span class=w>
+</span><span class=w>        </span><span class=n>Button</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=p>...</span><span class=w> </span><span class=p>}</span><span class=w>
+</span><span class=w>    </span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span><span class=w>        </span><span class=n>Text</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=p>...</span><span class=w> </span><span class=p>}</span><span class=w>
+</span><span class=w>    </span><span class=p>}</span><span class=w>
+</span><span class=w></span><span class=p>}</span><span class=w>
+</span><span class=w>
+</span></code></pre></td></tr></table></div></div><p>这段代码无法通过编译, 原因就是返回值<code>View</code>需要在编译器确认大小. 我们需要把它装成一个胖指针.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-rust data-lang=rust><span class=w>
+</span><span class=w></span><span class=k>pub</span><span class=w> </span><span class=k>fn</span> <span class=nf>something</span><span class=p>()</span><span class=w> </span>-&gt; <span class=nb>Box</span><span class=o>&lt;</span><span class=n>View</span><span class=o>&gt;</span><span class=w> </span><span class=p>{...}</span><span class=w>
+</span><span class=w>
+</span></code></pre></td></tr></table></div></div><p>嗯,这样就好很多. 但是编译器会爆种, 提出一个警告, 希望你把<code>Box&lt;View></code>改为<code>Box&lt;dyn View></code>.</p><p>这又是什么意思?</p><p><code>dyn</code> 是动态的缩写, 意义其实很明显. 使用<code>dyn</code>修饰的类型, 会在程序执行期动态分发. 会有一定的RUNTIME开销.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-rust data-lang=rust><span class=w>
+</span><span class=w></span><span class=k>pub</span><span class=w> </span><span class=k>fn</span> <span class=nf>something</span><span class=p>()</span><span class=w> </span>-&gt; <span class=nb>Box</span><span class=o>&lt;</span><span class=n>dyn</span><span class=w> </span><span class=n>View</span><span class=o>&gt;</span><span class=w> </span><span class=p>{...}</span><span class=w>
+</span><span class=w>
+</span></code></pre></td></tr></table></div></div><p>现在我们把代码改成这样, 好多了.</p><p>接下来说说<code>impl</code>, 这个语法是个语法糖其实.怎么个语法糖呢?</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-rust data-lang=rust><span class=w>
+</span><span class=w></span><span class=k>fn</span> <span class=nf>something</span><span class=o>&lt;</span><span class=n>T</span>: <span class=nc>View</span><span class=o>&gt;</span><span class=p>(</span><span class=n>v</span>: <span class=nc>T</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=p>...</span><span class=w> </span><span class=p>}</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c1>// ------------- 用 impl 之后 ------------------
+</span><span class=c1></span><span class=w>
+</span><span class=w></span><span class=k>fn</span> <span class=nf>something</span><span class=p>(</span><span class=n>v</span>: <span class=nc>impl</span><span class=w> </span><span class=n>View</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=p>...</span><span class=w> </span><span class=p>}</span><span class=w>
+</span><span class=w>
+</span></code></pre></td></tr></table></div></div><p>真的就这么简单.</p><p>第二次说一遍, 这种<code>T(泛型)</code>写法在入参可以这么做, 但是返回值不行. 除非你的返回值只返回一个<code>T</code>实现. 两种以上请<code>重载 (我乱说的,rust可能不支持)</code>或者使用<code>dyn</code>.</p></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/redis-compile/ title="Previous post (older)"><span>Previous</span>
+Redis Compile</a>
+<a rel=next href=/blog/grc-4/ title="Next post (newer)"><span>Next</span>
+GRC 4</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

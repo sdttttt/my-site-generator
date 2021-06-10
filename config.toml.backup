@@ -1,0 +1,58 @@
+baseURL = "https://sdttttt.github.io/"
+languageCode = "zh-cn"
+title = "SDTTTTT"
+
+theme = ["hugo-tania-main"]
+
+paginate = 5
+
+DisqusShortname = "sdttttt"
+
+# Basic metadata configuration for your blog.
+
+author = "SDTTTTT"
+copyright = "Copyright © 2020, SDTTTTT."
+
+enableFootnotes = false
+titleEmoji = "🐶"
+
+
+[build]
+useResourceCacheWhen = "fallback"
+writeStats = true
+
+[markup]
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
+
+[menu]
+[header]
+name = "Articles"
+url = "/blog/"
+[[menu.main]]
+identifier = "about"
+name = "About"
+url = "/about/"
+weight = 10
+
+[params]
+
+
+# The "description" of your website. This is used in the meta data of your generated html.
+description = "Hugo ---sdttttt"
+
+# The path to your "favicon". This should be a square (at least 32px x 32px) png-file.
+# Hint: It's good practise to also put a "favicon.ico"-file into your "static"-folder.
+favicon = "favicon.ico"
+
+# These "images" are used for the structured data templates. This will show up, when
+# services like Twitter or Slack want to generate a preview of a link to your site.
+# See https://gohugo.io/templates/internal#twitter-cards and
+# https://gohugo.io/templates/internal#open-graph.
+images = ["/me.jpg"]
+
+# Another "title" :-). This one is used as the site_name on the Hugo's internal
+# opengraph structured data template.
+# See https://ogp.me/ and https://gohugo.io/templates/internal#open-graph.
+title = "SDTTTTT"

@@ -1,171 +1,342 @@
-<!doctype html><html lang=zh-cn><title>Socks5 | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/socks5/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>Socks5</h1></header><p>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是"SOCKetS"的缩写。
-SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。</p><p>SOCKS5 协议可以分为三个部分：</p><ul><li>(1) 协议版本及认证方式</li><li>(2) 根据认证方式执行对应的认证</li><li>(3) 请求信息</li></ul><h4 id=1协议版本及认证方式>（1）协议版本及认证方式</h4><p>创建与 SOCKS5 服务器的 TCP 连接后<strong>客户端</strong>需要先发送请求来协议版本及认证方式，</p><table><thead><tr><th>VER</th><th>NMETHODS</th><th>METHODS</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>1-255</td></tr></tbody></table><ul><li><p>VER 是 SOCKS 版本，这里应该是 0x05；</p></li><li><p>NMETHODS 是 METHODS 部分的长度；</p></li><li><p>METHODS 是客户端支持的认证方式列表，每个方法占 1 字节。当前的定义是：</p><ul><li>0x00 不需要认证</li><li>0x01 GSSAPI</li><li>0x02 用户名、密码认证</li><li>0x03 - 0x7F 由 IANA 分配（保留）</li><li>0x80 - 0xFE 为私人方法保留</li><li>0xFF 无可接受的方法</li></ul></li></ul><p><strong>服务器</strong>回复客户端可用方法：</p><table><thead><tr><th>VER</th><th>METHOD</th></tr></thead><tbody><tr><td>1</td><td>1</td></tr></tbody></table><ul><li>VER 是 SOCKS 版本，这里应该是 0x05；</li><li>METHOD 是服务端选中的方法。如果返回 0xFF 表示没有一个认证方法被选中，客户端需要关闭连接。</li></ul><p>代码实现：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-golang data-lang=golang><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ProtocolVersion</span> <span style=color:#66d9ef>struct</span> {
-    <span style=color:#a6e22e>VER</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>NMETHODS</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>METHODS</span> []<span style=color:#66d9ef>uint8</span>
-}
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>Socks5 | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>Socks5</h1><div class=post-meta><div>By on <time>January 01, 0001</time></div><div class=tags><a href=/tags/network-protocol/>network protocol</a></div></div></div></div></header></article><div class=article-post><p>SOCKS 是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递，SOCKS 是"SOCKetS"的缩写。
+SOCKS5 是 SOCKS4 的升级版，其主要多了鉴定、IPv6、UDP 支持。</p><p>SOCKS5 协议可以分为三个部分：</p><ul><li>(1) 协议版本及认证方式</li><li>(2) 根据认证方式执行对应的认证</li><li>(3) 请求信息</li></ul><h4 id=1协议版本及认证方式>（1）协议版本及认证方式</h4><p>创建与 SOCKS5 服务器的 TCP 连接后<strong>客户端</strong>需要先发送请求来协议版本及认证方式，</p><table><thead><tr><th>VER</th><th>NMETHODS</th><th>METHODS</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>1-255</td></tr></tbody></table><ul><li><p>VER 是 SOCKS 版本，这里应该是 0x05；</p></li><li><p>NMETHODS 是 METHODS 部分的长度；</p></li><li><p>METHODS 是客户端支持的认证方式列表，每个方法占 1 字节。当前的定义是：</p><ul><li>0x00 不需要认证</li><li>0x01 GSSAPI</li><li>0x02 用户名、密码认证</li><li>0x03 - 0x7F 由 IANA 分配（保留）</li><li>0x80 - 0xFE 为私人方法保留</li><li>0xFF 无可接受的方法</li></ul></li></ul><p><strong>服务器</strong>回复客户端可用方法：</p><table><thead><tr><th>VER</th><th>METHOD</th></tr></thead><tbody><tr><td>1</td><td>1</td></tr></tbody></table><ul><li>VER 是 SOCKS 版本，这里应该是 0x05；</li><li>METHOD 是服务端选中的方法。如果返回 0xFF 表示没有一个认证方法被选中，客户端需要关闭连接。</li></ul><p>代码实现：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-golang data-lang=golang><span class=kd>type</span> <span class=nx>ProtocolVersion</span> <span class=kd>struct</span> <span class=p>{</span>
+    <span class=nx>VER</span> <span class=kt>uint8</span>
+    <span class=nx>NMETHODS</span> <span class=kt>uint8</span>
+    <span class=nx>METHODS</span> <span class=p>[]</span><span class=kt>uint8</span>
+<span class=p>}</span>
 
 
-<span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>ProtocolVersion</span>) <span style=color:#a6e22e>handshake</span>(<span style=color:#a6e22e>conn</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>Conn</span>) <span style=color:#66d9ef>error</span> {
-    <span style=color:#a6e22e>b</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>255</span>)
-    <span style=color:#a6e22e>n</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>conn</span>.<span style=color:#a6e22e>Read</span>(<span style=color:#a6e22e>b</span>)
-    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
-    }
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>VER</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>0</span>] <span style=color:#75715e>//ReadByte reads and returns a single byte，第一个参数为socks的版本号
-</span><span style=color:#75715e></span>    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>NMETHODS</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>1</span>] <span style=color:#75715e>//nmethods是记录methods的长度的。nmethods的长度是1个字节
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>n</span> <span style=color:#f92672>!=</span> int(<span style=color:#ae81ff>2</span><span style=color:#f92672>+</span><span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>NMETHODS</span>) {
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;协议错误, sNMETHODS不对&#34;</span>)
-    }
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>METHODS</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>2</span>:<span style=color:#ae81ff>2</span><span style=color:#f92672>+</span><span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>NMETHODS</span>] <span style=color:#75715e>//读取指定长度信息，读取正好len(buf)长度的字节。如果字节数不是指定长度，则返回错误信息和正确的字节数
-</span><span style=color:#75715e></span>
-    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>VER</span> <span style=color:#f92672>!=</span> <span style=color:#ae81ff>5</span> {
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;该协议不是socks5协议&#34;</span>)
-    }
+<span class=kd>func</span> <span class=p>(</span><span class=nx>s</span> <span class=o>*</span><span class=nx>ProtocolVersion</span><span class=p>)</span> <span class=nf>handshake</span><span class=p>(</span><span class=nx>conn</span> <span class=nx>net</span><span class=p>.</span><span class=nx>Conn</span><span class=p>)</span> <span class=kt>error</span> <span class=p>{</span>
+    <span class=nx>b</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>([]</span><span class=kt>byte</span><span class=p>,</span> <span class=mi>255</span><span class=p>)</span>
+    <span class=nx>n</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>conn</span><span class=p>.</span><span class=nf>Read</span><span class=p>(</span><span class=nx>b</span><span class=p>)</span>
+    <span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+        <span class=nx>log</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span>
+        <span class=k>return</span> <span class=nx>err</span>
+    <span class=p>}</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>VER</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=c1>//ReadByte reads and returns a single byte，第一个参数为socks的版本号
+</span><span class=c1></span>    <span class=nx>s</span><span class=p>.</span><span class=nx>NMETHODS</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=c1>//nmethods是记录methods的长度的。nmethods的长度是1个字节
+</span><span class=c1></span>    <span class=k>if</span> <span class=nx>n</span> <span class=o>!=</span> <span class=nb>int</span><span class=p>(</span><span class=mi>2</span><span class=o>+</span><span class=nx>s</span><span class=p>.</span><span class=nx>NMETHODS</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=nx>errors</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=s>&#34;协议错误, sNMETHODS不对&#34;</span><span class=p>)</span>
+    <span class=p>}</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>METHODS</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>2</span><span class=p>:</span><span class=mi>2</span><span class=o>+</span><span class=nx>s</span><span class=p>.</span><span class=nx>NMETHODS</span><span class=p>]</span> <span class=c1>//读取指定长度信息，读取正好len(buf)长度的字节。如果字节数不是指定长度，则返回错误信息和正确的字节数
+</span><span class=c1></span>
+    <span class=k>if</span> <span class=nx>s</span><span class=p>.</span><span class=nx>VER</span> <span class=o>!=</span> <span class=mi>5</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=nx>errors</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=s>&#34;该协议不是socks5协议&#34;</span><span class=p>)</span>
+    <span class=p>}</span>
 
-    <span style=color:#75715e>//服务器回应客户端消息:
-</span><span style=color:#75715e></span>    <span style=color:#75715e>//第一个参数表示版本号为5，即socks5协议，
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 第二个参数表示服务端选中的认证方法，0即无需密码访问, 2表示需要用户名和密码进行验证。
-</span><span style=color:#75715e></span>    <span style=color:#a6e22e>resp</span> <span style=color:#f92672>:=</span>[]<span style=color:#66d9ef>byte</span>{<span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>0</span>}
-    <span style=color:#a6e22e>conn</span>.<span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>resp</span>)
-    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
-}
-</code></pre></div><h4 id=2根据认证方式执行对应的认证>（2）根据认证方式执行对应的认证</h4><p>SOCKS5 协议提供 5 种认证方式：</p><ul><li>0x00 不需要认证</li><li>0x01 GSSAPI</li><li>0x02 用户名、密码认证</li><li>0x03 - 0x7F 由 IANA 分配（保留）</li><li>0x80 - 0xFE 为私人方法保留</li></ul><p>这里就主要介绍用户名、密码认证。
-在客户端、服务端协商使用用户名密码认证后，客户端发出用户名密码：</p><table><thead><tr><th>鉴定协议版本</th><th>用户名长度</th><th>用户名</th><th>密码长度</th><th>密码</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>动态</td><td>1</td><td>动态</td></tr></tbody></table><p>服务器鉴定后发出如下回应：</p><table><thead><tr><th>鉴定协议版本</th><th>鉴定状态</th></tr></thead><tbody><tr><td>1</td><td>1</td></tr></tbody></table><p>其中鉴定状态 0x00 表示成功，0x01 表示失败。</p><p>代码实现：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-golang data-lang=golang><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Socks5Auth</span> <span style=color:#66d9ef>struct</span> {
-    <span style=color:#a6e22e>VER</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>ULEN</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>UNAME</span> <span style=color:#66d9ef>string</span>
-    <span style=color:#a6e22e>PLEN</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>PASSWD</span> <span style=color:#66d9ef>string</span>
-}
+    <span class=c1>//服务器回应客户端消息:
+</span><span class=c1></span>    <span class=c1>//第一个参数表示版本号为5，即socks5协议，
+</span><span class=c1></span>    <span class=c1>// 第二个参数表示服务端选中的认证方法，0即无需密码访问, 2表示需要用户名和密码进行验证。
+</span><span class=c1></span>    <span class=nx>resp</span> <span class=o>:=</span><span class=p>[]</span><span class=kt>byte</span><span class=p>{</span><span class=mi>5</span><span class=p>,</span> <span class=mi>0</span><span class=p>}</span>
+    <span class=nx>conn</span><span class=p>.</span><span class=nf>Write</span><span class=p>(</span><span class=nx>resp</span><span class=p>)</span>
+    <span class=k>return</span> <span class=kc>nil</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=2根据认证方式执行对应的认证>（2）根据认证方式执行对应的认证</h4><p>SOCKS5 协议提供 5 种认证方式：</p><ul><li>0x00 不需要认证</li><li>0x01 GSSAPI</li><li>0x02 用户名、密码认证</li><li>0x03 - 0x7F 由 IANA 分配（保留）</li><li>0x80 - 0xFE 为私人方法保留</li></ul><p>这里就主要介绍用户名、密码认证。
+在客户端、服务端协商使用用户名密码认证后，客户端发出用户名密码：</p><table><thead><tr><th>鉴定协议版本</th><th>用户名长度</th><th>用户名</th><th>密码长度</th><th>密码</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>动态</td><td>1</td><td>动态</td></tr></tbody></table><p>服务器鉴定后发出如下回应：</p><table><thead><tr><th>鉴定协议版本</th><th>鉴定状态</th></tr></thead><tbody><tr><td>1</td><td>1</td></tr></tbody></table><p>其中鉴定状态 0x00 表示成功，0x01 表示失败。</p><p>代码实现：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-golang data-lang=golang><span class=kd>type</span> <span class=nx>Socks5Auth</span> <span class=kd>struct</span> <span class=p>{</span>
+    <span class=nx>VER</span> <span class=kt>uint8</span>
+    <span class=nx>ULEN</span> <span class=kt>uint8</span>
+    <span class=nx>UNAME</span> <span class=kt>string</span>
+    <span class=nx>PLEN</span> <span class=kt>uint8</span>
+    <span class=nx>PASSWD</span> <span class=kt>string</span>
+<span class=p>}</span>
 
-<span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Socks5Auth</span>) <span style=color:#a6e22e>authenticate</span>(<span style=color:#a6e22e>conn</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>Conn</span>) <span style=color:#66d9ef>error</span> {
-    <span style=color:#a6e22e>b</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>128</span>)
-    <span style=color:#a6e22e>n</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>conn</span>.<span style=color:#a6e22e>Read</span>(<span style=color:#a6e22e>b</span>)
-    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span>{
-        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
-    }
+<span class=kd>func</span> <span class=p>(</span><span class=nx>s</span> <span class=o>*</span><span class=nx>Socks5Auth</span><span class=p>)</span> <span class=nf>authenticate</span><span class=p>(</span><span class=nx>conn</span> <span class=nx>net</span><span class=p>.</span><span class=nx>Conn</span><span class=p>)</span> <span class=kt>error</span> <span class=p>{</span>
+    <span class=nx>b</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>([]</span><span class=kt>byte</span><span class=p>,</span> <span class=mi>128</span><span class=p>)</span>
+    <span class=nx>n</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>conn</span><span class=p>.</span><span class=nf>Read</span><span class=p>(</span><span class=nx>b</span><span class=p>)</span>
+    <span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span><span class=p>{</span>
+        <span class=nx>log</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span>
+        <span class=k>return</span> <span class=nx>err</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>VER</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>0</span>]
-    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>VER</span> <span style=color:#f92672>!=</span> <span style=color:#ae81ff>5</span> {
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;该协议不是socks5协议&#34;</span>)
-    }
+    <span class=nx>s</span><span class=p>.</span><span class=nx>VER</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span>
+    <span class=k>if</span> <span class=nx>s</span><span class=p>.</span><span class=nx>VER</span> <span class=o>!=</span> <span class=mi>5</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=nx>errors</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=s>&#34;该协议不是socks5协议&#34;</span><span class=p>)</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>ULEN</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>1</span>]
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>UNAME</span> = string(<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>2</span>:<span style=color:#ae81ff>2</span><span style=color:#f92672>+</span><span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>ULEN</span>])
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>PLEN</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>2</span><span style=color:#f92672>+</span><span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>ULEN</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>]
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>PASSWD</span> = string(<span style=color:#a6e22e>b</span>[<span style=color:#a6e22e>n</span><span style=color:#f92672>-</span>int(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>PLEN</span>):<span style=color:#a6e22e>n</span>])
-    <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>UNAME</span>, <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>PASSWD</span>)
-    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>username</span> <span style=color:#f92672>!=</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>UNAME</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>passwd</span> <span style=color:#f92672>!=</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>PASSWD</span> {
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;账号密码错误&#34;</span>)
-    }
+    <span class=nx>s</span><span class=p>.</span><span class=nx>ULEN</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>UNAME</span> <span class=p>=</span> <span class=nb>string</span><span class=p>(</span><span class=nx>b</span><span class=p>[</span><span class=mi>2</span><span class=p>:</span><span class=mi>2</span><span class=o>+</span><span class=nx>s</span><span class=p>.</span><span class=nx>ULEN</span><span class=p>])</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>PLEN</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>2</span><span class=o>+</span><span class=nx>s</span><span class=p>.</span><span class=nx>ULEN</span><span class=o>+</span><span class=mi>1</span><span class=p>]</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>PASSWD</span> <span class=p>=</span> <span class=nb>string</span><span class=p>(</span><span class=nx>b</span><span class=p>[</span><span class=nx>n</span><span class=o>-</span><span class=nb>int</span><span class=p>(</span><span class=nx>s</span><span class=p>.</span><span class=nx>PLEN</span><span class=p>):</span><span class=nx>n</span><span class=p>])</span>
+    <span class=nx>log</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>s</span><span class=p>.</span><span class=nx>UNAME</span><span class=p>,</span> <span class=nx>s</span><span class=p>.</span><span class=nx>PASSWD</span><span class=p>)</span>
+    <span class=k>if</span> <span class=nx>username</span> <span class=o>!=</span> <span class=nx>s</span><span class=p>.</span><span class=nx>UNAME</span> <span class=o>||</span> <span class=nx>passwd</span> <span class=o>!=</span> <span class=nx>s</span><span class=p>.</span><span class=nx>PASSWD</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=nx>errors</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=s>&#34;账号密码错误&#34;</span><span class=p>)</span>
+    <span class=p>}</span>
 
-    <span style=color:#75715e>/**
-</span><span style=color:#75715e>    回应客户端,响应客户端连接成功
-</span><span style=color:#75715e>    The server verifies the supplied UNAME and PASSWD, and sends the
-</span><span style=color:#75715e>    following response:
-</span><span style=color:#75715e>                            +----+--------+
-</span><span style=color:#75715e>                            |VER | STATUS |
-</span><span style=color:#75715e>                            +----+--------+
-</span><span style=color:#75715e>                            | 1  |   1    |
-</span><span style=color:#75715e>                            +----+--------+
-</span><span style=color:#75715e>    A STATUS field of X&#39;00&#39; indicates success. If the server returns a
-</span><span style=color:#75715e>    `failure&#39; (STATUS value other than X&#39;00&#39;) status, it MUST close the
-</span><span style=color:#75715e>    connection.
-</span><span style=color:#75715e>    */</span>
-	<span style=color:#a6e22e>resp</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>byte</span>{<span style=color:#ae81ff>0x05</span>, <span style=color:#ae81ff>0x00</span>}
-    <span style=color:#a6e22e>conn</span>.<span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>resp</span>)
+    <span class=cm>/**
+</span><span class=cm>    回应客户端,响应客户端连接成功
+</span><span class=cm>    The server verifies the supplied UNAME and PASSWD, and sends the
+</span><span class=cm>    following response:
+</span><span class=cm>                            +----+--------+
+</span><span class=cm>                            |VER | STATUS |
+</span><span class=cm>                            +----+--------+
+</span><span class=cm>                            | 1  |   1    |
+</span><span class=cm>                            +----+--------+
+</span><span class=cm>    A STATUS field of X&#39;00&#39; indicates success. If the server returns a
+</span><span class=cm>    `failure&#39; (STATUS value other than X&#39;00&#39;) status, it MUST close the
+</span><span class=cm>    connection.
+</span><span class=cm>    */</span>
+	<span class=nx>resp</span> <span class=o>:=</span> <span class=p>[]</span><span class=kt>byte</span><span class=p>{</span><span class=mh>0x05</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>}</span>
+    <span class=nx>conn</span><span class=p>.</span><span class=nf>Write</span><span class=p>(</span><span class=nx>resp</span><span class=p>)</span>
 
-    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
-}
-</code></pre></div><p>但其实，现在大家都习惯自己采用加密流的方式进行加密，很少采用用户名密码的形式进行加密，后面章节会介绍一种对 SOCKS 的混淆加密方式。</p><h4 id=3请求信息>（3）请求信息</h4><p>认证结束后客户端就可以发送请求信息。如果认证方法有特殊封装要求，请求必须按照方法所定义的方式进行封装解密，其原始格式如下：</p><table><thead><tr><th>VER</th><th>CMD</th><th>RSV</th><th>ATYP</th><th>DST.ADDR</th><th>DST.PORT</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>0x00</td><td>1</td><td>动态</td><td>2</td></tr></tbody></table><ul><li>VER 是 SOCKS 版本，这里应该是 0x05；</li><li>CMD 是 SOCK 的命令码<ul><li>0x01 表示 CONNECT 请求</li><li>0x02 表示 BIND 请求</li><li>0x03 表示 UDP 转发</li></ul></li><li>RSV 0x00，保留</li><li>ATYP DST.ADDR 类型</li><li>DST.ADDR 目的地址<ul><li>0x01 IPv4 地址，DST.ADDR 部分 4 字节长度</li><li>0x03 域名，DST.ADDR 部分第一个字节为域名长度，DST.ADDR 剩余的内容为域名，没有\0 结尾。</li><li>0x04 IPv6 地址，16 个字节长度。</li></ul></li><li>DST.PORT 网络字节序表示的目的端口</li></ul><p>代码实现：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-golang data-lang=golang><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Socks5Resolution</span> <span style=color:#66d9ef>struct</span> {
-    <span style=color:#a6e22e>VER</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>CMD</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>RSV</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>ATYP</span> <span style=color:#66d9ef>uint8</span>
-    <span style=color:#a6e22e>DSTADDR</span> []<span style=color:#66d9ef>byte</span>
-    <span style=color:#a6e22e>DSTPORT</span> <span style=color:#66d9ef>uint16</span>
-    <span style=color:#a6e22e>DSTDOMAIN</span> <span style=color:#66d9ef>string</span>
-    <span style=color:#a6e22e>RAWADDR</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>TCPAddr</span>
-}
+    <span class=k>return</span> <span class=kc>nil</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>但其实，现在大家都习惯自己采用加密流的方式进行加密，很少采用用户名密码的形式进行加密，后面章节会介绍一种对 SOCKS 的混淆加密方式。</p><h4 id=3请求信息>（3）请求信息</h4><p>认证结束后客户端就可以发送请求信息。如果认证方法有特殊封装要求，请求必须按照方法所定义的方式进行封装解密，其原始格式如下：</p><table><thead><tr><th>VER</th><th>CMD</th><th>RSV</th><th>ATYP</th><th>DST.ADDR</th><th>DST.PORT</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>0x00</td><td>1</td><td>动态</td><td>2</td></tr></tbody></table><ul><li>VER 是 SOCKS 版本，这里应该是 0x05；</li><li>CMD 是 SOCK 的命令码<ul><li>0x01 表示 CONNECT 请求</li><li>0x02 表示 BIND 请求</li><li>0x03 表示 UDP 转发</li></ul></li><li>RSV 0x00，保留</li><li>ATYP DST.ADDR 类型</li><li>DST.ADDR 目的地址<ul><li>0x01 IPv4 地址，DST.ADDR 部分 4 字节长度</li><li>0x03 域名，DST.ADDR 部分第一个字节为域名长度，DST.ADDR 剩余的内容为域名，没有\0 结尾。</li><li>0x04 IPv6 地址，16 个字节长度。</li></ul></li><li>DST.PORT 网络字节序表示的目的端口</li></ul><p>代码实现：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-golang data-lang=golang><span class=kd>type</span> <span class=nx>Socks5Resolution</span> <span class=kd>struct</span> <span class=p>{</span>
+    <span class=nx>VER</span> <span class=kt>uint8</span>
+    <span class=nx>CMD</span> <span class=kt>uint8</span>
+    <span class=nx>RSV</span> <span class=kt>uint8</span>
+    <span class=nx>ATYP</span> <span class=kt>uint8</span>
+    <span class=nx>DSTADDR</span> <span class=p>[]</span><span class=kt>byte</span>
+    <span class=nx>DSTPORT</span> <span class=kt>uint16</span>
+    <span class=nx>DSTDOMAIN</span> <span class=kt>string</span>
+    <span class=nx>RAWADDR</span> <span class=o>*</span><span class=nx>net</span><span class=p>.</span><span class=nx>TCPAddr</span>
+<span class=p>}</span>
 
-<span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Socks5Resolution</span>) <span style=color:#a6e22e>lstRequest</span>(<span style=color:#a6e22e>conn</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>Conn</span>) <span style=color:#66d9ef>error</span> {
-    <span style=color:#a6e22e>b</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>byte</span>, <span style=color:#ae81ff>128</span>)
-    <span style=color:#a6e22e>n</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>conn</span>.<span style=color:#a6e22e>Read</span>(<span style=color:#a6e22e>b</span>)
-    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>n</span> &lt; <span style=color:#ae81ff>7</span> {
-        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>err</span>)
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;请求协议错误&#34;</span>)
-    }
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>VER</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>0</span>]
-    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>VER</span> <span style=color:#f92672>!=</span> <span style=color:#ae81ff>5</span> {
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;该协议不是socks5协议&#34;</span>)
-    }
+<span class=kd>func</span> <span class=p>(</span><span class=nx>s</span> <span class=o>*</span><span class=nx>Socks5Resolution</span><span class=p>)</span> <span class=nf>lstRequest</span><span class=p>(</span><span class=nx>conn</span> <span class=nx>net</span><span class=p>.</span><span class=nx>Conn</span><span class=p>)</span> <span class=kt>error</span> <span class=p>{</span>
+    <span class=nx>b</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>([]</span><span class=kt>byte</span><span class=p>,</span> <span class=mi>128</span><span class=p>)</span>
+    <span class=nx>n</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>conn</span><span class=p>.</span><span class=nf>Read</span><span class=p>(</span><span class=nx>b</span><span class=p>)</span>
+    <span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=o>||</span> <span class=nx>n</span> <span class=p>&lt;</span> <span class=mi>7</span> <span class=p>{</span>
+        <span class=nx>log</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span>
+        <span class=k>return</span> <span class=nx>errors</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=s>&#34;请求协议错误&#34;</span><span class=p>)</span>
+    <span class=p>}</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>VER</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span>
+    <span class=k>if</span> <span class=nx>s</span><span class=p>.</span><span class=nx>VER</span> <span class=o>!=</span> <span class=mi>5</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=nx>errors</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=s>&#34;该协议不是socks5协议&#34;</span><span class=p>)</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>CMD</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>1</span>]
-    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>CMD</span> <span style=color:#f92672>!=</span> <span style=color:#ae81ff>1</span> {
-        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;客户端请求类型不为代理连接, 其他功能暂时不支持.&#34;</span>)
-    }
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>RSV</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>2</span>] <span style=color:#75715e>//RSV保留字端，值长度为1个字节
-</span><span style=color:#75715e></span>
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>ATYP</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>3</span>]
+    <span class=nx>s</span><span class=p>.</span><span class=nx>CMD</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+    <span class=k>if</span> <span class=nx>s</span><span class=p>.</span><span class=nx>CMD</span> <span class=o>!=</span> <span class=mi>1</span> <span class=p>{</span>
+        <span class=k>return</span> <span class=nx>errors</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=s>&#34;客户端请求类型不为代理连接, 其他功能暂时不支持.&#34;</span><span class=p>)</span>
+    <span class=p>}</span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>RSV</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>2</span><span class=p>]</span> <span class=c1>//RSV保留字端，值长度为1个字节
+</span><span class=c1></span>
+    <span class=nx>s</span><span class=p>.</span><span class=nx>ATYP</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>3</span><span class=p>]</span>
 
-    <span style=color:#66d9ef>switch</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>ATYP</span> {
-    <span style=color:#66d9ef>case</span> <span style=color:#ae81ff>1</span>:
-        <span style=color:#75715e>//	IP V4 address: X&#39;01&#39;
-</span><span style=color:#75715e></span>        <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>DSTADDR</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>4</span> : <span style=color:#ae81ff>4</span><span style=color:#f92672>+</span><span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>IPv4len</span>]
-    <span style=color:#66d9ef>case</span> <span style=color:#ae81ff>3</span>:
-        <span style=color:#75715e>//	DOMAINNAME: X&#39;03&#39;
-</span><span style=color:#75715e></span>        <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>DSTDOMAIN</span> = string(<span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>5</span>:<span style=color:#a6e22e>n</span><span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>])
-        <span style=color:#a6e22e>ipAddr</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>ResolveIPAddr</span>(<span style=color:#e6db74>&#34;ip&#34;</span>, <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>DSTDOMAIN</span>)
-		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
-			<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
-		}
-        <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>DSTADDR</span> = <span style=color:#a6e22e>ipAddr</span>.<span style=color:#a6e22e>IP</span>
-    <span style=color:#66d9ef>case</span> <span style=color:#ae81ff>4</span>:
-        <span style=color:#75715e>//	IP V6 address: X&#39;04&#39;
-</span><span style=color:#75715e></span>        <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>DSTADDR</span> = <span style=color:#a6e22e>b</span>[<span style=color:#ae81ff>4</span> : <span style=color:#ae81ff>4</span><span style=color:#f92672>+</span><span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>IPv6len</span>]
-	<span style=color:#66d9ef>default</span>:
-		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;IP地址错误&#34;</span>)
-    }
+    <span class=k>switch</span> <span class=nx>s</span><span class=p>.</span><span class=nx>ATYP</span> <span class=p>{</span>
+    <span class=k>case</span> <span class=mi>1</span><span class=p>:</span>
+        <span class=c1>//	IP V4 address: X&#39;01&#39;
+</span><span class=c1></span>        <span class=nx>s</span><span class=p>.</span><span class=nx>DSTADDR</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>4</span> <span class=p>:</span> <span class=mi>4</span><span class=o>+</span><span class=nx>net</span><span class=p>.</span><span class=nx>IPv4len</span><span class=p>]</span>
+    <span class=k>case</span> <span class=mi>3</span><span class=p>:</span>
+        <span class=c1>//	DOMAINNAME: X&#39;03&#39;
+</span><span class=c1></span>        <span class=nx>s</span><span class=p>.</span><span class=nx>DSTDOMAIN</span> <span class=p>=</span> <span class=nb>string</span><span class=p>(</span><span class=nx>b</span><span class=p>[</span><span class=mi>5</span><span class=p>:</span><span class=nx>n</span><span class=o>-</span><span class=mi>2</span><span class=p>])</span>
+        <span class=nx>ipAddr</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>net</span><span class=p>.</span><span class=nf>ResolveIPAddr</span><span class=p>(</span><span class=s>&#34;ip&#34;</span><span class=p>,</span> <span class=nx>s</span><span class=p>.</span><span class=nx>DSTDOMAIN</span><span class=p>)</span>
+		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+			<span class=k>return</span> <span class=nx>err</span>
+		<span class=p>}</span>
+        <span class=nx>s</span><span class=p>.</span><span class=nx>DSTADDR</span> <span class=p>=</span> <span class=nx>ipAddr</span><span class=p>.</span><span class=nx>IP</span>
+    <span class=k>case</span> <span class=mi>4</span><span class=p>:</span>
+        <span class=c1>//	IP V6 address: X&#39;04&#39;
+</span><span class=c1></span>        <span class=nx>s</span><span class=p>.</span><span class=nx>DSTADDR</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=mi>4</span> <span class=p>:</span> <span class=mi>4</span><span class=o>+</span><span class=nx>net</span><span class=p>.</span><span class=nx>IPv6len</span><span class=p>]</span>
+	<span class=k>default</span><span class=p>:</span>
+		<span class=k>return</span> <span class=nx>errors</span><span class=p>.</span><span class=nf>New</span><span class=p>(</span><span class=s>&#34;IP地址错误&#34;</span><span class=p>)</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>DSTPORT</span> = <span style=color:#a6e22e>binary</span>.<span style=color:#a6e22e>BigEndian</span>.<span style=color:#a6e22e>Uint16</span>(<span style=color:#a6e22e>b</span>[<span style=color:#a6e22e>n</span><span style=color:#f92672>-</span><span style=color:#ae81ff>2</span>:<span style=color:#a6e22e>n</span>])
-    <span style=color:#75715e>// DSTADDR全部换成IP地址，可以防止DNS污染和封杀
-</span><span style=color:#75715e></span>    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>RAWADDR</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>TCPAddr</span>{
-		<span style=color:#a6e22e>IP</span>:   <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>DSTADDR</span>,
-		<span style=color:#a6e22e>Port</span>: int(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>DSTPORT</span>),
-    }
+    <span class=nx>s</span><span class=p>.</span><span class=nx>DSTPORT</span> <span class=p>=</span> <span class=nx>binary</span><span class=p>.</span><span class=nx>BigEndian</span><span class=p>.</span><span class=nf>Uint16</span><span class=p>(</span><span class=nx>b</span><span class=p>[</span><span class=nx>n</span><span class=o>-</span><span class=mi>2</span><span class=p>:</span><span class=nx>n</span><span class=p>])</span>
+    <span class=c1>// DSTADDR全部换成IP地址，可以防止DNS污染和封杀
+</span><span class=c1></span>    <span class=nx>s</span><span class=p>.</span><span class=nx>RAWADDR</span> <span class=p>=</span> <span class=o>&amp;</span><span class=nx>net</span><span class=p>.</span><span class=nx>TCPAddr</span><span class=p>{</span>
+		<span class=nx>IP</span><span class=p>:</span>   <span class=nx>s</span><span class=p>.</span><span class=nx>DSTADDR</span><span class=p>,</span>
+		<span class=nx>Port</span><span class=p>:</span> <span class=nb>int</span><span class=p>(</span><span class=nx>s</span><span class=p>.</span><span class=nx>DSTPORT</span><span class=p>),</span>
+    <span class=p>}</span>
 
-    <span style=color:#75715e>/**
-</span><span style=color:#75715e>    回应客户端,响应客户端连接成功
-</span><span style=color:#75715e>        +----+-----+-------+------+----------+----------+
-</span><span style=color:#75715e>        |VER | REP |  RSV  | ATYP | BND.ADDR | BND.PORT |
-</span><span style=color:#75715e>        +----+-----+-------+------+----------+----------+
-</span><span style=color:#75715e>        | 1  |  1  | X&#39;00&#39; |  1   | Variable |    2     |
-</span><span style=color:#75715e>        +----+-----+-------+------+----------+----------+
-</span><span style=color:#75715e>    */</span>
-	<span style=color:#a6e22e>resp</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>byte</span>{<span style=color:#ae81ff>0x05</span>, <span style=color:#ae81ff>0x00</span>, <span style=color:#ae81ff>0x00</span>, <span style=color:#ae81ff>0x01</span>, <span style=color:#ae81ff>0x00</span>, <span style=color:#ae81ff>0x00</span>, <span style=color:#ae81ff>0x00</span>, <span style=color:#ae81ff>0x00</span>, <span style=color:#ae81ff>0x00</span>, <span style=color:#ae81ff>0x00</span>}
-    <span style=color:#a6e22e>conn</span>.<span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>resp</span>)
+    <span class=cm>/**
+</span><span class=cm>    回应客户端,响应客户端连接成功
+</span><span class=cm>        +----+-----+-------+------+----------+----------+
+</span><span class=cm>        |VER | REP |  RSV  | ATYP | BND.ADDR | BND.PORT |
+</span><span class=cm>        +----+-----+-------+------+----------+----------+
+</span><span class=cm>        | 1  |  1  | X&#39;00&#39; |  1   | Variable |    2     |
+</span><span class=cm>        +----+-----+-------+------+----------+----------+
+</span><span class=cm>    */</span>
+	<span class=nx>resp</span> <span class=o>:=</span> <span class=p>[]</span><span class=kt>byte</span><span class=p>{</span><span class=mh>0x05</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x01</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>}</span>
+    <span class=nx>conn</span><span class=p>.</span><span class=nf>Write</span><span class=p>(</span><span class=nx>resp</span><span class=p>)</span>
 
-    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+    <span class=k>return</span> <span class=kc>nil</span>
 
 
-}
-</code></pre></div><h4 id=4最后将信息进行转发即可>（4）最后将信息进行转发即可</h4><p>代码实现:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-golang data-lang=golang>    <span style=color:#a6e22e>wg</span> <span style=color:#f92672>:=</span> new(<span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>WaitGroup</span>)
-    <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#ae81ff>2</span>)
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h4 id=4最后将信息进行转发即可>（4）最后将信息进行转发即可</h4><p>代码实现:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-golang data-lang=golang>    <span class=nx>wg</span> <span class=o>:=</span> <span class=nb>new</span><span class=p>(</span><span class=nx>sync</span><span class=p>.</span><span class=nx>WaitGroup</span><span class=p>)</span>
+    <span class=nx>wg</span><span class=p>.</span><span class=nf>Add</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span>
 
-    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
-		<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Done</span>()
-		<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>dstServer</span>.<span style=color:#a6e22e>Close</span>()
-        <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>dstServer</span>, <span style=color:#a6e22e>client</span>)
-    }()
+    <span class=k>go</span> <span class=kd>func</span><span class=p>()</span> <span class=p>{</span>
+		<span class=k>defer</span> <span class=nx>wg</span><span class=p>.</span><span class=nf>Done</span><span class=p>()</span>
+		<span class=k>defer</span> <span class=nx>dstServer</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+        <span class=nx>io</span><span class=p>.</span><span class=nf>Copy</span><span class=p>(</span><span class=nx>dstServer</span><span class=p>,</span> <span class=nx>client</span><span class=p>)</span>
+    <span class=p>}()</span>
 
-    <span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
-		<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Done</span>()
-        <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>Close</span>()
-        <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Copy</span>(<span style=color:#a6e22e>client</span>, <span style=color:#a6e22e>dstServer</span>)
-    }()
+    <span class=k>go</span> <span class=kd>func</span><span class=p>()</span> <span class=p>{</span>
+		<span class=k>defer</span> <span class=nx>wg</span><span class=p>.</span><span class=nf>Done</span><span class=p>()</span>
+        <span class=k>defer</span> <span class=nx>client</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+        <span class=nx>io</span><span class=p>.</span><span class=nf>Copy</span><span class=p>(</span><span class=nx>client</span><span class=p>,</span> <span class=nx>dstServer</span><span class=p>)</span>
+    <span class=p>}()</span>
 
-    <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Wait</span>()
-</code></pre></div></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+    <span class=nx>wg</span><span class=p>.</span><span class=nf>Wait</span><span class=p>()</span>
+</code></pre></td></tr></table></div></div></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/gudingdapei/ title="Previous post (older)"><span>Previous</span>
+固定搭配</a>
+<a rel=next href=/blog/ror_environment_config/ title="Next post (newer)"><span>Next</span>
+Rails ENV</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

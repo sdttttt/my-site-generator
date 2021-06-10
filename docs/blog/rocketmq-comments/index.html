@@ -1,56 +1,110 @@
-<!doctype html><html lang=zh-cn><title>RocketMQ 3.3.4 Broker | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/rocketmq-comments/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>RocketMQ 3.3.4 Broker</h1><time datetime=2020-10-13T16:56:11+08:00>October 13, 2020</time></header><p>差不多可以看消息队列的源码了。
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>RocketMQ 3.3.4 Broker | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>RocketMQ 3.3.4 Broker</h1><div class=post-meta><div>By sdttttt on <time>October 13, 2020</time></div><div class=tags><a href=/tags/java/>java</a></div></div></div></div></header></article><div class=article-post><p>差不多可以看消息队列的源码了。
 在下从gitee上找到了rocketmq的早期版本（3.2.2），
 坏消息是这个2014年的项目里没有单元测试极少, 调试会比较困难.
-好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。</p><p>我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：</p><p>先从初始化开始：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-Java data-lang=Java>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>static</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>main</span><span style=color:#f92672>(</span>String<span style=color:#f92672>[]</span> args<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-        start<span style=color:#f92672>(</span>createBrokerController<span style=color:#f92672>(</span>args<span style=color:#f92672>));</span>
-    <span style=color:#f92672>}</span>
-</code></pre></div><p>rocketmq是从<code>commandline</code>启动的，<code>createBrokerController</code>函数比较长，
-会有很多额外的逻辑干扰你，我这里直接说重点：</p><ul><li>读取环境变量，没有就用默认值。</li><li>解析命令行参数。</li><li>初始化配置类。</li><li>打印默认配置内容。</li><li>检查NameServer地址设置是否正确。</li><li>检查broker的类型（master，slave）</li><li>初始化日志配置类。</li><li>再次打印。</li><li>初始化服务控制对象.</li><li>最后增加一个关闭Broker时触发的hook.</li></ul><blockquote><p>服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。</p></blockquote><p>以上就是<code>createBrokerController</code>的内容，函数虽然长，但是并不复杂。</p><p>下面为<code>start</code>函数的内容, 在<code>main</code>中的<code>start</code>函数实际上是去委托了<code>BrokerController</code>去执行.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java>    <span style=color:#66d9ef>public</span> <span style=color:#66d9ef>void</span> <span style=color:#a6e22e>start</span><span style=color:#f92672>()</span> <span style=color:#66d9ef>throws</span> Exception <span style=color:#f92672>{</span>
+好消息是这个时候的RocketMQ还没开源多久，里面有很多中文注释。看起来会很舒服。</p><p>我们从Broker开始涂鸦。关于RocketMQ中每个角色的作用这里不再陈述：</p><p>先从初始化开始：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-Java data-lang=Java>    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>
+        <span class=n>start</span><span class=o>(</span><span class=n>createBrokerController</span><span class=o>(</span><span class=n>args</span><span class=o>));</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>rocketmq是从<code>commandline</code>启动的，<code>createBrokerController</code>函数比较长，
+会有很多额外的逻辑干扰你，我这里直接说重点：</p><ul><li>读取环境变量，没有就用默认值。</li><li>解析命令行参数。</li><li>初始化配置类。</li><li>打印默认配置内容。</li><li>检查NameServer地址设置是否正确。</li><li>检查broker的类型（master，slave）</li><li>初始化日志配置类。</li><li>再次打印。</li><li>初始化服务控制对象.</li><li>最后增加一个关闭Broker时触发的hook.</li></ul><blockquote><p>服务控制对象： Broker各个服务控制器，包括存储层配置，配置文件版本号，消费进度存储，Consumer连接、订阅关系管理等等。</p></blockquote><p>以上就是<code>createBrokerController</code>的内容，函数虽然长，但是并不复杂。</p><p>下面为<code>start</code>函数的内容, 在<code>main</code>中的<code>start</code>函数实际上是去委托了<code>BrokerController</code>去执行.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-java data-lang=java>    <span class=kd>public</span> <span class=kt>void</span> <span class=nf>start</span><span class=o>()</span> <span class=kd>throws</span> <span class=n>Exception</span> <span class=o>{</span>
 
-        <span style=color:#75715e>// 启动Broker的各层服务
-</span><span style=color:#75715e></span>
-        <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>messageStore</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-            <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>messageStore</span><span style=color:#f92672>.</span><span style=color:#a6e22e>start</span><span style=color:#f92672>();</span>
-        <span style=color:#f92672>}</span>
+        <span class=c1>// 启动Broker的各层服务
+</span><span class=c1></span>
+        <span class=k>if</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>messageStore</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>messageStore</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=o>}</span>
 
-        <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>remotingServer</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-            <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>remotingServer</span><span style=color:#f92672>.</span><span style=color:#a6e22e>start</span><span style=color:#f92672>();</span>
-        <span style=color:#f92672>}</span>
+        <span class=k>if</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>remotingServer</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>remotingServer</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=o>}</span>
 
-        <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>brokerOuterAPI</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-            <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>brokerOuterAPI</span><span style=color:#f92672>.</span><span style=color:#a6e22e>start</span><span style=color:#f92672>();</span>
-        <span style=color:#f92672>}</span>
+        <span class=k>if</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>brokerOuterAPI</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>brokerOuterAPI</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=o>}</span>
 
-        <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>pullRequestHoldService</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-            <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>pullRequestHoldService</span><span style=color:#f92672>.</span><span style=color:#a6e22e>start</span><span style=color:#f92672>();</span>
-        <span style=color:#f92672>}</span>
+        <span class=k>if</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>pullRequestHoldService</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>pullRequestHoldService</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=o>}</span>
 
-        <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>clientHousekeepingService</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-            <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>clientHousekeepingService</span><span style=color:#f92672>.</span><span style=color:#a6e22e>start</span><span style=color:#f92672>();</span>
-        <span style=color:#f92672>}</span>
+        <span class=k>if</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>clientHousekeepingService</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>clientHousekeepingService</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=o>}</span>
 
-        <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>filterServerManager</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-            <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>filterServerManager</span><span style=color:#f92672>.</span><span style=color:#a6e22e>start</span><span style=color:#f92672>();</span>
-        <span style=color:#f92672>}</span>
+        <span class=k>if</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>filterServerManager</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=k>this</span><span class=o>.</span><span class=na>filterServerManager</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=o>}</span>
 
-        <span style=color:#75715e>// 启动时，注册该Broker的信息到所有的NameServer
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>registerBrokerAll</span><span style=color:#f92672>(</span><span style=color:#66d9ef>true</span><span style=color:#f92672>);</span>
+        <span class=c1>// 启动时，注册该Broker的信息到所有的NameServer
+</span><span class=c1></span>        <span class=k>this</span><span class=o>.</span><span class=na>registerBrokerAll</span><span class=o>(</span><span class=kc>true</span><span class=o>);</span>
 
-        <span style=color:#75715e>// 定时注册Broker到Name Server
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>scheduledExecutorService</span><span style=color:#f92672>.</span><span style=color:#a6e22e>scheduleAtFixedRate</span><span style=color:#f92672>(()</span> <span style=color:#f92672>-&gt;</span> <span style=color:#f92672>{</span>
-            <span style=color:#66d9ef>try</span> <span style=color:#f92672>{</span>
-                <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>registerBrokerAll</span><span style=color:#f92672>(</span><span style=color:#66d9ef>true</span><span style=color:#f92672>);</span>
-            <span style=color:#f92672>}</span> <span style=color:#66d9ef>catch</span> <span style=color:#f92672>(</span>Exception e<span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-                log<span style=color:#f92672>.</span><span style=color:#a6e22e>error</span><span style=color:#f92672>(</span><span style=color:#e6db74>&#34;registerBrokerAll Exception&#34;</span><span style=color:#f92672>,</span> e<span style=color:#f92672>);</span>
-            <span style=color:#f92672>}</span>
-        <span style=color:#f92672>},</span> 1000 <span style=color:#f92672>*</span> 10<span style=color:#f92672>,</span> 1000 <span style=color:#f92672>*</span> 30<span style=color:#f92672>,</span> TimeUnit<span style=color:#f92672>.</span><span style=color:#a6e22e>MILLISECONDS</span><span style=color:#f92672>);</span>
+        <span class=c1>// 定时注册Broker到Name Server
+</span><span class=c1></span>        <span class=k>this</span><span class=o>.</span><span class=na>scheduledExecutorService</span><span class=o>.</span><span class=na>scheduleAtFixedRate</span><span class=o>(()</span> <span class=o>-&gt;</span> <span class=o>{</span>
+            <span class=k>try</span> <span class=o>{</span>
+                <span class=k>this</span><span class=o>.</span><span class=na>registerBrokerAll</span><span class=o>(</span><span class=kc>true</span><span class=o>);</span>
+            <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+                <span class=n>log</span><span class=o>.</span><span class=na>error</span><span class=o>(</span><span class=s>&#34;registerBrokerAll Exception&#34;</span><span class=o>,</span> <span class=n>e</span><span class=o>);</span>
+            <span class=o>}</span>
+        <span class=o>},</span> <span class=n>1000</span> <span class=o>*</span> <span class=n>10</span><span class=o>,</span> <span class=n>1000</span> <span class=o>*</span> <span class=n>30</span><span class=o>,</span> <span class=n>TimeUnit</span><span class=o>.</span><span class=na>MILLISECONDS</span><span class=o>);</span>
 
-        <span style=color:#66d9ef>if</span> <span style=color:#f92672>(</span><span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>brokerStatsManager</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>null</span><span style=color:#f92672>)</span> <span style=color:#f92672>{</span>
-            <span style=color:#75715e>// 看起来就是一些数据统计线程
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>brokerStatsManager</span><span style=color:#f92672>.</span><span style=color:#a6e22e>start</span><span style=color:#f92672>();</span>
-        <span style=color:#f92672>}</span>
+        <span class=k>if</span> <span class=o>(</span><span class=k>this</span><span class=o>.</span><span class=na>brokerStatsManager</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+            <span class=c1>// 看起来就是一些数据统计线程
+</span><span class=c1></span>            <span class=k>this</span><span class=o>.</span><span class=na>brokerStatsManager</span><span class=o>.</span><span class=na>start</span><span class=o>();</span>
+        <span class=o>}</span>
 
-        <span style=color:#75715e>// 删除多余的Topic
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>this</span><span style=color:#f92672>.</span><span style=color:#a6e22e>addDeleteTopicTask</span><span style=color:#f92672>();</span>
-    <span style=color:#f92672>}</span>
-</code></pre></div><p>整个Borker的流程差不多就是这样.代码里并没有什么亮点说实话.</p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+        <span class=c1>// 删除多余的Topic
+</span><span class=c1></span>        <span class=k>this</span><span class=o>.</span><span class=na>addDeleteTopicTask</span><span class=o>();</span>
+    <span class=o>}</span>
+</code></pre></td></tr></table></div></div><p>整个Borker的流程差不多就是这样.代码里并没有什么亮点说实话.</p></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/log-2/ title="Previous post (older)"><span>Previous</span>
+日志</a>
+<a rel=next href=/blog/log-3/ title="Next post (newer)"><span>Next</span>
+Log 3</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

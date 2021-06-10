@@ -1,507 +1,1016 @@
-<!doctype html><html lang=zh-cn><title>Appveyor | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/appveyor/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>Appveyor</h1></header><p>Appveyor 也是一款线上 CICD 工具。</p><p>Support Contexts:</p><ul><li>Windows (Default)</li><li>Ubuntu</li><li>MacOS</li></ul><p>Support Languages:</p><ul><li>Node.js</li><li>io.js</li><li>Xamarin</li><li>Python</li><li>Ruby</li><li>C++</li><li>Go</li></ul><h2 id=ruby>Ruby</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>
-<span style=color:#f92672>version</span>: <span style=color:#ae81ff>1.0</span><span style=color:#ae81ff>.{build}-{branch}</span>
-
-<span style=color:#f92672>skip_commits</span>:
-  <span style=color:#f92672>files</span>:
-    - <span style=color:#e6db74>&#39;azure-pipelines.yml&#39;</span>
-    - <span style=color:#e6db74>&#39;README.md&#39;</span>
-
-<span style=color:#f92672>install</span>:
-  - <span style=color:#ae81ff>set PATH=C:\Ruby26-x64\bin;%PATH%</span>
-  - <span style=color:#ae81ff>bundle install</span>
-
-<span style=color:#f92672>build</span>: <span style=color:#66d9ef>off</span>
-
-<span style=color:#f92672>before_test</span>:
-  - <span style=color:#ae81ff>ruby -v</span>
-  - <span style=color:#ae81ff>gem -v</span>
-  - <span style=color:#ae81ff>bundle -v</span>
-
-<span style=color:#f92672>test_script</span>:
-  - <span style=color:#ae81ff>rails db:migrate RAILS_ENV=test</span>
-
-</code></pre></div><h2 id=appveyoryml-reference>Appveyor.yml Reference</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml>
-<span style=color:#75715e># Notes:</span>
-<span style=color:#75715e>#   - Minimal appveyor.yml file is an empty file. All sections are optional.</span>
-<span style=color:#75715e>#   - Indent each level of configuration with 2 spaces. Do not use tabs!</span>
-<span style=color:#75715e>#   - All section names are case-sensitive.</span>
-<span style=color:#75715e>#   - Section names should be unique on each level.</span>
-
-<span style=color:#75715e>#---------------------------------#</span>
-<span style=color:#75715e>#      general configuration      #</span>
-<span style=color:#75715e>#---------------------------------#</span>
-
-<span style=color:#75715e># version format</span>
-<span style=color:#f92672>version</span>: <span style=color:#ae81ff>1.0</span><span style=color:#ae81ff>.{build}</span>
-
-<span style=color:#75715e># you can use {branch} name in version format too</span>
-<span style=color:#75715e># version: 1.0.{build}-{branch}</span>
-
-<span style=color:#75715e># branches to build</span>
-<span style=color:#f92672>branches</span>:
-  <span style=color:#75715e># whitelist</span>
-  <span style=color:#f92672>only</span>:
-    - <span style=color:#ae81ff>master</span>
-    - <span style=color:#ae81ff>production</span>
-
-  <span style=color:#75715e># blacklist</span>
-  <span style=color:#f92672>except</span>:
-    - <span style=color:#ae81ff>gh-pages</span>
-
-<span style=color:#75715e># Do not build on tags (GitHub, Bitbucket, GitLab, Gitea)</span>
-<span style=color:#f92672>skip_tags</span>: <span style=color:#66d9ef>true</span>
-
-<span style=color:#75715e># Start builds on tags only (GitHub, BitBucket, GitLab, Gitea)</span>
-<span style=color:#f92672>skip_non_tags</span>: <span style=color:#66d9ef>true</span>
-
-<span style=color:#75715e># Skipping commits with particular message or from specific user</span>
-<span style=color:#f92672>skip_commits</span>:
-  <span style=color:#f92672>message</span>: <span style=color:#ae81ff>/Created.*\.(png|jpg|jpeg|bmp|gif)/     </span> <span style=color:#75715e># Regex for matching commit message</span>
-  <span style=color:#f92672>author</span>: <span style=color:#ae81ff>John                                     </span> <span style=color:#75715e># Commit author&#39;s username, name, email or regexp maching one of these.</span>
-
-<span style=color:#75715e># Including commits with particular message or from specific user</span>
-<span style=color:#f92672>only_commits</span>:
-  <span style=color:#f92672>message</span>: <span style=color:#ae81ff>/build/               </span> <span style=color:#75715e># Start a new build if message contains &#39;build&#39;</span>
-  <span style=color:#f92672>author</span>: <span style=color:#ae81ff>jack@company.com       </span> <span style=color:#75715e># Start a new build for commit of user with email jack@company.com</span>
-
-<span style=color:#75715e># Skipping commits affecting specific files (GitHub only). More details here: /docs/appveyor-yml</span>
-<span style=color:#75715e>#skip_commits:</span>
-<span style=color:#75715e>#  files:</span>
-<span style=color:#75715e>#    - docs/*</span>
-<span style=color:#75715e>#    - &#39;**/*.html&#39;</span>
-
-<span style=color:#75715e># Including commits affecting specific files (GitHub only). More details here: /docs/appveyor-yml</span>
-<span style=color:#75715e>#only_commits:</span>
-<span style=color:#75715e>#  files:</span>
-<span style=color:#75715e>#    - Project-A/</span>
-<span style=color:#75715e>#    - Project-B/</span>
-
-<span style=color:#75715e># Do not build feature branch with open Pull Requests</span>
-<span style=color:#f92672>skip_branch_with_pr</span>: <span style=color:#66d9ef>true</span>
-
-<span style=color:#75715e># Maximum number of concurrent jobs for the project</span>
-<span style=color:#f92672>max_jobs</span>: <span style=color:#ae81ff>1</span>
-
-<span style=color:#75715e>#---------------------------------#</span>
-<span style=color:#75715e>#    environment configuration    #</span>
-<span style=color:#75715e>#---------------------------------#</span>
-
-<span style=color:#75715e># Build worker image (VM template)</span>
-<span style=color:#f92672>image</span>: <span style=color:#ae81ff>Visual Studio 2015</span>
-
-<span style=color:#75715e># scripts that are called at very beginning, before repo cloning</span>
-<span style=color:#f92672>init</span>:
-  - <span style=color:#ae81ff>git config --global core.autocrlf input</span>
-
-<span style=color:#75715e># clone directory</span>
-<span style=color:#f92672>clone_folder</span>: <span style=color:#ae81ff>c:\projects\myproject</span>
-
-<span style=color:#75715e># fetch repository as zip archive</span>
-<span style=color:#f92672>shallow_clone</span>: <span style=color:#66d9ef>true</span>                 <span style=color:#75715e># default is &#34;false&#34;</span>
-
-<span style=color:#75715e># set clone depth</span>
-<span style=color:#f92672>clone_depth</span>: <span style=color:#ae81ff>5</span>                      <span style=color:#75715e># clone entire repository history if not defined</span>
-
-<span style=color:#75715e># setting up etc\hosts file</span>
-<span style=color:#f92672>hosts</span>:
-  <span style=color:#f92672>queue-server</span>: <span style=color:#ae81ff>127.0.0.1</span>
-  <span style=color:#f92672>db.server.com</span>: <span style=color:#ae81ff>127.0.0.2</span>
-
-<span style=color:#75715e># environment variables</span>
-<span style=color:#f92672>environment</span>:
-  <span style=color:#f92672>my_var1</span>: <span style=color:#ae81ff>value1</span>
-  <span style=color:#f92672>my_var2</span>: <span style=color:#ae81ff>value2</span>
-  <span style=color:#75715e># this is how to set encrypted variable. Go to &#34;Settings&#34; -&gt; &#34;Encrypt YAML&#34; page in account menu to encrypt data.</span>
-  <span style=color:#f92672>my_secure_var1</span>:
-    <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>FW3tJ3fMncxvs58/ifSP7w==</span>
-
-<span style=color:#75715e># environment:</span>
-<span style=color:#75715e>#  global:</span>
-<span style=color:#75715e>#    connection_string: server=12;password=13;</span>
-<span style=color:#75715e>#    service_url: https://127.0.0.1:8090</span>
-<span style=color:#75715e>#</span>
-<span style=color:#75715e>#  matrix:</span>
-<span style=color:#75715e>#  - db: mysql</span>
-<span style=color:#75715e>#    provider: mysql</span>
-<span style=color:#75715e>#</span>
-<span style=color:#75715e>#  - db: mssql</span>
-<span style=color:#75715e>#    provider: mssql</span>
-<span style=color:#75715e>#    password:</span>
-<span style=color:#75715e>#      secure: $#(JFDA)jQ@#$</span>
-
-<span style=color:#75715e># this is how to allow failing jobs in the matrix</span>
-<span style=color:#f92672>matrix</span>:
-  <span style=color:#f92672>fast_finish</span>: <span style=color:#66d9ef>true</span>     <span style=color:#75715e># set this flag to immediately finish build once one of the jobs fails.</span>
-  <span style=color:#f92672>allow_failures</span>:
-    - <span style=color:#f92672>platform</span>: <span style=color:#ae81ff>x86</span>
-      <span style=color:#f92672>configuration</span>: <span style=color:#ae81ff>Debug</span>
-    - <span style=color:#f92672>platform</span>: <span style=color:#ae81ff>x64</span>
-      <span style=color:#f92672>configuration</span>: <span style=color:#ae81ff>Release</span>
-
-<span style=color:#75715e># exclude configuration from the matrix. Works similarly to &#39;allow_failures&#39; but build not even being started for excluded combination.</span>
-  <span style=color:#f92672>exclude</span>:
-    - <span style=color:#f92672>platform</span>: <span style=color:#ae81ff>x86</span>
-      <span style=color:#f92672>configuration</span>: <span style=color:#ae81ff>Debug</span>
-
-<span style=color:#75715e># build cache to preserve files/folders between builds</span>
-<span style=color:#f92672>cache</span>:
-  - <span style=color:#ae81ff>packages -&gt; **\packages.config </span> <span style=color:#75715e># preserve &#34;packages&#34; directory in the root of build folder but will reset it if packages.config is modified</span>
-  - <span style=color:#ae81ff>projectA\libs</span>
-  - <span style=color:#ae81ff>node_modules                   </span> <span style=color:#75715e># local npm modules</span>
-  - <span style=color:#e6db74>&#39;%LocalAppData%\NuGet\Cache&#39;</span>    <span style=color:#75715e># NuGet &lt; v3</span>
-  - <span style=color:#e6db74>&#39;%LocalAppData%\NuGet\v3-cache&#39;</span> <span style=color:#75715e># NuGet v3</span>
-
-<span style=color:#75715e># enable service required for build/tests</span>
-<span style=color:#f92672>services</span>:
-  - <span style=color:#ae81ff>mssql2014          </span> <span style=color:#75715e># start SQL Server 2014 Express</span>
-  - <span style=color:#ae81ff>mssql2014rs        </span> <span style=color:#75715e># start SQL Server 2014 Express and Reporting Services</span>
-  - <span style=color:#ae81ff>mssql2012sp1       </span> <span style=color:#75715e># start SQL Server 2012 SP1 Express</span>
-  - <span style=color:#ae81ff>mssql2012sp1rs     </span> <span style=color:#75715e># start SQL Server 2012 SP1 Express and Reporting Services</span>
-  - <span style=color:#ae81ff>mssql2008r2sp2     </span> <span style=color:#75715e># start SQL Server 2008 R2 SP2 Express</span>
-  - <span style=color:#ae81ff>mssql2008r2sp2rs   </span> <span style=color:#75715e># start SQL Server 2008 R2 SP2 Express and Reporting Services</span>
-  - <span style=color:#ae81ff>mysql              </span> <span style=color:#75715e># start MySQL 5.6 service</span>
-  - <span style=color:#ae81ff>postgresql         </span> <span style=color:#75715e># start PostgreSQL 9.5 service</span>
-  - <span style=color:#ae81ff>iis                </span> <span style=color:#75715e># start IIS</span>
-  - <span style=color:#ae81ff>msmq               </span> <span style=color:#75715e># start Queuing services</span>
-  - <span style=color:#ae81ff>mongodb            </span> <span style=color:#75715e># start MongoDB</span>
-
-<span style=color:#75715e># scripts that run after cloning repository</span>
-<span style=color:#f92672>install</span>:
-  <span style=color:#75715e># by default, all script lines are interpreted as batch</span>
-  - <span style=color:#ae81ff>echo This is batch</span>
-  <span style=color:#75715e># to run script as a PowerShell command prepend it with ps:</span>
-  - <span style=color:#f92672>ps</span>: <span style=color:#ae81ff>Write-Host &#39;This is PowerShell&#39;</span>
-  <span style=color:#75715e># batch commands start from cmd:</span>
-  - <span style=color:#f92672>cmd</span>: <span style=color:#ae81ff>echo This is batch again</span>
-  - <span style=color:#f92672>cmd</span>: <span style=color:#ae81ff>set MY_VAR=12345</span>
-
-<span style=color:#75715e># enable patching of AssemblyInfo.* files</span>
-<span style=color:#f92672>assembly_info</span>:
-  <span style=color:#f92672>patch</span>: <span style=color:#66d9ef>true</span>
-  <span style=color:#f92672>file</span>: <span style=color:#ae81ff>AssemblyInfo.*</span>
-  <span style=color:#f92672>assembly_version</span>: <span style=color:#e6db74>&#34;2.2.{build}&#34;</span>
-  <span style=color:#f92672>assembly_file_version</span>: <span style=color:#e6db74>&#34;{version}&#34;</span>
-  <span style=color:#f92672>assembly_informational_version</span>: <span style=color:#e6db74>&#34;{version}&#34;</span>
-
-
-<span style=color:#75715e># Automatically register private account and/or project AppVeyor NuGet feeds.</span>
-<span style=color:#f92672>nuget</span>:
-  <span style=color:#f92672>account_feed</span>: <span style=color:#66d9ef>true</span>
-  <span style=color:#f92672>project_feed</span>: <span style=color:#66d9ef>true</span>
-  <span style=color:#f92672>disable_publish_on_pr</span>: <span style=color:#66d9ef>true</span>     <span style=color:#75715e># disable publishing of .nupkg artifacts to account/project feeds for pull request builds</span>
-  <span style=color:#f92672>publish_wap_octopus</span>: <span style=color:#66d9ef>true</span>       <span style=color:#75715e># disable publishing of Octopus Deploy .nupkg artifacts to account/project feeds</span>
-
-<span style=color:#75715e>#---------------------------------#</span>
-<span style=color:#75715e>#       build configuration       #</span>
-<span style=color:#75715e>#---------------------------------#</span>
-
-<span style=color:#75715e># build platform, i.e. x86, x64, Any CPU. This setting is optional.</span>
-<span style=color:#f92672>platform</span>: <span style=color:#ae81ff>Any CPU</span>
-
-<span style=color:#75715e># to add several platforms to build matrix:</span>
-<span style=color:#75715e>#platform:</span>
-<span style=color:#75715e>#  - x86</span>
-<span style=color:#75715e>#  - Any CPU</span>
-
-<span style=color:#75715e># build Configuration, i.e. Debug, Release, etc.</span>
-<span style=color:#f92672>configuration</span>: <span style=color:#ae81ff>Release</span>
-
-<span style=color:#75715e># to add several configurations to build matrix:</span>
-<span style=color:#75715e>#configuration:</span>
-<span style=color:#75715e>#  - Debug</span>
-<span style=color:#75715e>#  - Release</span>
-
-<span style=color:#75715e># Build settings, not to be confused with &#34;before_build&#34; and &#34;after_build&#34;.</span>
-<span style=color:#75715e># &#34;project&#34; is relative to the original build directory and not influenced by directory changes in &#34;before_build&#34;.</span>
-<span style=color:#f92672>build</span>:
-  <span style=color:#f92672>parallel</span>: <span style=color:#66d9ef>true</span>                  <span style=color:#75715e># enable MSBuild parallel builds</span>
-  <span style=color:#f92672>project</span>: <span style=color:#ae81ff>MyTestAzureCS.sln     </span> <span style=color:#75715e># path to Visual Studio solution or project</span>
-  <span style=color:#f92672>publish_wap</span>: <span style=color:#66d9ef>true</span>               <span style=color:#75715e># package Web Application Projects (WAP) for Web Deploy</span>
-  <span style=color:#f92672>publish_wap_xcopy</span>: <span style=color:#66d9ef>true</span>         <span style=color:#75715e># package Web Application Projects (WAP) for XCopy deployment</span>
-  <span style=color:#f92672>publish_wap_beanstalk</span>: <span style=color:#66d9ef>true</span>     <span style=color:#75715e># Package Web Applications for AWS Elastic Beanstalk deployment</span>
-  <span style=color:#f92672>publish_wap_octopus</span>: <span style=color:#66d9ef>true</span>       <span style=color:#75715e># Package Web Applications for Octopus deployment</span>
-  <span style=color:#f92672>publish_azure_webjob</span>: <span style=color:#66d9ef>true</span>      <span style=color:#75715e># Package Azure WebJobs for Zip Push deployment</span>
-  <span style=color:#f92672>publish_azure</span>: <span style=color:#66d9ef>true</span>             <span style=color:#75715e># package Azure Cloud Service projects and push to artifacts</span>
-  <span style=color:#f92672>publish_aspnet_core</span>: <span style=color:#66d9ef>true</span>       <span style=color:#75715e># Package ASP.NET Core projects</span>
-  <span style=color:#f92672>publish_core_console</span>: <span style=color:#66d9ef>true</span>      <span style=color:#75715e># Package .NET Core console projects</span>
-  <span style=color:#f92672>publish_nuget</span>: <span style=color:#66d9ef>true</span>             <span style=color:#75715e># package projects with .nuspec files and push to artifacts</span>
-  <span style=color:#f92672>publish_nuget_symbols</span>: <span style=color:#66d9ef>true</span>     <span style=color:#75715e># generate and publish NuGet symbol packages</span>
-  <span style=color:#f92672>include_nuget_references</span>: <span style=color:#66d9ef>true</span>  <span style=color:#75715e># add -IncludeReferencedProjects option while packaging NuGet artifacts</span>
-
-  <span style=color:#75715e># MSBuild verbosity level</span>
-  <span style=color:#f92672>verbosity</span>: <span style=color:#ae81ff>quiet|minimal|normal|detailed</span>
-
-
-<span style=color:#75715e># scripts to run before build</span>
-<span style=color:#f92672>before_build</span>:
-
-<span style=color:#75715e># to run your custom scripts instead of automatic MSBuild</span>
-<span style=color:#f92672>build_script</span>:
-
-<span style=color:#75715e># scripts to run after build (working directory and environment changes are persisted from the previous steps)</span>
-<span style=color:#f92672>after_build</span>:
-
-<span style=color:#75715e># scripts to run *after* solution is built and *before* automatic packaging occurs (web apps, NuGet packages, Azure Cloud Services)</span>
-<span style=color:#f92672>before_package</span>:
-
-<span style=color:#75715e># to disable automatic builds</span>
-<span style=color:#75715e>#build: off</span>
-
-<span style=color:#75715e>#---------------------------------#</span>
-<span style=color:#75715e>#       tests configuration       #</span>
-<span style=color:#75715e>#---------------------------------#</span>
-
-<span style=color:#75715e># to run tests against only selected assemblies and/or categories</span>
-<span style=color:#f92672>test</span>:
-  <span style=color:#f92672>assemblies</span>:
-    <span style=color:#f92672>only</span>:
-      - <span style=color:#ae81ff>asm1.dll</span>
-      - <span style=color:#ae81ff>asm2.dll</span>
-
-  <span style=color:#f92672>categories</span>:
-    <span style=color:#f92672>only</span>:
-      - <span style=color:#ae81ff>UI</span>
-      - <span style=color:#ae81ff>E2E</span>
-
-<span style=color:#75715e># to run tests against all except selected assemblies and/or categories</span>
-<span style=color:#75715e>#test:</span>
-<span style=color:#75715e>#  assemblies:</span>
-<span style=color:#75715e>#    except:</span>
-<span style=color:#75715e>#      - asm1.dll</span>
-<span style=color:#75715e>#      - asm2.dll</span>
-<span style=color:#75715e>#</span>
-<span style=color:#75715e>#  categories:</span>
-<span style=color:#75715e>#    except:</span>
-<span style=color:#75715e>#      - UI</span>
-<span style=color:#75715e>#      - E2E</span>
-
-<span style=color:#75715e># to run tests from different categories as separate jobs in parallel</span>
-<span style=color:#75715e>#test:</span>
-<span style=color:#75715e>#  categories:</span>
-<span style=color:#75715e>#    - A            # A category common for all jobs</span>
-<span style=color:#75715e>#    - [UI]         # 1st job</span>
-<span style=color:#75715e>#    - [DAL, BL]    # 2nd job</span>
-
-<span style=color:#75715e># scripts to run before tests (working directory and environment changes are persisted from the previous steps such as &#34;before_build&#34;)</span>
-<span style=color:#f92672>before_test</span>:
-  - <span style=color:#ae81ff>echo script1</span>
-  - <span style=color:#f92672>ps</span>: <span style=color:#ae81ff>Write-Host &#34;script1&#34;</span>
-
-<span style=color:#75715e># to run your custom scripts instead of automatic tests</span>
-<span style=color:#f92672>test_script</span>:
-  - <span style=color:#ae81ff>echo This is my custom test script</span>
-
-<span style=color:#75715e># scripts to run after tests</span>
-<span style=color:#f92672>after_test</span>:
-
-<span style=color:#75715e># to disable automatic tests</span>
-<span style=color:#75715e>#test: off</span>
-
-
-<span style=color:#75715e>#---------------------------------#</span>
-<span style=color:#75715e>#      artifacts configuration    #</span>
-<span style=color:#75715e>#---------------------------------#</span>
-
-<span style=color:#f92672>artifacts</span>:
-
-  <span style=color:#75715e># pushing a single file</span>
-  - <span style=color:#f92672>path</span>: <span style=color:#ae81ff>test.zip</span>
-
-  <span style=color:#75715e># pushing a single file with environment variable in path and &#34;Deployment name&#34; specified</span>
-  - <span style=color:#f92672>path</span>: <span style=color:#ae81ff>MyProject\bin\$(configuration)</span>
-    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>myapp</span>
-
-  <span style=color:#75715e># pushing entire folder as a zip archive</span>
-  - <span style=color:#f92672>path</span>: <span style=color:#ae81ff>logs</span>
-
-  <span style=color:#75715e># pushing all *.nupkg files in build directory recursively</span>
-  - <span style=color:#f92672>path</span>: <span style=color:#e6db74>&#39;**\*.nupkg&#39;</span>
-
-
-<span style=color:#75715e>#---------------------------------#</span>
-<span style=color:#75715e>#     deployment configuration    #</span>
-<span style=color:#75715e>#---------------------------------#</span>
-
-<span style=color:#75715e># providers: Local, FTP, WebDeploy, AzureCS, AzureBlob, S3, NuGet, Environment</span>
-<span style=color:#75715e># provider names are case-sensitive!</span>
-<span style=color:#f92672>deploy</span>:
-
-    <span style=color:#75715e># FTP deployment provider settings</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>FTP</span>
-    <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>ftp|ftps|sftp</span>
-    <span style=color:#f92672>host</span>: <span style=color:#ae81ff>ftp.myserver.com</span>
-    <span style=color:#f92672>username</span>: <span style=color:#ae81ff>admin</span>
-    <span style=color:#f92672>password</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>eYKZKFkkEvFYWX6NfjZIVw==</span>
-    <span style=color:#f92672>folder</span>:
-    <span style=color:#f92672>application</span>:
-    <span style=color:#f92672>active_mode</span>: <span style=color:#66d9ef>false</span>
-    <span style=color:#f92672>beta</span>: <span style=color:#66d9ef>true</span>      <span style=color:#75715e># enable alternative FTP library for &#39;ftp&#39; and &#39;ftps&#39; modes</span>
-    <span style=color:#f92672>debug</span>: <span style=color:#66d9ef>true</span>     <span style=color:#75715e># show complete FTP log</span>
-
-    <span style=color:#75715e># Amazon S3 deployment provider settings</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>S3</span>
-    <span style=color:#f92672>access_key_id</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>ABcd==</span>
-    <span style=color:#f92672>secret_access_key</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>ABcd==</span>
-    <span style=color:#f92672>bucket</span>: <span style=color:#ae81ff>my_bucket</span>
-    <span style=color:#f92672>folder</span>:
-    <span style=color:#f92672>artifact</span>:
-    <span style=color:#f92672>set_public</span>: <span style=color:#66d9ef>false</span>
-
-    <span style=color:#75715e># Azure Blob storage deployment provider settings</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>AzureBlob</span>
-    <span style=color:#f92672>storage_account_name</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>ABcd==</span>
-    <span style=color:#f92672>storage_access_key</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>ABcd==</span>
-    <span style=color:#f92672>container</span>: <span style=color:#ae81ff>my_container</span>
-    <span style=color:#f92672>folder</span>:
-    <span style=color:#f92672>artifact</span>:
-
-    <span style=color:#75715e># Web Deploy deployment provider settings</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>WebDeploy</span>
-    <span style=color:#f92672>server</span>: <span style=color:#ae81ff>http://www.deploy.com/myendpoint</span>
-    <span style=color:#f92672>website</span>: <span style=color:#ae81ff>mywebsite</span>
-    <span style=color:#f92672>username</span>: <span style=color:#ae81ff>user</span>
-    <span style=color:#f92672>password</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>eYKZKFkkEvFYWX6NfjZIVw==</span>
-    <span style=color:#f92672>ntlm</span>: <span style=color:#66d9ef>false</span>
-    <span style=color:#f92672>remove_files</span>: <span style=color:#66d9ef>false</span>
-    <span style=color:#f92672>app_offline</span>: <span style=color:#66d9ef>false</span>
-    <span style=color:#f92672>do_not_use_checksum</span>: <span style=color:#66d9ef>true</span>           <span style=color:#75715e># do not use check sum for comparing source and destination files. By default checksums are used.</span>
-    <span style=color:#f92672>sync_retry_attempts</span>: <span style=color:#ae81ff>2</span>              <span style=color:#75715e># sync attempts, max</span>
-    <span style=color:#f92672>sync_retry_interval</span>: <span style=color:#ae81ff>2000</span>           <span style=color:#75715e># timeout between sync attempts, milliseconds</span>
-    <span style=color:#f92672>aspnet_core</span>: <span style=color:#66d9ef>true</span>                   <span style=color:#75715e># artifact zip contains ASP.NET Core application</span>
-    <span style=color:#f92672>aspnet_core_force_restart</span>: <span style=color:#66d9ef>true</span>     <span style=color:#75715e># poke app&#39;s web.config before deploy to force application restart</span>
-    <span style=color:#f92672>skip_dirs</span>: <span style=color:#ae81ff>\\App_Data</span>
-    <span style=color:#f92672>skip_files</span>: <span style=color:#ae81ff>web.config</span>
-    <span style=color:#f92672>on</span>:
-      <span style=color:#f92672>branch</span>: <span style=color:#ae81ff>release</span>
-      <span style=color:#f92672>platform</span>: <span style=color:#ae81ff>x86</span>
-      <span style=color:#f92672>configuration</span>: <span style=color:#ae81ff>debug</span>
-
-    <span style=color:#75715e># Deploying to Azure Cloud Service</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>AzureCS</span>
-    <span style=color:#f92672>subscription_id</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>fjZIVw==</span>
-    <span style=color:#f92672>subscription_certificate</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>eYKZKFkkEv...FYWX6NfjZIVw==</span>
-    <span style=color:#f92672>storage_account_name</span>: <span style=color:#ae81ff>my_storage</span>
-    <span style=color:#f92672>storage_access_key</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>ABcd==</span>
-    <span style=color:#f92672>service</span>: <span style=color:#ae81ff>my_service</span>
-    <span style=color:#f92672>slot</span>: <span style=color:#ae81ff>Production</span>
-    <span style=color:#f92672>target_profile</span>: <span style=color:#ae81ff>Cloud</span>
-    <span style=color:#f92672>artifact</span>: <span style=color:#ae81ff>MyPackage.cspkg</span>
-
-    <span style=color:#75715e># Deploying to NuGet feed</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>NuGet</span>
-    <span style=color:#f92672>server</span>: <span style=color:#ae81ff>https://my.nuget.server/feed</span>
-    <span style=color:#f92672>api_key</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>FYWX6NfjZIVw==</span>
-    <span style=color:#f92672>skip_symbols</span>: <span style=color:#66d9ef>false</span>
-    <span style=color:#f92672>symbol_server</span>: <span style=color:#ae81ff>https://your.symbol.server/feed</span>
-    <span style=color:#f92672>artifact</span>: <span style=color:#ae81ff>MyPackage.nupkg</span>
-
-    <span style=color:#75715e># Deploy to GitHub Releases</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>GitHub</span>
-    <span style=color:#f92672>artifact</span>: <span style=color:#ae81ff>/.*\.nupkg/          </span> <span style=color:#75715e># upload all NuGet packages to release assets</span>
-    <span style=color:#f92672>draft</span>: <span style=color:#66d9ef>false</span>
-    <span style=color:#f92672>prerelease</span>: <span style=color:#66d9ef>false</span>
-    <span style=color:#f92672>on</span>:
-      <span style=color:#f92672>branch</span>: <span style=color:#ae81ff>master               </span> <span style=color:#75715e># release from master branch only</span>
-      <span style=color:#f92672>APPVEYOR_REPO_TAG</span>: <span style=color:#66d9ef>true</span>       <span style=color:#75715e># deploy on tag push only</span>
-
-    <span style=color:#75715e># Deploying to a named environment</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>Environment</span>
-    <span style=color:#f92672>name</span>: <span style=color:#ae81ff>staging</span>
-    <span style=color:#f92672>on</span>:
-      <span style=color:#f92672>branch</span>: <span style=color:#ae81ff>staging</span>
-      <span style=color:#f92672>env_var1</span>: <span style=color:#ae81ff>value1</span>
-      <span style=color:#f92672>env_var2</span>: <span style=color:#ae81ff>value2</span>
-
-<span style=color:#75715e># scripts to run before deployment</span>
-<span style=color:#f92672>before_deploy</span>:
-
-<span style=color:#75715e># scripts to run after deployment</span>
-<span style=color:#f92672>after_deploy</span>:
-
-<span style=color:#75715e># to run your custom scripts instead of provider deployments</span>
-<span style=color:#f92672>deploy_script</span>:
-
-<span style=color:#75715e># to disable deployment</span>
-<span style=color:#75715e>#deploy: off</span>
-
-<span style=color:#75715e>#---------------------------------#</span>
-<span style=color:#75715e>#        global handlers          #</span>
-<span style=color:#75715e>#---------------------------------#</span>
-
-<span style=color:#75715e># on successful build</span>
-<span style=color:#f92672>on_success</span>:
-  - <span style=color:#ae81ff>do something</span>
-
-<span style=color:#75715e># on build failure</span>
-<span style=color:#f92672>on_failure</span>:
-  - <span style=color:#ae81ff>do something</span>
-
-<span style=color:#75715e># after build failure or success</span>
-<span style=color:#f92672>on_finish</span>:
-  - <span style=color:#ae81ff>do something</span>
-
-
-<span style=color:#75715e>#---------------------------------#</span>
-<span style=color:#75715e>#         notifications           #</span>
-<span style=color:#75715e>#---------------------------------#</span>
-
-<span style=color:#f92672>notifications</span>:
-
-  <span style=color:#75715e># Email</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>Email</span>
-    <span style=color:#f92672>to</span>:
-      - <span style=color:#ae81ff>user1@email.com</span>
-      - <span style=color:#ae81ff>user2@email.com</span>
-    <span style=color:#f92672>subject</span>: <span style=color:#e6db74>&#39;Build {{status}}&#39;</span>                  <span style=color:#75715e># optional</span>
-    <span style=color:#f92672>message</span>: <span style=color:#e6db74>&#34;{{message}}, {{commitId}}, ...&#34;</span>    <span style=color:#75715e># optional</span>
-    <span style=color:#f92672>on_build_status_changed</span>: <span style=color:#66d9ef>true</span>
-
-  <span style=color:#75715e># HipChat</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>HipChat</span>
-    <span style=color:#f92672>auth_token</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>RbOnSMSFKYzxzFRrxM1+XA==</span>
-    <span style=color:#f92672>room</span>: <span style=color:#ae81ff>ProjectA</span>
-    <span style=color:#f92672>template</span>: <span style=color:#e6db74>&#34;{message}, {commitId}, ...&#34;</span>
-
-  <span style=color:#75715e># Slack</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>Slack</span>
-    <span style=color:#f92672>incoming_webhook</span>: <span style=color:#ae81ff>http://incoming-webhook-url</span>
-
-  <span style=color:#75715e># ...or using auth token</span>
-
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>Slack</span>
-    <span style=color:#f92672>auth_token</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>kBl9BlxvRMr9liHmnBs14A==</span>
-    <span style=color:#f92672>channel</span>: <span style=color:#ae81ff>development</span>
-    <span style=color:#f92672>template</span>: <span style=color:#e6db74>&#34;{message}, {commitId}, ...&#34;</span>
-
-  <span style=color:#75715e># Campfire</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>Campfire</span>
-    <span style=color:#f92672>account</span>: <span style=color:#ae81ff>appveyor</span>
-    <span style=color:#f92672>auth_token</span>:
-      <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>RifLRG8Vfyol+sNhj9u2JA==</span>
-    <span style=color:#f92672>room</span>: <span style=color:#ae81ff>ProjectA</span>
-    <span style=color:#f92672>template</span>: <span style=color:#e6db74>&#34;{message}, {commitId}, ...&#34;</span>
-
-  <span style=color:#75715e># Webhook</span>
-  - <span style=color:#f92672>provider</span>: <span style=color:#ae81ff>Webhook</span>
-    <span style=color:#f92672>url</span>: <span style=color:#ae81ff>http://www.myhook2.com</span>
-    <span style=color:#f92672>headers</span>:
-      <span style=color:#f92672>User-Agent</span>: <span style=color:#ae81ff>myapp 1.0</span>
-      <span style=color:#f92672>Authorization</span>:
-        <span style=color:#f92672>secure</span>: <span style=color:#ae81ff>GhD+5xhLz/tkYY6AO3fcfQ==</span>
-    <span style=color:#f92672>on_build_success</span>: <span style=color:#66d9ef>false</span>
-    <span style=color:#f92672>on_build_failure</span>: <span style=color:#66d9ef>true</span>
-    <span style=color:#f92672>on_build_status_changed</span>: <span style=color:#66d9ef>true</span>
-
-</code></pre></div></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>Appveyor | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>Appveyor</h1><div class=post-meta><div>By on <time>January 01, 0001</time></div><div class=tags><a href=/tags/cicd/>CICD</a></div></div></div></div></header></article><div class=article-post><p>Appveyor 也是一款线上 CICD 工具。</p><p>Support Contexts:</p><ul><li>Windows (Default)</li><li>Ubuntu</li><li>MacOS</li></ul><p>Support Languages:</p><ul><li>Node.js</li><li>io.js</li><li>Xamarin</li><li>Python</li><li>Ruby</li><li>C++</li><li>Go</li></ul><h2 id=ruby>Ruby</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=w>
+</span><span class=w></span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>1.0</span><span class=l>.{build}-{branch}</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>skip_commits</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>files</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=s1>&#39;azure-pipelines.yml&#39;</span><span class=w>
+</span><span class=w>    </span>- <span class=s1>&#39;README.md&#39;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>install</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>set PATH=C:\Ruby26-x64\bin;%PATH%</span><span class=w>
+</span><span class=w>  </span>- <span class=l>bundle install</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>build</span><span class=p>:</span><span class=w> </span><span class=kc>off</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>before_test</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>ruby -v</span><span class=w>
+</span><span class=w>  </span>- <span class=l>gem -v</span><span class=w>
+</span><span class=w>  </span>- <span class=l>bundle -v</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>test_script</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>rails db:migrate RAILS_ENV=test</span><span class=w>
+</span><span class=w>
+</span></code></pre></td></tr></table></div></div><h2 id=appveyoryml-reference>Appveyor.yml Reference</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span><span class=lnt>171
+</span><span class=lnt>172
+</span><span class=lnt>173
+</span><span class=lnt>174
+</span><span class=lnt>175
+</span><span class=lnt>176
+</span><span class=lnt>177
+</span><span class=lnt>178
+</span><span class=lnt>179
+</span><span class=lnt>180
+</span><span class=lnt>181
+</span><span class=lnt>182
+</span><span class=lnt>183
+</span><span class=lnt>184
+</span><span class=lnt>185
+</span><span class=lnt>186
+</span><span class=lnt>187
+</span><span class=lnt>188
+</span><span class=lnt>189
+</span><span class=lnt>190
+</span><span class=lnt>191
+</span><span class=lnt>192
+</span><span class=lnt>193
+</span><span class=lnt>194
+</span><span class=lnt>195
+</span><span class=lnt>196
+</span><span class=lnt>197
+</span><span class=lnt>198
+</span><span class=lnt>199
+</span><span class=lnt>200
+</span><span class=lnt>201
+</span><span class=lnt>202
+</span><span class=lnt>203
+</span><span class=lnt>204
+</span><span class=lnt>205
+</span><span class=lnt>206
+</span><span class=lnt>207
+</span><span class=lnt>208
+</span><span class=lnt>209
+</span><span class=lnt>210
+</span><span class=lnt>211
+</span><span class=lnt>212
+</span><span class=lnt>213
+</span><span class=lnt>214
+</span><span class=lnt>215
+</span><span class=lnt>216
+</span><span class=lnt>217
+</span><span class=lnt>218
+</span><span class=lnt>219
+</span><span class=lnt>220
+</span><span class=lnt>221
+</span><span class=lnt>222
+</span><span class=lnt>223
+</span><span class=lnt>224
+</span><span class=lnt>225
+</span><span class=lnt>226
+</span><span class=lnt>227
+</span><span class=lnt>228
+</span><span class=lnt>229
+</span><span class=lnt>230
+</span><span class=lnt>231
+</span><span class=lnt>232
+</span><span class=lnt>233
+</span><span class=lnt>234
+</span><span class=lnt>235
+</span><span class=lnt>236
+</span><span class=lnt>237
+</span><span class=lnt>238
+</span><span class=lnt>239
+</span><span class=lnt>240
+</span><span class=lnt>241
+</span><span class=lnt>242
+</span><span class=lnt>243
+</span><span class=lnt>244
+</span><span class=lnt>245
+</span><span class=lnt>246
+</span><span class=lnt>247
+</span><span class=lnt>248
+</span><span class=lnt>249
+</span><span class=lnt>250
+</span><span class=lnt>251
+</span><span class=lnt>252
+</span><span class=lnt>253
+</span><span class=lnt>254
+</span><span class=lnt>255
+</span><span class=lnt>256
+</span><span class=lnt>257
+</span><span class=lnt>258
+</span><span class=lnt>259
+</span><span class=lnt>260
+</span><span class=lnt>261
+</span><span class=lnt>262
+</span><span class=lnt>263
+</span><span class=lnt>264
+</span><span class=lnt>265
+</span><span class=lnt>266
+</span><span class=lnt>267
+</span><span class=lnt>268
+</span><span class=lnt>269
+</span><span class=lnt>270
+</span><span class=lnt>271
+</span><span class=lnt>272
+</span><span class=lnt>273
+</span><span class=lnt>274
+</span><span class=lnt>275
+</span><span class=lnt>276
+</span><span class=lnt>277
+</span><span class=lnt>278
+</span><span class=lnt>279
+</span><span class=lnt>280
+</span><span class=lnt>281
+</span><span class=lnt>282
+</span><span class=lnt>283
+</span><span class=lnt>284
+</span><span class=lnt>285
+</span><span class=lnt>286
+</span><span class=lnt>287
+</span><span class=lnt>288
+</span><span class=lnt>289
+</span><span class=lnt>290
+</span><span class=lnt>291
+</span><span class=lnt>292
+</span><span class=lnt>293
+</span><span class=lnt>294
+</span><span class=lnt>295
+</span><span class=lnt>296
+</span><span class=lnt>297
+</span><span class=lnt>298
+</span><span class=lnt>299
+</span><span class=lnt>300
+</span><span class=lnt>301
+</span><span class=lnt>302
+</span><span class=lnt>303
+</span><span class=lnt>304
+</span><span class=lnt>305
+</span><span class=lnt>306
+</span><span class=lnt>307
+</span><span class=lnt>308
+</span><span class=lnt>309
+</span><span class=lnt>310
+</span><span class=lnt>311
+</span><span class=lnt>312
+</span><span class=lnt>313
+</span><span class=lnt>314
+</span><span class=lnt>315
+</span><span class=lnt>316
+</span><span class=lnt>317
+</span><span class=lnt>318
+</span><span class=lnt>319
+</span><span class=lnt>320
+</span><span class=lnt>321
+</span><span class=lnt>322
+</span><span class=lnt>323
+</span><span class=lnt>324
+</span><span class=lnt>325
+</span><span class=lnt>326
+</span><span class=lnt>327
+</span><span class=lnt>328
+</span><span class=lnt>329
+</span><span class=lnt>330
+</span><span class=lnt>331
+</span><span class=lnt>332
+</span><span class=lnt>333
+</span><span class=lnt>334
+</span><span class=lnt>335
+</span><span class=lnt>336
+</span><span class=lnt>337
+</span><span class=lnt>338
+</span><span class=lnt>339
+</span><span class=lnt>340
+</span><span class=lnt>341
+</span><span class=lnt>342
+</span><span class=lnt>343
+</span><span class=lnt>344
+</span><span class=lnt>345
+</span><span class=lnt>346
+</span><span class=lnt>347
+</span><span class=lnt>348
+</span><span class=lnt>349
+</span><span class=lnt>350
+</span><span class=lnt>351
+</span><span class=lnt>352
+</span><span class=lnt>353
+</span><span class=lnt>354
+</span><span class=lnt>355
+</span><span class=lnt>356
+</span><span class=lnt>357
+</span><span class=lnt>358
+</span><span class=lnt>359
+</span><span class=lnt>360
+</span><span class=lnt>361
+</span><span class=lnt>362
+</span><span class=lnt>363
+</span><span class=lnt>364
+</span><span class=lnt>365
+</span><span class=lnt>366
+</span><span class=lnt>367
+</span><span class=lnt>368
+</span><span class=lnt>369
+</span><span class=lnt>370
+</span><span class=lnt>371
+</span><span class=lnt>372
+</span><span class=lnt>373
+</span><span class=lnt>374
+</span><span class=lnt>375
+</span><span class=lnt>376
+</span><span class=lnt>377
+</span><span class=lnt>378
+</span><span class=lnt>379
+</span><span class=lnt>380
+</span><span class=lnt>381
+</span><span class=lnt>382
+</span><span class=lnt>383
+</span><span class=lnt>384
+</span><span class=lnt>385
+</span><span class=lnt>386
+</span><span class=lnt>387
+</span><span class=lnt>388
+</span><span class=lnt>389
+</span><span class=lnt>390
+</span><span class=lnt>391
+</span><span class=lnt>392
+</span><span class=lnt>393
+</span><span class=lnt>394
+</span><span class=lnt>395
+</span><span class=lnt>396
+</span><span class=lnt>397
+</span><span class=lnt>398
+</span><span class=lnt>399
+</span><span class=lnt>400
+</span><span class=lnt>401
+</span><span class=lnt>402
+</span><span class=lnt>403
+</span><span class=lnt>404
+</span><span class=lnt>405
+</span><span class=lnt>406
+</span><span class=lnt>407
+</span><span class=lnt>408
+</span><span class=lnt>409
+</span><span class=lnt>410
+</span><span class=lnt>411
+</span><span class=lnt>412
+</span><span class=lnt>413
+</span><span class=lnt>414
+</span><span class=lnt>415
+</span><span class=lnt>416
+</span><span class=lnt>417
+</span><span class=lnt>418
+</span><span class=lnt>419
+</span><span class=lnt>420
+</span><span class=lnt>421
+</span><span class=lnt>422
+</span><span class=lnt>423
+</span><span class=lnt>424
+</span><span class=lnt>425
+</span><span class=lnt>426
+</span><span class=lnt>427
+</span><span class=lnt>428
+</span><span class=lnt>429
+</span><span class=lnt>430
+</span><span class=lnt>431
+</span><span class=lnt>432
+</span><span class=lnt>433
+</span><span class=lnt>434
+</span><span class=lnt>435
+</span><span class=lnt>436
+</span><span class=lnt>437
+</span><span class=lnt>438
+</span><span class=lnt>439
+</span><span class=lnt>440
+</span><span class=lnt>441
+</span><span class=lnt>442
+</span><span class=lnt>443
+</span><span class=lnt>444
+</span><span class=lnt>445
+</span><span class=lnt>446
+</span><span class=lnt>447
+</span><span class=lnt>448
+</span><span class=lnt>449
+</span><span class=lnt>450
+</span><span class=lnt>451
+</span><span class=lnt>452
+</span><span class=lnt>453
+</span><span class=lnt>454
+</span><span class=lnt>455
+</span><span class=lnt>456
+</span><span class=lnt>457
+</span><span class=lnt>458
+</span><span class=lnt>459
+</span><span class=lnt>460
+</span><span class=lnt>461
+</span><span class=lnt>462
+</span><span class=lnt>463
+</span><span class=lnt>464
+</span><span class=lnt>465
+</span><span class=lnt>466
+</span><span class=lnt>467
+</span><span class=lnt>468
+</span><span class=lnt>469
+</span><span class=lnt>470
+</span><span class=lnt>471
+</span><span class=lnt>472
+</span><span class=lnt>473
+</span><span class=lnt>474
+</span><span class=lnt>475
+</span><span class=lnt>476
+</span><span class=lnt>477
+</span><span class=lnt>478
+</span><span class=lnt>479
+</span><span class=lnt>480
+</span><span class=lnt>481
+</span><span class=lnt>482
+</span><span class=lnt>483
+</span><span class=lnt>484
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yml data-lang=yml><span class=w>
+</span><span class=w></span><span class=c># Notes:</span><span class=w>
+</span><span class=w></span><span class=c>#   - Minimal appveyor.yml file is an empty file. All sections are optional.</span><span class=w>
+</span><span class=w></span><span class=c>#   - Indent each level of configuration with 2 spaces. Do not use tabs!</span><span class=w>
+</span><span class=w></span><span class=c>#   - All section names are case-sensitive.</span><span class=w>
+</span><span class=w></span><span class=c>#   - Section names should be unique on each level.</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w></span><span class=c>#      general configuration      #</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># version format</span><span class=w>
+</span><span class=w></span><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>1.0</span><span class=l>.{build}</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># you can use {branch} name in version format too</span><span class=w>
+</span><span class=w></span><span class=c># version: 1.0.{build}-{branch}</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># branches to build</span><span class=w>
+</span><span class=w></span><span class=nt>branches</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=c># whitelist</span><span class=w>
+</span><span class=w>  </span><span class=nt>only</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>master</span><span class=w>
+</span><span class=w>    </span>- <span class=l>production</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># blacklist</span><span class=w>
+</span><span class=w>  </span><span class=nt>except</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=l>gh-pages</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Do not build on tags (GitHub, Bitbucket, GitLab, Gitea)</span><span class=w>
+</span><span class=w></span><span class=nt>skip_tags</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Start builds on tags only (GitHub, BitBucket, GitLab, Gitea)</span><span class=w>
+</span><span class=w></span><span class=nt>skip_non_tags</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Skipping commits with particular message or from specific user</span><span class=w>
+</span><span class=w></span><span class=nt>skip_commits</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>message</span><span class=p>:</span><span class=w> </span><span class=l>/Created.*\.(png|jpg|jpeg|bmp|gif)/     </span><span class=w> </span><span class=c># Regex for matching commit message</span><span class=w>
+</span><span class=w>  </span><span class=nt>author</span><span class=p>:</span><span class=w> </span><span class=l>John                                     </span><span class=w> </span><span class=c># Commit author&#39;s username, name, email or regexp maching one of these.</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Including commits with particular message or from specific user</span><span class=w>
+</span><span class=w></span><span class=nt>only_commits</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>message</span><span class=p>:</span><span class=w> </span><span class=l>/build/               </span><span class=w> </span><span class=c># Start a new build if message contains &#39;build&#39;</span><span class=w>
+</span><span class=w>  </span><span class=nt>author</span><span class=p>:</span><span class=w> </span><span class=l>jack@company.com       </span><span class=w> </span><span class=c># Start a new build for commit of user with email jack@company.com</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Skipping commits affecting specific files (GitHub only). More details here: /docs/appveyor-yml</span><span class=w>
+</span><span class=w></span><span class=c>#skip_commits:</span><span class=w>
+</span><span class=w></span><span class=c>#  files:</span><span class=w>
+</span><span class=w></span><span class=c>#    - docs/*</span><span class=w>
+</span><span class=w></span><span class=c>#    - &#39;**/*.html&#39;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Including commits affecting specific files (GitHub only). More details here: /docs/appveyor-yml</span><span class=w>
+</span><span class=w></span><span class=c>#only_commits:</span><span class=w>
+</span><span class=w></span><span class=c>#  files:</span><span class=w>
+</span><span class=w></span><span class=c>#    - Project-A/</span><span class=w>
+</span><span class=w></span><span class=c>#    - Project-B/</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Do not build feature branch with open Pull Requests</span><span class=w>
+</span><span class=w></span><span class=nt>skip_branch_with_pr</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Maximum number of concurrent jobs for the project</span><span class=w>
+</span><span class=w></span><span class=nt>max_jobs</span><span class=p>:</span><span class=w> </span><span class=m>1</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w></span><span class=c>#    environment configuration    #</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Build worker image (VM template)</span><span class=w>
+</span><span class=w></span><span class=nt>image</span><span class=p>:</span><span class=w> </span><span class=l>Visual Studio 2015</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts that are called at very beginning, before repo cloning</span><span class=w>
+</span><span class=w></span><span class=nt>init</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>git config --global core.autocrlf input</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># clone directory</span><span class=w>
+</span><span class=w></span><span class=nt>clone_folder</span><span class=p>:</span><span class=w> </span><span class=l>c:\projects\myproject</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># fetch repository as zip archive</span><span class=w>
+</span><span class=w></span><span class=nt>shallow_clone</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>                 </span><span class=c># default is &#34;false&#34;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># set clone depth</span><span class=w>
+</span><span class=w></span><span class=nt>clone_depth</span><span class=p>:</span><span class=w> </span><span class=m>5</span><span class=w>                      </span><span class=c># clone entire repository history if not defined</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># setting up etc\hosts file</span><span class=w>
+</span><span class=w></span><span class=nt>hosts</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>queue-server</span><span class=p>:</span><span class=w> </span><span class=m>127.0.0.1</span><span class=w>
+</span><span class=w>  </span><span class=nt>db.server.com</span><span class=p>:</span><span class=w> </span><span class=m>127.0.0.2</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># environment variables</span><span class=w>
+</span><span class=w></span><span class=nt>environment</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>my_var1</span><span class=p>:</span><span class=w> </span><span class=l>value1</span><span class=w>
+</span><span class=w>  </span><span class=nt>my_var2</span><span class=p>:</span><span class=w> </span><span class=l>value2</span><span class=w>
+</span><span class=w>  </span><span class=c># this is how to set encrypted variable. Go to &#34;Settings&#34; -&gt; &#34;Encrypt YAML&#34; page in account menu to encrypt data.</span><span class=w>
+</span><span class=w>  </span><span class=nt>my_secure_var1</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>FW3tJ3fMncxvs58/ifSP7w==</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># environment:</span><span class=w>
+</span><span class=w></span><span class=c>#  global:</span><span class=w>
+</span><span class=w></span><span class=c>#    connection_string: server=12;password=13;</span><span class=w>
+</span><span class=w></span><span class=c>#    service_url: https://127.0.0.1:8090</span><span class=w>
+</span><span class=w></span><span class=c>#</span><span class=w>
+</span><span class=w></span><span class=c>#  matrix:</span><span class=w>
+</span><span class=w></span><span class=c>#  - db: mysql</span><span class=w>
+</span><span class=w></span><span class=c>#    provider: mysql</span><span class=w>
+</span><span class=w></span><span class=c>#</span><span class=w>
+</span><span class=w></span><span class=c>#  - db: mssql</span><span class=w>
+</span><span class=w></span><span class=c>#    provider: mssql</span><span class=w>
+</span><span class=w></span><span class=c>#    password:</span><span class=w>
+</span><span class=w></span><span class=c>#      secure: $#(JFDA)jQ@#$</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># this is how to allow failing jobs in the matrix</span><span class=w>
+</span><span class=w></span><span class=nt>matrix</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>fast_finish</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>     </span><span class=c># set this flag to immediately finish build once one of the jobs fails.</span><span class=w>
+</span><span class=w>  </span><span class=nt>allow_failures</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>platform</span><span class=p>:</span><span class=w> </span><span class=l>x86</span><span class=w>
+</span><span class=w>      </span><span class=nt>configuration</span><span class=p>:</span><span class=w> </span><span class=l>Debug</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>platform</span><span class=p>:</span><span class=w> </span><span class=l>x64</span><span class=w>
+</span><span class=w>      </span><span class=nt>configuration</span><span class=p>:</span><span class=w> </span><span class=l>Release</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># exclude configuration from the matrix. Works similarly to &#39;allow_failures&#39; but build not even being started for excluded combination.</span><span class=w>
+</span><span class=w>  </span><span class=nt>exclude</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>platform</span><span class=p>:</span><span class=w> </span><span class=l>x86</span><span class=w>
+</span><span class=w>      </span><span class=nt>configuration</span><span class=p>:</span><span class=w> </span><span class=l>Debug</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># build cache to preserve files/folders between builds</span><span class=w>
+</span><span class=w></span><span class=nt>cache</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>packages -&gt; **\packages.config </span><span class=w> </span><span class=c># preserve &#34;packages&#34; directory in the root of build folder but will reset it if packages.config is modified</span><span class=w>
+</span><span class=w>  </span>- <span class=l>projectA\libs</span><span class=w>
+</span><span class=w>  </span>- <span class=l>node_modules                   </span><span class=w> </span><span class=c># local npm modules</span><span class=w>
+</span><span class=w>  </span>- <span class=s1>&#39;%LocalAppData%\NuGet\Cache&#39;</span><span class=w>    </span><span class=c># NuGet &lt; v3</span><span class=w>
+</span><span class=w>  </span>- <span class=s1>&#39;%LocalAppData%\NuGet\v3-cache&#39;</span><span class=w> </span><span class=c># NuGet v3</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># enable service required for build/tests</span><span class=w>
+</span><span class=w></span><span class=nt>services</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mssql2014          </span><span class=w> </span><span class=c># start SQL Server 2014 Express</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mssql2014rs        </span><span class=w> </span><span class=c># start SQL Server 2014 Express and Reporting Services</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mssql2012sp1       </span><span class=w> </span><span class=c># start SQL Server 2012 SP1 Express</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mssql2012sp1rs     </span><span class=w> </span><span class=c># start SQL Server 2012 SP1 Express and Reporting Services</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mssql2008r2sp2     </span><span class=w> </span><span class=c># start SQL Server 2008 R2 SP2 Express</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mssql2008r2sp2rs   </span><span class=w> </span><span class=c># start SQL Server 2008 R2 SP2 Express and Reporting Services</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mysql              </span><span class=w> </span><span class=c># start MySQL 5.6 service</span><span class=w>
+</span><span class=w>  </span>- <span class=l>postgresql         </span><span class=w> </span><span class=c># start PostgreSQL 9.5 service</span><span class=w>
+</span><span class=w>  </span>- <span class=l>iis                </span><span class=w> </span><span class=c># start IIS</span><span class=w>
+</span><span class=w>  </span>- <span class=l>msmq               </span><span class=w> </span><span class=c># start Queuing services</span><span class=w>
+</span><span class=w>  </span>- <span class=l>mongodb            </span><span class=w> </span><span class=c># start MongoDB</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts that run after cloning repository</span><span class=w>
+</span><span class=w></span><span class=nt>install</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=c># by default, all script lines are interpreted as batch</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo This is batch</span><span class=w>
+</span><span class=w>  </span><span class=c># to run script as a PowerShell command prepend it with ps:</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>ps</span><span class=p>:</span><span class=w> </span><span class=l>Write-Host &#39;This is PowerShell&#39;</span><span class=w>
+</span><span class=w>  </span><span class=c># batch commands start from cmd:</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>cmd</span><span class=p>:</span><span class=w> </span><span class=l>echo This is batch again</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>cmd</span><span class=p>:</span><span class=w> </span><span class=l>set MY_VAR=12345</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># enable patching of AssemblyInfo.* files</span><span class=w>
+</span><span class=w></span><span class=nt>assembly_info</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>patch</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>  </span><span class=nt>file</span><span class=p>:</span><span class=w> </span><span class=l>AssemblyInfo.*</span><span class=w>
+</span><span class=w>  </span><span class=nt>assembly_version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;2.2.{build}&#34;</span><span class=w>
+</span><span class=w>  </span><span class=nt>assembly_file_version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;{version}&#34;</span><span class=w>
+</span><span class=w>  </span><span class=nt>assembly_informational_version</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;{version}&#34;</span><span class=w>
+</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Automatically register private account and/or project AppVeyor NuGet feeds.</span><span class=w>
+</span><span class=w></span><span class=nt>nuget</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>account_feed</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>  </span><span class=nt>project_feed</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>  </span><span class=nt>disable_publish_on_pr</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>     </span><span class=c># disable publishing of .nupkg artifacts to account/project feeds for pull request builds</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_wap_octopus</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>       </span><span class=c># disable publishing of Octopus Deploy .nupkg artifacts to account/project feeds</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w></span><span class=c>#       build configuration       #</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># build platform, i.e. x86, x64, Any CPU. This setting is optional.</span><span class=w>
+</span><span class=w></span><span class=nt>platform</span><span class=p>:</span><span class=w> </span><span class=l>Any CPU</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to add several platforms to build matrix:</span><span class=w>
+</span><span class=w></span><span class=c>#platform:</span><span class=w>
+</span><span class=w></span><span class=c>#  - x86</span><span class=w>
+</span><span class=w></span><span class=c>#  - Any CPU</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># build Configuration, i.e. Debug, Release, etc.</span><span class=w>
+</span><span class=w></span><span class=nt>configuration</span><span class=p>:</span><span class=w> </span><span class=l>Release</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to add several configurations to build matrix:</span><span class=w>
+</span><span class=w></span><span class=c>#configuration:</span><span class=w>
+</span><span class=w></span><span class=c>#  - Debug</span><span class=w>
+</span><span class=w></span><span class=c>#  - Release</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Build settings, not to be confused with &#34;before_build&#34; and &#34;after_build&#34;.</span><span class=w>
+</span><span class=w></span><span class=c># &#34;project&#34; is relative to the original build directory and not influenced by directory changes in &#34;before_build&#34;.</span><span class=w>
+</span><span class=w></span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>parallel</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>                  </span><span class=c># enable MSBuild parallel builds</span><span class=w>
+</span><span class=w>  </span><span class=nt>project</span><span class=p>:</span><span class=w> </span><span class=l>MyTestAzureCS.sln     </span><span class=w> </span><span class=c># path to Visual Studio solution or project</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_wap</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>               </span><span class=c># package Web Application Projects (WAP) for Web Deploy</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_wap_xcopy</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>         </span><span class=c># package Web Application Projects (WAP) for XCopy deployment</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_wap_beanstalk</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>     </span><span class=c># Package Web Applications for AWS Elastic Beanstalk deployment</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_wap_octopus</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>       </span><span class=c># Package Web Applications for Octopus deployment</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_azure_webjob</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>      </span><span class=c># Package Azure WebJobs for Zip Push deployment</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_azure</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>             </span><span class=c># package Azure Cloud Service projects and push to artifacts</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_aspnet_core</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>       </span><span class=c># Package ASP.NET Core projects</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_core_console</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>      </span><span class=c># Package .NET Core console projects</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_nuget</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>             </span><span class=c># package projects with .nuspec files and push to artifacts</span><span class=w>
+</span><span class=w>  </span><span class=nt>publish_nuget_symbols</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>     </span><span class=c># generate and publish NuGet symbol packages</span><span class=w>
+</span><span class=w>  </span><span class=nt>include_nuget_references</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>  </span><span class=c># add -IncludeReferencedProjects option while packaging NuGet artifacts</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># MSBuild verbosity level</span><span class=w>
+</span><span class=w>  </span><span class=nt>verbosity</span><span class=p>:</span><span class=w> </span><span class=l>quiet|minimal|normal|detailed</span><span class=w>
+</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts to run before build</span><span class=w>
+</span><span class=w></span><span class=nt>before_build</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to run your custom scripts instead of automatic MSBuild</span><span class=w>
+</span><span class=w></span><span class=nt>build_script</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts to run after build (working directory and environment changes are persisted from the previous steps)</span><span class=w>
+</span><span class=w></span><span class=nt>after_build</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts to run *after* solution is built and *before* automatic packaging occurs (web apps, NuGet packages, Azure Cloud Services)</span><span class=w>
+</span><span class=w></span><span class=nt>before_package</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to disable automatic builds</span><span class=w>
+</span><span class=w></span><span class=c>#build: off</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w></span><span class=c>#       tests configuration       #</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to run tests against only selected assemblies and/or categories</span><span class=w>
+</span><span class=w></span><span class=nt>test</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>assemblies</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>only</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=l>asm1.dll</span><span class=w>
+</span><span class=w>      </span>- <span class=l>asm2.dll</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=nt>categories</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>only</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=l>UI</span><span class=w>
+</span><span class=w>      </span>- <span class=l>E2E</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to run tests against all except selected assemblies and/or categories</span><span class=w>
+</span><span class=w></span><span class=c>#test:</span><span class=w>
+</span><span class=w></span><span class=c>#  assemblies:</span><span class=w>
+</span><span class=w></span><span class=c>#    except:</span><span class=w>
+</span><span class=w></span><span class=c>#      - asm1.dll</span><span class=w>
+</span><span class=w></span><span class=c>#      - asm2.dll</span><span class=w>
+</span><span class=w></span><span class=c>#</span><span class=w>
+</span><span class=w></span><span class=c>#  categories:</span><span class=w>
+</span><span class=w></span><span class=c>#    except:</span><span class=w>
+</span><span class=w></span><span class=c>#      - UI</span><span class=w>
+</span><span class=w></span><span class=c>#      - E2E</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to run tests from different categories as separate jobs in parallel</span><span class=w>
+</span><span class=w></span><span class=c>#test:</span><span class=w>
+</span><span class=w></span><span class=c>#  categories:</span><span class=w>
+</span><span class=w></span><span class=c>#    - A            # A category common for all jobs</span><span class=w>
+</span><span class=w></span><span class=c>#    - [UI]         # 1st job</span><span class=w>
+</span><span class=w></span><span class=c>#    - [DAL, BL]    # 2nd job</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts to run before tests (working directory and environment changes are persisted from the previous steps such as &#34;before_build&#34;)</span><span class=w>
+</span><span class=w></span><span class=nt>before_test</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo script1</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>ps</span><span class=p>:</span><span class=w> </span><span class=l>Write-Host &#34;script1&#34;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to run your custom scripts instead of automatic tests</span><span class=w>
+</span><span class=w></span><span class=nt>test_script</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>echo This is my custom test script</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts to run after tests</span><span class=w>
+</span><span class=w></span><span class=nt>after_test</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to disable automatic tests</span><span class=w>
+</span><span class=w></span><span class=c>#test: off</span><span class=w>
+</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w></span><span class=c>#      artifacts configuration    #</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>artifacts</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># pushing a single file</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>test.zip</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># pushing a single file with environment variable in path and &#34;Deployment name&#34; specified</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>MyProject\bin\$(configuration)</span><span class=w>
+</span><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>myapp</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># pushing entire folder as a zip archive</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=l>logs</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># pushing all *.nupkg files in build directory recursively</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>path</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;**\*.nupkg&#39;</span><span class=w>
+</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w></span><span class=c>#     deployment configuration    #</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># providers: Local, FTP, WebDeploy, AzureCS, AzureBlob, S3, NuGet, Environment</span><span class=w>
+</span><span class=w></span><span class=c># provider names are case-sensitive!</span><span class=w>
+</span><span class=w></span><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=c># FTP deployment provider settings</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>FTP</span><span class=w>
+</span><span class=w>    </span><span class=nt>protocol</span><span class=p>:</span><span class=w> </span><span class=l>ftp|ftps|sftp</span><span class=w>
+</span><span class=w>    </span><span class=nt>host</span><span class=p>:</span><span class=w> </span><span class=l>ftp.myserver.com</span><span class=w>
+</span><span class=w>    </span><span class=nt>username</span><span class=p>:</span><span class=w> </span><span class=l>admin</span><span class=w>
+</span><span class=w>    </span><span class=nt>password</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>eYKZKFkkEvFYWX6NfjZIVw==</span><span class=w>
+</span><span class=w>    </span><span class=nt>folder</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>application</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>active_mode</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>    </span><span class=nt>beta</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>      </span><span class=c># enable alternative FTP library for &#39;ftp&#39; and &#39;ftps&#39; modes</span><span class=w>
+</span><span class=w>    </span><span class=nt>debug</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>     </span><span class=c># show complete FTP log</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=c># Amazon S3 deployment provider settings</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>S3</span><span class=w>
+</span><span class=w>    </span><span class=nt>access_key_id</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>ABcd==</span><span class=w>
+</span><span class=w>    </span><span class=nt>secret_access_key</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>ABcd==</span><span class=w>
+</span><span class=w>    </span><span class=nt>bucket</span><span class=p>:</span><span class=w> </span><span class=l>my_bucket</span><span class=w>
+</span><span class=w>    </span><span class=nt>folder</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>artifact</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>set_public</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=c># Azure Blob storage deployment provider settings</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>AzureBlob</span><span class=w>
+</span><span class=w>    </span><span class=nt>storage_account_name</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>ABcd==</span><span class=w>
+</span><span class=w>    </span><span class=nt>storage_access_key</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>ABcd==</span><span class=w>
+</span><span class=w>    </span><span class=nt>container</span><span class=p>:</span><span class=w> </span><span class=l>my_container</span><span class=w>
+</span><span class=w>    </span><span class=nt>folder</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>artifact</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=c># Web Deploy deployment provider settings</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>WebDeploy</span><span class=w>
+</span><span class=w>    </span><span class=nt>server</span><span class=p>:</span><span class=w> </span><span class=l>http://www.deploy.com/myendpoint</span><span class=w>
+</span><span class=w>    </span><span class=nt>website</span><span class=p>:</span><span class=w> </span><span class=l>mywebsite</span><span class=w>
+</span><span class=w>    </span><span class=nt>username</span><span class=p>:</span><span class=w> </span><span class=l>user</span><span class=w>
+</span><span class=w>    </span><span class=nt>password</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>eYKZKFkkEvFYWX6NfjZIVw==</span><span class=w>
+</span><span class=w>    </span><span class=nt>ntlm</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>    </span><span class=nt>remove_files</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>    </span><span class=nt>app_offline</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>    </span><span class=nt>do_not_use_checksum</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>           </span><span class=c># do not use check sum for comparing source and destination files. By default checksums are used.</span><span class=w>
+</span><span class=w>    </span><span class=nt>sync_retry_attempts</span><span class=p>:</span><span class=w> </span><span class=m>2</span><span class=w>              </span><span class=c># sync attempts, max</span><span class=w>
+</span><span class=w>    </span><span class=nt>sync_retry_interval</span><span class=p>:</span><span class=w> </span><span class=m>2000</span><span class=w>           </span><span class=c># timeout between sync attempts, milliseconds</span><span class=w>
+</span><span class=w>    </span><span class=nt>aspnet_core</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>                   </span><span class=c># artifact zip contains ASP.NET Core application</span><span class=w>
+</span><span class=w>    </span><span class=nt>aspnet_core_force_restart</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>     </span><span class=c># poke app&#39;s web.config before deploy to force application restart</span><span class=w>
+</span><span class=w>    </span><span class=nt>skip_dirs</span><span class=p>:</span><span class=w> </span><span class=l>\\App_Data</span><span class=w>
+</span><span class=w>    </span><span class=nt>skip_files</span><span class=p>:</span><span class=w> </span><span class=l>web.config</span><span class=w>
+</span><span class=w>    </span><span class=nt>on</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>branch</span><span class=p>:</span><span class=w> </span><span class=l>release</span><span class=w>
+</span><span class=w>      </span><span class=nt>platform</span><span class=p>:</span><span class=w> </span><span class=l>x86</span><span class=w>
+</span><span class=w>      </span><span class=nt>configuration</span><span class=p>:</span><span class=w> </span><span class=l>debug</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=c># Deploying to Azure Cloud Service</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>AzureCS</span><span class=w>
+</span><span class=w>    </span><span class=nt>subscription_id</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>fjZIVw==</span><span class=w>
+</span><span class=w>    </span><span class=nt>subscription_certificate</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>eYKZKFkkEv...FYWX6NfjZIVw==</span><span class=w>
+</span><span class=w>    </span><span class=nt>storage_account_name</span><span class=p>:</span><span class=w> </span><span class=l>my_storage</span><span class=w>
+</span><span class=w>    </span><span class=nt>storage_access_key</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>ABcd==</span><span class=w>
+</span><span class=w>    </span><span class=nt>service</span><span class=p>:</span><span class=w> </span><span class=l>my_service</span><span class=w>
+</span><span class=w>    </span><span class=nt>slot</span><span class=p>:</span><span class=w> </span><span class=l>Production</span><span class=w>
+</span><span class=w>    </span><span class=nt>target_profile</span><span class=p>:</span><span class=w> </span><span class=l>Cloud</span><span class=w>
+</span><span class=w>    </span><span class=nt>artifact</span><span class=p>:</span><span class=w> </span><span class=l>MyPackage.cspkg</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=c># Deploying to NuGet feed</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>NuGet</span><span class=w>
+</span><span class=w>    </span><span class=nt>server</span><span class=p>:</span><span class=w> </span><span class=l>https://my.nuget.server/feed</span><span class=w>
+</span><span class=w>    </span><span class=nt>api_key</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>FYWX6NfjZIVw==</span><span class=w>
+</span><span class=w>    </span><span class=nt>skip_symbols</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>    </span><span class=nt>symbol_server</span><span class=p>:</span><span class=w> </span><span class=l>https://your.symbol.server/feed</span><span class=w>
+</span><span class=w>    </span><span class=nt>artifact</span><span class=p>:</span><span class=w> </span><span class=l>MyPackage.nupkg</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=c># Deploy to GitHub Releases</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>GitHub</span><span class=w>
+</span><span class=w>    </span><span class=nt>artifact</span><span class=p>:</span><span class=w> </span><span class=l>/.*\.nupkg/          </span><span class=w> </span><span class=c># upload all NuGet packages to release assets</span><span class=w>
+</span><span class=w>    </span><span class=nt>draft</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>    </span><span class=nt>prerelease</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>    </span><span class=nt>on</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>branch</span><span class=p>:</span><span class=w> </span><span class=l>master               </span><span class=w> </span><span class=c># release from master branch only</span><span class=w>
+</span><span class=w>      </span><span class=nt>APPVEYOR_REPO_TAG</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>       </span><span class=c># deploy on tag push only</span><span class=w>
+</span><span class=w>
+</span><span class=w>    </span><span class=c># Deploying to a named environment</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Environment</span><span class=w>
+</span><span class=w>    </span><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>staging</span><span class=w>
+</span><span class=w>    </span><span class=nt>on</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>branch</span><span class=p>:</span><span class=w> </span><span class=l>staging</span><span class=w>
+</span><span class=w>      </span><span class=nt>env_var1</span><span class=p>:</span><span class=w> </span><span class=l>value1</span><span class=w>
+</span><span class=w>      </span><span class=nt>env_var2</span><span class=p>:</span><span class=w> </span><span class=l>value2</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts to run before deployment</span><span class=w>
+</span><span class=w></span><span class=nt>before_deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># scripts to run after deployment</span><span class=w>
+</span><span class=w></span><span class=nt>after_deploy</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to run your custom scripts instead of provider deployments</span><span class=w>
+</span><span class=w></span><span class=nt>deploy_script</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># to disable deployment</span><span class=w>
+</span><span class=w></span><span class=c>#deploy: off</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w></span><span class=c>#        global handlers          #</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># on successful build</span><span class=w>
+</span><span class=w></span><span class=nt>on_success</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>do something</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># on build failure</span><span class=w>
+</span><span class=w></span><span class=nt>on_failure</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>do something</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># after build failure or success</span><span class=w>
+</span><span class=w></span><span class=nt>on_finish</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span>- <span class=l>do something</span><span class=w>
+</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w></span><span class=c>#         notifications           #</span><span class=w>
+</span><span class=w></span><span class=c>#---------------------------------#</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>notifications</span><span class=p>:</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># Email</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Email</span><span class=w>
+</span><span class=w>    </span><span class=nt>to</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=l>user1@email.com</span><span class=w>
+</span><span class=w>      </span>- <span class=l>user2@email.com</span><span class=w>
+</span><span class=w>    </span><span class=nt>subject</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;Build {{status}}&#39;</span><span class=w>                  </span><span class=c># optional</span><span class=w>
+</span><span class=w>    </span><span class=nt>message</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;{{message}}, {{commitId}}, ...&#34;</span><span class=w>    </span><span class=c># optional</span><span class=w>
+</span><span class=w>    </span><span class=nt>on_build_status_changed</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># HipChat</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>HipChat</span><span class=w>
+</span><span class=w>    </span><span class=nt>auth_token</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>RbOnSMSFKYzxzFRrxM1+XA==</span><span class=w>
+</span><span class=w>    </span><span class=nt>room</span><span class=p>:</span><span class=w> </span><span class=l>ProjectA</span><span class=w>
+</span><span class=w>    </span><span class=nt>template</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;{message}, {commitId}, ...&#34;</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># Slack</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Slack</span><span class=w>
+</span><span class=w>    </span><span class=nt>incoming_webhook</span><span class=p>:</span><span class=w> </span><span class=l>http://incoming-webhook-url</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># ...or using auth token</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Slack</span><span class=w>
+</span><span class=w>    </span><span class=nt>auth_token</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>kBl9BlxvRMr9liHmnBs14A==</span><span class=w>
+</span><span class=w>    </span><span class=nt>channel</span><span class=p>:</span><span class=w> </span><span class=l>development</span><span class=w>
+</span><span class=w>    </span><span class=nt>template</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;{message}, {commitId}, ...&#34;</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># Campfire</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Campfire</span><span class=w>
+</span><span class=w>    </span><span class=nt>account</span><span class=p>:</span><span class=w> </span><span class=l>appveyor</span><span class=w>
+</span><span class=w>    </span><span class=nt>auth_token</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>RifLRG8Vfyol+sNhj9u2JA==</span><span class=w>
+</span><span class=w>    </span><span class=nt>room</span><span class=p>:</span><span class=w> </span><span class=l>ProjectA</span><span class=w>
+</span><span class=w>    </span><span class=nt>template</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;{message}, {commitId}, ...&#34;</span><span class=w>
+</span><span class=w>
+</span><span class=w>  </span><span class=c># Webhook</span><span class=w>
+</span><span class=w>  </span>- <span class=nt>provider</span><span class=p>:</span><span class=w> </span><span class=l>Webhook</span><span class=w>
+</span><span class=w>    </span><span class=nt>url</span><span class=p>:</span><span class=w> </span><span class=l>http://www.myhook2.com</span><span class=w>
+</span><span class=w>    </span><span class=nt>headers</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span><span class=nt>User-Agent</span><span class=p>:</span><span class=w> </span><span class=l>myapp 1.0</span><span class=w>
+</span><span class=w>      </span><span class=nt>Authorization</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span><span class=nt>secure</span><span class=p>:</span><span class=w> </span><span class=l>GhD+5xhLz/tkYY6AO3fcfQ==</span><span class=w>
+</span><span class=w>    </span><span class=nt>on_build_success</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>    </span><span class=nt>on_build_failure</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>    </span><span class=nt>on_build_status_changed</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>
+</span></code></pre></td></tr></table></div></div></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/azure_pipelines/ title="Previous post (older)"><span>Previous</span>
+Azure Pipelines</a>
+<a rel=next href=/blog/github_actions/ title="Next post (newer)"><span>Next</span>
+Github Actions</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

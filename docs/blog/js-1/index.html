@@ -1,25 +1,52 @@
-<!doctype html><html lang=zh-cn><title>节流与防抖 | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/js-1/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>节流与防抖</h1><time datetime=2021-01-18T16:49:35+08:00>January 18, 2021</time></header><p>闲来无事在网上翻一些关于 Javascript 的一些搞基技巧，就发现了节流与防抖这两种设计模式。</p><p>上个星期在编写搜索框的时候就已经写过类似的代码 <em>（搜索框输入关键词会实时去服务器上搜索，考虑到服务器压力就把代码加了限制，每 500ms 最多搜索一次，实际上这就是类似防抖的设计，只是我还不知道这个叫防抖&mldr;）</em></p><p>下面是搜索框的限制代码：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=color:#a6e22e>watch</span>(<span style=color:#a6e22e>searchText</span>, (<span style=color:#a6e22e>newVal</span>) =&gt; {
-    <span style=color:#a6e22e>clearTimeout</span>(<span style=color:#a6e22e>searchTimer</span>);
-    <span style=color:#a6e22e>searchTimer</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>setTimeout</span>(
-        () =&gt; <span style=color:#75715e>//...需要限制的逻辑
-</span><span style=color:#75715e></span>            ),
-        <span style=color:#ae81ff>500</span>
-    );
-});
-</code></pre></div><p>原理非常简单，通过定时器实现，一旦现有状态改变就说明有新的输入，然后清除老的定时器，新设置定时器。</p><hr><p>今天在网上冲浪又学到了一种新的设计：<strong>节流</strong></p><p>直接看代码吧：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=color:#a6e22e>watch</span>(<span style=color:#a6e22e>searchText</span>, (<span style=color:#a6e22e>newVal</span>) =&gt; {
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>节流与防抖 | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>节流与防抖</h1><div class=post-meta><div>By sdttttt on <time>January 18, 2021</time></div><div class=tags><a href=/tags/javascript/>Javascript</a></div></div></div></div></header></article><div class=article-post><p>闲来无事在网上翻一些关于 Javascript 的一些搞基技巧，就发现了节流与防抖这两种设计模式。</p><p>上个星期在编写搜索框的时候就已经写过类似的代码 <em>（搜索框输入关键词会实时去服务器上搜索，考虑到服务器压力就把代码加了限制，每 500ms 最多搜索一次，实际上这就是类似防抖的设计，只是我还不知道这个叫防抖&mldr;）</em></p><p>下面是搜索框的限制代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-javascript data-lang=javascript><span class=nx>watch</span><span class=p>(</span><span class=nx>searchText</span><span class=p>,</span> <span class=p>(</span><span class=nx>newVal</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+    <span class=nx>clearTimeout</span><span class=p>(</span><span class=nx>searchTimer</span><span class=p>);</span>
+    <span class=nx>searchTimer</span> <span class=o>=</span> <span class=nx>setTimeout</span><span class=p>(</span>
+        <span class=p>()</span> <span class=p>=&gt;</span> <span class=c1>//...需要限制的逻辑
+</span><span class=c1></span>            <span class=p>),</span>
+        <span class=mi>500</span>
+    <span class=p>);</span>
+<span class=p>});</span>
+</code></pre></td></tr></table></div></div><p>原理非常简单，通过定时器实现，一旦现有状态改变就说明有新的输入，然后清除老的定时器，新设置定时器。</p><hr><p>今天在网上冲浪又学到了一种新的设计：<strong>节流</strong></p><p>直接看代码吧：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-javascript data-lang=javascript><span class=nx>watch</span><span class=p>(</span><span class=nx>searchText</span><span class=p>,</span> <span class=p>(</span><span class=nx>newVal</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
 
-    <span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>isStop</span>) {
-        <span style=color:#66d9ef>return</span>
-    }
+    <span class=k>if</span><span class=p>(</span><span class=nx>isStop</span><span class=p>)</span> <span class=p>{</span>
+        <span class=k>return</span>
+    <span class=p>}</span>
 
-    <span style=color:#a6e22e>isStop</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+    <span class=nx>isStop</span> <span class=o>=</span> <span class=kc>true</span><span class=p>;</span>
 
-    <span style=color:#a6e22e>setTimeout</span>(
-        () =&gt; {
-            <span style=color:#75715e>//...需要限制的逻辑
-</span><span style=color:#75715e></span>            <span style=color:#a6e22e>isStop</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>
-        }
-    ),
-    <span style=color:#ae81ff>500</span>
-);
-</code></pre></div><p>emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 <em>（好吧，看了几遍其实发现差不多）</em></p><p>原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。</p><p>节流主要作用就是限制执行频率。</p><p>硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。</p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+    <span class=nx>setTimeout</span><span class=p>(</span>
+        <span class=p>()</span> <span class=p>=&gt;</span> <span class=p>{</span>
+            <span class=c1>//...需要限制的逻辑
+</span><span class=c1></span>            <span class=nx>isStop</span> <span class=o>=</span> <span class=kc>false</span>
+        <span class=p>}</span>
+    <span class=p>),</span>
+    <span class=mi>500</span>
+<span class=p>);</span>
+</code></pre></td></tr></table></div></div><p>emmm，一开始看了半天，实际上看懂之后节流比防抖更加简单 <em>（好吧，看了几遍其实发现差不多）</em></p><p>原理还是一样简单，计数器结束将标志位设置为 false，这样新来的计时器就能通过，如果没到限制时间就进入这个函数会被标志位拦住，直接返回。</p><p>节流主要作用就是限制执行频率。</p><p>硬要说防抖和节流的区别。。。emm我也说不上来，看应用场景吧。</p></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/composition-api/ title="Previous post (older)"><span>Previous</span>
+Composition Api</a>
+<a rel=next href=/blog/gradle-build-for-idiotc4t/ title="Next post (newer)"><span>Next</span>
+记录一次Gradle构建的困难</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

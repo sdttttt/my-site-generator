@@ -1,223 +1,448 @@
-<!doctype html><html lang=zh-cn><title>File Upload | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/file_upload/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>File Upload</h1><time datetime=2020-04-12T10:46:06+08:00>April 12, 2020</time></header><p>DVWA File upload 过关秘籍.</p><h3 id=low>LOW</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_POST[ <span style=color:#e6db74>&#39;Upload&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Where are we going to be writing to?
-</span><span style=color:#75715e></span>    $target_path  <span style=color:#f92672>=</span> <span style=color:#a6e22e>DVWA_WEB_PAGE_TO_ROOT</span> <span style=color:#f92672>.</span> <span style=color:#e6db74>&#34;hackable/uploads/&#34;</span>;
-    $target_path <span style=color:#f92672>.=</span> <span style=color:#a6e22e>basename</span>( $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;name&#39;</span> ] );
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>File Upload | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>File Upload</h1><div class=post-meta><div>By on <time>April 12, 2020</time></div><div class=tags><a href=/tags/penetration-test/>penetration test</a></div></div></div></div></header></article><div class=article-post><p>DVWA File upload 过关秘籍.</p><h3 id=low>LOW</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;Upload&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Where are we going to be writing to?
+</span><span class=c1></span>    <span class=nv>$target_path</span>  <span class=o>=</span> <span class=nx>DVWA_WEB_PAGE_TO_ROOT</span> <span class=o>.</span> <span class=s2>&#34;hackable/uploads/&#34;</span><span class=p>;</span>
+    <span class=nv>$target_path</span> <span class=o>.=</span> <span class=nx>basename</span><span class=p>(</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;name&#39;</span> <span class=p>]</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// Can we move the file to the upload folder?
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 完全没做过滤.
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 上传一个PHP文件也是可以的.
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>( <span style=color:#f92672>!</span><span style=color:#a6e22e>move_uploaded_file</span>( $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;tmp_name&#39;</span> ], $target_path ) ) {
-        <span style=color:#75715e>// No
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span>;
-    }
-    <span style=color:#66d9ef>else</span> {
-        <span style=color:#75715e>// Yes!
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;</span><span style=color:#e6db74>{</span>$target_path<span style=color:#e6db74>}</span><span style=color:#e6db74> succesfully uploaded!&lt;/pre&gt;&#34;</span>;
-    }
-}
-</code></pre></div><h3 id=medium>Medium</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_POST[ <span style=color:#e6db74>&#39;Upload&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Where are we going to be writing to?
-</span><span style=color:#75715e></span>    $target_path  <span style=color:#f92672>=</span> <span style=color:#a6e22e>DVWA_WEB_PAGE_TO_ROOT</span> <span style=color:#f92672>.</span> <span style=color:#e6db74>&#34;hackable/uploads/&#34;</span>;
-    $target_path <span style=color:#f92672>.=</span> <span style=color:#a6e22e>basename</span>( $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;name&#39;</span> ] );
+    <span class=c1>// Can we move the file to the upload folder?
+</span><span class=c1></span>    <span class=c1>// 完全没做过滤.
+</span><span class=c1></span>    <span class=c1>// 上传一个PHP文件也是可以的.
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span> <span class=o>!</span><span class=nx>move_uploaded_file</span><span class=p>(</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;tmp_name&#39;</span> <span class=p>],</span> <span class=nv>$target_path</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+        <span class=c1>// No
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+        <span class=c1>// Yes!
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;</span><span class=si>{</span><span class=nv>$target_path</span><span class=si>}</span><span class=s2> succesfully uploaded!&lt;/pre&gt;&#34;</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=medium>Medium</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;Upload&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Where are we going to be writing to?
+</span><span class=c1></span>    <span class=nv>$target_path</span>  <span class=o>=</span> <span class=nx>DVWA_WEB_PAGE_TO_ROOT</span> <span class=o>.</span> <span class=s2>&#34;hackable/uploads/&#34;</span><span class=p>;</span>
+    <span class=nv>$target_path</span> <span class=o>.=</span> <span class=nx>basename</span><span class=p>(</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;name&#39;</span> <span class=p>]</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// File information
-</span><span style=color:#75715e></span>    $uploaded_name <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;name&#39;</span> ];
-    $uploaded_type <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;type&#39;</span> ];
-    $uploaded_size <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;size&#39;</span> ];
+    <span class=c1>// File information
+</span><span class=c1></span>    <span class=nv>$uploaded_name</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;name&#39;</span> <span class=p>];</span>
+    <span class=nv>$uploaded_type</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;type&#39;</span> <span class=p>];</span>
+    <span class=nv>$uploaded_size</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;size&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Is it an image?
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// // 开始做了一些过滤
-</span><span style=color:#75715e></span>
-    <span style=color:#75715e>// 下面是官方对$_FILES 函数的描述
-</span><span style=color:#75715e></span>    <span style=color:#75715e>//  [name] =&gt; MyFile.txt (comes from the browser, so treat as tainted)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>//         [type] =&gt; text/plain  (not sure where it gets this from - assume the browser, so treat as tainted)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>//         [tmp_name] =&gt; /tmp/php/php1h4j1o (could be anywhere on your system, depending on your config        settings, but the user has no control, so this isn&#39;t tainted)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>//         [error] =&gt; UPLOAD_ERR_OK  (= 0)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>//         [size] =&gt; 123   (the size in bytes)
-</span><span style=color:#75715e></span>    
-    <span style=color:#75715e>// 其中对name和type的description的描述都是 `treat as tainted`(被污染的)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 这意味着它有可能会被修改 unsafe
-</span><span style=color:#75715e></span>    
-    <span style=color:#75715e>// 我们可以尝试上传一个PHP文件，使用一些拦截请求工具，修改即将发出的请求.
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 来达到修改`name`中的后缀名和`type`中的媒体类型.
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>( ( $uploaded_type <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;image/jpeg&#34;</span> <span style=color:#f92672>||</span> $uploaded_type <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;image/png&#34;</span> ) <span style=color:#f92672>&amp;&amp;</span>
-        ( $uploaded_size <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>100000</span> ) ) {
+    <span class=c1>// Is it an image?
+</span><span class=c1></span>    <span class=c1>// // 开始做了一些过滤
+</span><span class=c1></span>
+    <span class=c1>// 下面是官方对$_FILES 函数的描述
+</span><span class=c1></span>    <span class=c1>//  [name] =&gt; MyFile.txt (comes from the browser, so treat as tainted)
+</span><span class=c1></span>    <span class=c1>//         [type] =&gt; text/plain  (not sure where it gets this from - assume the browser, so treat as tainted)
+</span><span class=c1></span>    <span class=c1>//         [tmp_name] =&gt; /tmp/php/php1h4j1o (could be anywhere on your system, depending on your config        settings, but the user has no control, so this isn&#39;t tainted)
+</span><span class=c1></span>    <span class=c1>//         [error] =&gt; UPLOAD_ERR_OK  (= 0)
+</span><span class=c1></span>    <span class=c1>//         [size] =&gt; 123   (the size in bytes)
+</span><span class=c1></span>    
+    <span class=c1>// 其中对name和type的description的描述都是 `treat as tainted`(被污染的)
+</span><span class=c1></span>    <span class=c1>// 这意味着它有可能会被修改 unsafe
+</span><span class=c1></span>    
+    <span class=c1>// 我们可以尝试上传一个PHP文件，使用一些拦截请求工具，修改即将发出的请求.
+</span><span class=c1></span>    <span class=c1>// 来达到修改`name`中的后缀名和`type`中的媒体类型.
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span> <span class=p>(</span> <span class=nv>$uploaded_type</span> <span class=o>==</span> <span class=s2>&#34;image/jpeg&#34;</span> <span class=o>||</span> <span class=nv>$uploaded_type</span> <span class=o>==</span> <span class=s2>&#34;image/png&#34;</span> <span class=p>)</span> <span class=o>&amp;&amp;</span>
+        <span class=p>(</span> <span class=nv>$uploaded_size</span> <span class=o>&lt;</span> <span class=mi>100000</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
 
-        <span style=color:#75715e>// Can we move the file to the upload folder?
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span>( <span style=color:#f92672>!</span><span style=color:#a6e22e>move_uploaded_file</span>( $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;tmp_name&#39;</span> ], $target_path ) ) {
-            <span style=color:#75715e>// No
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span>;
-        }
-        <span style=color:#66d9ef>else</span> {
-            <span style=color:#75715e>// Yes!
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;</span><span style=color:#e6db74>{</span>$target_path<span style=color:#e6db74>}</span><span style=color:#e6db74> succesfully uploaded!&lt;/pre&gt;&#34;</span>;
-        }
-    }
-    <span style=color:#66d9ef>else</span> {
-        <span style=color:#75715e>// Invalid file
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#39;</span>;
-    }
-}
-</code></pre></div><h3 id=high>High</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_POST[ <span style=color:#e6db74>&#39;Upload&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Where are we going to be writing to?
-</span><span style=color:#75715e></span>    $target_path  <span style=color:#f92672>=</span> <span style=color:#a6e22e>DVWA_WEB_PAGE_TO_ROOT</span> <span style=color:#f92672>.</span> <span style=color:#e6db74>&#34;hackable/uploads/&#34;</span>;
-    $target_path <span style=color:#f92672>.=</span> <span style=color:#a6e22e>basename</span>( $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;name&#39;</span> ] );
+        <span class=c1>// Can we move the file to the upload folder?
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span> <span class=o>!</span><span class=nx>move_uploaded_file</span><span class=p>(</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;tmp_name&#39;</span> <span class=p>],</span> <span class=nv>$target_path</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+            <span class=c1>// No
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+        <span class=p>}</span>
+        <span class=k>else</span> <span class=p>{</span>
+            <span class=c1>// Yes!
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;</span><span class=si>{</span><span class=nv>$target_path</span><span class=si>}</span><span class=s2> succesfully uploaded!&lt;/pre&gt;&#34;</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+        <span class=c1>// Invalid file
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=high>High</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;Upload&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Where are we going to be writing to?
+</span><span class=c1></span>    <span class=nv>$target_path</span>  <span class=o>=</span> <span class=nx>DVWA_WEB_PAGE_TO_ROOT</span> <span class=o>.</span> <span class=s2>&#34;hackable/uploads/&#34;</span><span class=p>;</span>
+    <span class=nv>$target_path</span> <span class=o>.=</span> <span class=nx>basename</span><span class=p>(</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;name&#39;</span> <span class=p>]</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// File information
-</span><span style=color:#75715e></span>    $uploaded_name <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;name&#39;</span> ];
-        <span style=color:#75715e>// jpg
-</span><span style=color:#75715e></span>    $uploaded_ext  <span style=color:#f92672>=</span> <span style=color:#a6e22e>substr</span>( $uploaded_name, <span style=color:#a6e22e>strrpos</span>( $uploaded_name, <span style=color:#e6db74>&#39;.&#39;</span> ) <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>);
+    <span class=c1>// File information
+</span><span class=c1></span>    <span class=nv>$uploaded_name</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;name&#39;</span> <span class=p>];</span>
+        <span class=c1>// jpg
+</span><span class=c1></span>    <span class=nv>$uploaded_ext</span>  <span class=o>=</span> <span class=nx>substr</span><span class=p>(</span> <span class=nv>$uploaded_name</span><span class=p>,</span> <span class=nx>strrpos</span><span class=p>(</span> <span class=nv>$uploaded_name</span><span class=p>,</span> <span class=s1>&#39;.&#39;</span> <span class=p>)</span> <span class=o>+</span> <span class=mi>1</span><span class=p>);</span>
     
-    <span style=color:#75715e>// file size
-</span><span style=color:#75715e></span>    $uploaded_size <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;size&#39;</span> ];
+    <span class=c1>// file size
+</span><span class=c1></span>    <span class=nv>$uploaded_size</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;size&#39;</span> <span class=p>];</span>
     
-    <span style=color:#75715e>// tmp_name 是临时副本的名字
-</span><span style=color:#75715e></span>    $uploaded_tmp  <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;tmp_name&#39;</span> ];
+    <span class=c1>// tmp_name 是临时副本的名字
+</span><span class=c1></span>    <span class=nv>$uploaded_tmp</span>  <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;tmp_name&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Is it an image?
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 和上面的比起来多个一个文件后缀名的判断.
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// strtolower 转小写
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 扩展名只要满足jpeg,png或者jpg就行
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>( ( <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;jpg&#34;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;jpeg&#34;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;png&#34;</span> ) <span style=color:#f92672>&amp;&amp;</span>
-        ( $uploaded_size <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>100000</span> ) <span style=color:#f92672>&amp;&amp;</span>
-        <span style=color:#75715e>// getimagesize 获取图像信息
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// 这个函数保证你穿的一定得是个图像
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// 可以用图片木马绕过
-</span><span style=color:#75715e></span>        <span style=color:#a6e22e>getimagesize</span>( $uploaded_tmp ) ) {
+    <span class=c1>// Is it an image?
+</span><span class=c1></span>    <span class=c1>// 和上面的比起来多个一个文件后缀名的判断.
+</span><span class=c1></span>    <span class=c1>// strtolower 转小写
+</span><span class=c1></span>    <span class=c1>// 扩展名只要满足jpeg,png或者jpg就行
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span> <span class=p>(</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s2>&#34;jpg&#34;</span> <span class=o>||</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s2>&#34;jpeg&#34;</span> <span class=o>||</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s2>&#34;png&#34;</span> <span class=p>)</span> <span class=o>&amp;&amp;</span>
+        <span class=p>(</span> <span class=nv>$uploaded_size</span> <span class=o>&lt;</span> <span class=mi>100000</span> <span class=p>)</span> <span class=o>&amp;&amp;</span>
+        <span class=c1>// getimagesize 获取图像信息
+</span><span class=c1></span>        <span class=c1>// 这个函数保证你穿的一定得是个图像
+</span><span class=c1></span>        <span class=c1>// 可以用图片木马绕过
+</span><span class=c1></span>        <span class=nx>getimagesize</span><span class=p>(</span> <span class=nv>$uploaded_tmp</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
 
-        <span style=color:#75715e>// Can we move the file to the upload folder?
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span>( <span style=color:#f92672>!</span><span style=color:#a6e22e>move_uploaded_file</span>( $uploaded_tmp, $target_path ) ) {
-            <span style=color:#75715e>// No
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span>;
-        }
-        <span style=color:#66d9ef>else</span> {
-            <span style=color:#75715e>// Yes!
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;</span><span style=color:#e6db74>{</span>$target_path<span style=color:#e6db74>}</span><span style=color:#e6db74> succesfully uploaded!&lt;/pre&gt;&#34;</span>;
-        }
-    }
-    <span style=color:#66d9ef>else</span> {
-        <span style=color:#75715e>// Invalid file
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#39;</span>;
-    }
-}
-</code></pre></div><h3 id=high-1>High</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_POST[ <span style=color:#e6db74>&#39;Upload&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Where are we going to be writing to?
-</span><span style=color:#75715e></span>    $target_path  <span style=color:#f92672>=</span> <span style=color:#a6e22e>DVWA_WEB_PAGE_TO_ROOT</span> <span style=color:#f92672>.</span> <span style=color:#e6db74>&#34;hackable/uploads/&#34;</span>;
-    $target_path <span style=color:#f92672>.=</span> <span style=color:#a6e22e>basename</span>( $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;name&#39;</span> ] );
+        <span class=c1>// Can we move the file to the upload folder?
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span> <span class=o>!</span><span class=nx>move_uploaded_file</span><span class=p>(</span> <span class=nv>$uploaded_tmp</span><span class=p>,</span> <span class=nv>$target_path</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+            <span class=c1>// No
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+        <span class=p>}</span>
+        <span class=k>else</span> <span class=p>{</span>
+            <span class=c1>// Yes!
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;</span><span class=si>{</span><span class=nv>$target_path</span><span class=si>}</span><span class=s2> succesfully uploaded!&lt;/pre&gt;&#34;</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+        <span class=c1>// Invalid file
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=high-1>High</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;Upload&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Where are we going to be writing to?
+</span><span class=c1></span>    <span class=nv>$target_path</span>  <span class=o>=</span> <span class=nx>DVWA_WEB_PAGE_TO_ROOT</span> <span class=o>.</span> <span class=s2>&#34;hackable/uploads/&#34;</span><span class=p>;</span>
+    <span class=nv>$target_path</span> <span class=o>.=</span> <span class=nx>basename</span><span class=p>(</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;name&#39;</span> <span class=p>]</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// File information
-</span><span style=color:#75715e></span>    $uploaded_name <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;name&#39;</span> ];
-    $uploaded_ext  <span style=color:#f92672>=</span> <span style=color:#a6e22e>substr</span>( $uploaded_name, <span style=color:#a6e22e>strrpos</span>( $uploaded_name, <span style=color:#e6db74>&#39;.&#39;</span> ) <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>);
-    $uploaded_size <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;size&#39;</span> ];
-    $uploaded_tmp  <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;tmp_name&#39;</span> ];
+    <span class=c1>// File information
+</span><span class=c1></span>    <span class=nv>$uploaded_name</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;name&#39;</span> <span class=p>];</span>
+    <span class=nv>$uploaded_ext</span>  <span class=o>=</span> <span class=nx>substr</span><span class=p>(</span> <span class=nv>$uploaded_name</span><span class=p>,</span> <span class=nx>strrpos</span><span class=p>(</span> <span class=nv>$uploaded_name</span><span class=p>,</span> <span class=s1>&#39;.&#39;</span> <span class=p>)</span> <span class=o>+</span> <span class=mi>1</span><span class=p>);</span>
+    <span class=nv>$uploaded_size</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;size&#39;</span> <span class=p>];</span>
+    <span class=nv>$uploaded_tmp</span>  <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;tmp_name&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Is it an image?
-</span><span style=color:#75715e></span>    <span style=color:#75715e>// 对比上面多验证了文件的后缀名
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>( ( <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;jpg&#34;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;jpeg&#34;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;png&#34;</span> ) <span style=color:#f92672>&amp;&amp;</span>
-        ( $uploaded_size <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>100000</span> ) <span style=color:#f92672>&amp;&amp;</span>
+    <span class=c1>// Is it an image?
+</span><span class=c1></span>    <span class=c1>// 对比上面多验证了文件的后缀名
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span> <span class=p>(</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s2>&#34;jpg&#34;</span> <span class=o>||</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s2>&#34;jpeg&#34;</span> <span class=o>||</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s2>&#34;png&#34;</span> <span class=p>)</span> <span class=o>&amp;&amp;</span>
+        <span class=p>(</span> <span class=nv>$uploaded_size</span> <span class=o>&lt;</span> <span class=mi>100000</span> <span class=p>)</span> <span class=o>&amp;&amp;</span>
 
         
        
-        <span style=color:#75715e>// 函数会通过读取文件头，返回图片的长、宽等信息，如果没有相关的图片文件头，函数会报错
-</span><span style=color:#75715e></span>        <span style=color:#a6e22e>getimagesize</span>( $uploaded_tmp ) ) {
+        <span class=c1>// 函数会通过读取文件头，返回图片的长、宽等信息，如果没有相关的图片文件头，函数会报错
+</span><span class=c1></span>        <span class=nx>getimagesize</span><span class=p>(</span> <span class=nv>$uploaded_tmp</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
 
-        <span style=color:#75715e>// 可以看到，High级别的代码读取文件名中最后一个”.”后的字符串，期望通过文件名来限制文件类型
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// 因此要求上传文件名形式必须是”*.jpg”、”*.jpeg” 、”*.png”之一
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// 同时，getimagesize函数更是限制了上传文件的文件头必须为图像类型
-</span><span style=color:#75715e></span>
-        <span style=color:#75715e>// Can we move the file to the upload folder?
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span>( <span style=color:#f92672>!</span><span style=color:#a6e22e>move_uploaded_file</span>( $uploaded_tmp, $target_path ) ) {
-            <span style=color:#75715e>// No
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span>;
-        }
-        <span style=color:#66d9ef>else</span> {
-            <span style=color:#75715e>// Yes!
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;</span><span style=color:#e6db74>{</span>$target_path<span style=color:#e6db74>}</span><span style=color:#e6db74> succesfully uploaded!&lt;/pre&gt;&#34;</span>;
-        }
-    }
-    <span style=color:#66d9ef>else</span> {
-        <span style=color:#75715e>// Invalid file
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#39;</span>;
-    }
-}
-</code></pre></div><h3 id=impossible>Impossible</h3><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP><span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>isset</span>( $_POST[ <span style=color:#e6db74>&#39;Upload&#39;</span> ] ) ) {
-    <span style=color:#75715e>// Check Anti-CSRF token
-</span><span style=color:#75715e></span>    <span style=color:#a6e22e>checkToken</span>( $_REQUEST[ <span style=color:#e6db74>&#39;user_token&#39;</span> ], $_SESSION[ <span style=color:#e6db74>&#39;session_token&#39;</span> ], <span style=color:#e6db74>&#39;index.php&#39;</span> );
+        <span class=c1>// 可以看到，High级别的代码读取文件名中最后一个”.”后的字符串，期望通过文件名来限制文件类型
+</span><span class=c1></span>        <span class=c1>// 因此要求上传文件名形式必须是”*.jpg”、”*.jpeg” 、”*.png”之一
+</span><span class=c1></span>        <span class=c1>// 同时，getimagesize函数更是限制了上传文件的文件头必须为图像类型
+</span><span class=c1></span>
+        <span class=c1>// Can we move the file to the upload folder?
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span> <span class=o>!</span><span class=nx>move_uploaded_file</span><span class=p>(</span> <span class=nv>$uploaded_tmp</span><span class=p>,</span> <span class=nv>$target_path</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+            <span class=c1>// No
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+        <span class=p>}</span>
+        <span class=k>else</span> <span class=p>{</span>
+            <span class=c1>// Yes!
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;</span><span class=si>{</span><span class=nv>$target_path</span><span class=si>}</span><span class=s2> succesfully uploaded!&lt;/pre&gt;&#34;</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+        <span class=c1>// Invalid file
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><h3 id=impossible>Impossible</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=k>if</span><span class=p>(</span> <span class=nx>isset</span><span class=p>(</span> <span class=nv>$_POST</span><span class=p>[</span> <span class=s1>&#39;Upload&#39;</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+    <span class=c1>// Check Anti-CSRF token
+</span><span class=c1></span>    <span class=nx>checkToken</span><span class=p>(</span> <span class=nv>$_REQUEST</span><span class=p>[</span> <span class=s1>&#39;user_token&#39;</span> <span class=p>],</span> <span class=nv>$_SESSION</span><span class=p>[</span> <span class=s1>&#39;session_token&#39;</span> <span class=p>],</span> <span class=s1>&#39;index.php&#39;</span> <span class=p>);</span>
 
-    <span style=color:#75715e>// File information
-</span><span style=color:#75715e></span>    $uploaded_name <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;name&#39;</span> ];
-    $uploaded_ext  <span style=color:#f92672>=</span> <span style=color:#a6e22e>substr</span>( $uploaded_name, <span style=color:#a6e22e>strrpos</span>( $uploaded_name, <span style=color:#e6db74>&#39;.&#39;</span> ) <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>);
-    $uploaded_size <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;size&#39;</span> ];
-    $uploaded_type <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;type&#39;</span> ];
-    $uploaded_tmp  <span style=color:#f92672>=</span> $_FILES[ <span style=color:#e6db74>&#39;uploaded&#39;</span> ][ <span style=color:#e6db74>&#39;tmp_name&#39;</span> ];
+    <span class=c1>// File information
+</span><span class=c1></span>    <span class=nv>$uploaded_name</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;name&#39;</span> <span class=p>];</span>
+    <span class=nv>$uploaded_ext</span>  <span class=o>=</span> <span class=nx>substr</span><span class=p>(</span> <span class=nv>$uploaded_name</span><span class=p>,</span> <span class=nx>strrpos</span><span class=p>(</span> <span class=nv>$uploaded_name</span><span class=p>,</span> <span class=s1>&#39;.&#39;</span> <span class=p>)</span> <span class=o>+</span> <span class=mi>1</span><span class=p>);</span>
+    <span class=nv>$uploaded_size</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;size&#39;</span> <span class=p>];</span>
+    <span class=nv>$uploaded_type</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;type&#39;</span> <span class=p>];</span>
+    <span class=nv>$uploaded_tmp</span>  <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span> <span class=s1>&#39;uploaded&#39;</span> <span class=p>][</span> <span class=s1>&#39;tmp_name&#39;</span> <span class=p>];</span>
 
-    <span style=color:#75715e>// Where are we going to be writing to?
-</span><span style=color:#75715e></span>    $target_path   <span style=color:#f92672>=</span> <span style=color:#a6e22e>DVWA_WEB_PAGE_TO_ROOT</span> <span style=color:#f92672>.</span> <span style=color:#e6db74>&#39;hackable/uploads/&#39;</span>;
-    <span style=color:#75715e>//$target_file   = basename( $uploaded_name, &#39;.&#39; . $uploaded_ext ) . &#39;-&#39;;
-</span><span style=color:#75715e></span>
-    <span style=color:#75715e>// MD5 加密
-</span><span style=color:#75715e></span>    $target_file   <span style=color:#f92672>=</span>  <span style=color:#a6e22e>md5</span>( <span style=color:#a6e22e>uniqid</span>() <span style=color:#f92672>.</span> $uploaded_name ) <span style=color:#f92672>.</span> <span style=color:#e6db74>&#39;.&#39;</span> <span style=color:#f92672>.</span> $uploaded_ext;
-    $temp_file     <span style=color:#f92672>=</span> ( ( <span style=color:#a6e22e>ini_get</span>( <span style=color:#e6db74>&#39;upload_tmp_dir&#39;</span> ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;&#39;</span> ) <span style=color:#f92672>?</span> ( <span style=color:#a6e22e>sys_get_temp_dir</span>() ) <span style=color:#f92672>:</span> ( <span style=color:#a6e22e>ini_get</span>( <span style=color:#e6db74>&#39;upload_tmp_dir&#39;</span> ) ) );
-    $temp_file    <span style=color:#f92672>.=</span> <span style=color:#a6e22e>DIRECTORY_SEPARATOR</span> <span style=color:#f92672>.</span> <span style=color:#a6e22e>md5</span>( <span style=color:#a6e22e>uniqid</span>() <span style=color:#f92672>.</span> $uploaded_name ) <span style=color:#f92672>.</span> <span style=color:#e6db74>&#39;.&#39;</span> <span style=color:#f92672>.</span> $uploaded_ext;
+    <span class=c1>// Where are we going to be writing to?
+</span><span class=c1></span>    <span class=nv>$target_path</span>   <span class=o>=</span> <span class=nx>DVWA_WEB_PAGE_TO_ROOT</span> <span class=o>.</span> <span class=s1>&#39;hackable/uploads/&#39;</span><span class=p>;</span>
+    <span class=c1>//$target_file   = basename( $uploaded_name, &#39;.&#39; . $uploaded_ext ) . &#39;-&#39;;
+</span><span class=c1></span>
+    <span class=c1>// MD5 加密
+</span><span class=c1></span>    <span class=nv>$target_file</span>   <span class=o>=</span>  <span class=nx>md5</span><span class=p>(</span> <span class=nx>uniqid</span><span class=p>()</span> <span class=o>.</span> <span class=nv>$uploaded_name</span> <span class=p>)</span> <span class=o>.</span> <span class=s1>&#39;.&#39;</span> <span class=o>.</span> <span class=nv>$uploaded_ext</span><span class=p>;</span>
+    <span class=nv>$temp_file</span>     <span class=o>=</span> <span class=p>(</span> <span class=p>(</span> <span class=nx>ini_get</span><span class=p>(</span> <span class=s1>&#39;upload_tmp_dir&#39;</span> <span class=p>)</span> <span class=o>==</span> <span class=s1>&#39;&#39;</span> <span class=p>)</span> <span class=o>?</span> <span class=p>(</span> <span class=nx>sys_get_temp_dir</span><span class=p>()</span> <span class=p>)</span> <span class=o>:</span> <span class=p>(</span> <span class=nx>ini_get</span><span class=p>(</span> <span class=s1>&#39;upload_tmp_dir&#39;</span> <span class=p>)</span> <span class=p>)</span> <span class=p>);</span>
+    <span class=nv>$temp_file</span>    <span class=o>.=</span> <span class=nx>DIRECTORY_SEPARATOR</span> <span class=o>.</span> <span class=nx>md5</span><span class=p>(</span> <span class=nx>uniqid</span><span class=p>()</span> <span class=o>.</span> <span class=nv>$uploaded_name</span> <span class=p>)</span> <span class=o>.</span> <span class=s1>&#39;.&#39;</span> <span class=o>.</span> <span class=nv>$uploaded_ext</span><span class=p>;</span>
 
-    <span style=color:#75715e>// Is it an image?
-</span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span>( ( <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;jpg&#39;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;jpeg&#39;</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>strtolower</span>( $uploaded_ext ) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;png&#39;</span> ) <span style=color:#f92672>&amp;&amp;</span>
-        ( $uploaded_size <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>100000</span> ) <span style=color:#f92672>&amp;&amp;</span>
-        ( $uploaded_type <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;image/jpeg&#39;</span> <span style=color:#f92672>||</span> $uploaded_type <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;image/png&#39;</span> ) <span style=color:#f92672>&amp;&amp;</span>
-        <span style=color:#a6e22e>getimagesize</span>( $uploaded_tmp ) ) {
+    <span class=c1>// Is it an image?
+</span><span class=c1></span>    <span class=k>if</span><span class=p>(</span> <span class=p>(</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s1>&#39;jpg&#39;</span> <span class=o>||</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s1>&#39;jpeg&#39;</span> <span class=o>||</span> <span class=nx>strtolower</span><span class=p>(</span> <span class=nv>$uploaded_ext</span> <span class=p>)</span> <span class=o>==</span> <span class=s1>&#39;png&#39;</span> <span class=p>)</span> <span class=o>&amp;&amp;</span>
+        <span class=p>(</span> <span class=nv>$uploaded_size</span> <span class=o>&lt;</span> <span class=mi>100000</span> <span class=p>)</span> <span class=o>&amp;&amp;</span>
+        <span class=p>(</span> <span class=nv>$uploaded_type</span> <span class=o>==</span> <span class=s1>&#39;image/jpeg&#39;</span> <span class=o>||</span> <span class=nv>$uploaded_type</span> <span class=o>==</span> <span class=s1>&#39;image/png&#39;</span> <span class=p>)</span> <span class=o>&amp;&amp;</span>
+        <span class=nx>getimagesize</span><span class=p>(</span> <span class=nv>$uploaded_tmp</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
 
-        <span style=color:#75715e>// Strip any metadata, by re-encoding image (Note, using php-Imagick is recommended over php-GD)
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span>( $uploaded_type <span style=color:#f92672>==</span> <span style=color:#e6db74>&#39;image/jpeg&#39;</span> ) {
-            $img <span style=color:#f92672>=</span> <span style=color:#a6e22e>imagecreatefromjpeg</span>( $uploaded_tmp );
-            <span style=color:#a6e22e>imagejpeg</span>( $img, $temp_file, <span style=color:#ae81ff>100</span>);
-        }
-        <span style=color:#66d9ef>else</span> {
-            $img <span style=color:#f92672>=</span> <span style=color:#a6e22e>imagecreatefrompng</span>( $uploaded_tmp );
-            <span style=color:#a6e22e>imagepng</span>( $img, $temp_file, <span style=color:#ae81ff>9</span>);
-        }
-        <span style=color:#a6e22e>imagedestroy</span>( $img );
+        <span class=c1>// Strip any metadata, by re-encoding image (Note, using php-Imagick is recommended over php-GD)
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span> <span class=nv>$uploaded_type</span> <span class=o>==</span> <span class=s1>&#39;image/jpeg&#39;</span> <span class=p>)</span> <span class=p>{</span>
+            <span class=nv>$img</span> <span class=o>=</span> <span class=nx>imagecreatefromjpeg</span><span class=p>(</span> <span class=nv>$uploaded_tmp</span> <span class=p>);</span>
+            <span class=nx>imagejpeg</span><span class=p>(</span> <span class=nv>$img</span><span class=p>,</span> <span class=nv>$temp_file</span><span class=p>,</span> <span class=mi>100</span><span class=p>);</span>
+        <span class=p>}</span>
+        <span class=k>else</span> <span class=p>{</span>
+            <span class=nv>$img</span> <span class=o>=</span> <span class=nx>imagecreatefrompng</span><span class=p>(</span> <span class=nv>$uploaded_tmp</span> <span class=p>);</span>
+            <span class=nx>imagepng</span><span class=p>(</span> <span class=nv>$img</span><span class=p>,</span> <span class=nv>$temp_file</span><span class=p>,</span> <span class=mi>9</span><span class=p>);</span>
+        <span class=p>}</span>
+        <span class=nx>imagedestroy</span><span class=p>(</span> <span class=nv>$img</span> <span class=p>);</span>
 
-        <span style=color:#75715e>// Can we move the file to the web root from the temp folder?
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>rename</span>( $temp_file, ( <span style=color:#a6e22e>getcwd</span>() <span style=color:#f92672>.</span> <span style=color:#a6e22e>DIRECTORY_SEPARATOR</span> <span style=color:#f92672>.</span> $target_path <span style=color:#f92672>.</span> $target_file ) ) ) {
-            <span style=color:#75715e>// Yes!
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#34;&lt;pre&gt;&lt;a href=&#39;</span><span style=color:#e6db74>${</span>target_path}${target_file}&#39;&gt;${target_file<span style=color:#e6db74>}</span><span style=color:#e6db74>&lt;/a&gt; succesfully uploaded!&lt;/pre&gt;&#34;</span>;
-        }
-        <span style=color:#66d9ef>else</span> {
-            <span style=color:#75715e>// No
-</span><span style=color:#75715e></span>            <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span>;
-        }
+        <span class=c1>// Can we move the file to the web root from the temp folder?
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span> <span class=nx>rename</span><span class=p>(</span> <span class=nv>$temp_file</span><span class=p>,</span> <span class=p>(</span> <span class=nx>getcwd</span><span class=p>()</span> <span class=o>.</span> <span class=nx>DIRECTORY_SEPARATOR</span> <span class=o>.</span> <span class=nv>$target_path</span> <span class=o>.</span> <span class=nv>$target_file</span> <span class=p>)</span> <span class=p>)</span> <span class=p>)</span> <span class=p>{</span>
+            <span class=c1>// Yes!
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s2>&#34;&lt;pre&gt;&lt;a href=&#39;</span><span class=si>${</span><span class=nv>target_path}${target_file}&#39;&gt;${target_file</span><span class=si>}</span><span class=s2>&lt;/a&gt; succesfully uploaded!&lt;/pre&gt;&#34;</span><span class=p>;</span>
+        <span class=p>}</span>
+        <span class=k>else</span> <span class=p>{</span>
+            <span class=c1>// No
+</span><span class=c1></span>            <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+        <span class=p>}</span>
 
-        <span style=color:#75715e>// Delete any temp files
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>if</span>( <span style=color:#a6e22e>file_exists</span>( $temp_file ) )
-            <span style=color:#a6e22e>unlink</span>( $temp_file );
-    }
-    <span style=color:#66d9ef>else</span> {
-        <span style=color:#75715e>// Invalid file
-</span><span style=color:#75715e></span>        <span style=color:#66d9ef>echo</span> <span style=color:#e6db74>&#39;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#39;</span>;
-    }
-}
+        <span class=c1>// Delete any temp files
+</span><span class=c1></span>        <span class=k>if</span><span class=p>(</span> <span class=nx>file_exists</span><span class=p>(</span> <span class=nv>$temp_file</span> <span class=p>)</span> <span class=p>)</span>
+            <span class=nx>unlink</span><span class=p>(</span> <span class=nv>$temp_file</span> <span class=p>);</span>
+    <span class=p>}</span>
+    <span class=k>else</span> <span class=p>{</span>
+        <span class=c1>// Invalid file
+</span><span class=c1></span>        <span class=k>echo</span> <span class=s1>&#39;&lt;pre&gt;Your image was not uploaded. We can only accept JPEG or PNG images.&lt;/pre&gt;&#39;</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 
-<span style=color:#75715e>// Generate Anti-CSRF token
-</span><span style=color:#75715e></span><span style=color:#a6e22e>generateSessionToken</span>();
-</code></pre></div><h3 id=extension>Extension</h3><p><strong>00%截断</strong></p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-PHP data-lang=PHP>$is_upload <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
-$msg <span style=color:#f92672>=</span> <span style=color:#66d9ef>null</span>;
-<span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>isset</span>($_POST[<span style=color:#e6db74>&#39;submit&#39;</span>])){
-    <span style=color:#75715e>// 白名单
-</span><span style=color:#75715e></span>    $ext_arr <span style=color:#f92672>=</span> <span style=color:#66d9ef>array</span>(<span style=color:#e6db74>&#39;jpg&#39;</span>,<span style=color:#e6db74>&#39;png&#39;</span>,<span style=color:#e6db74>&#39;gif&#39;</span>);
-    $file_ext <span style=color:#f92672>=</span> <span style=color:#a6e22e>substr</span>($_FILES[<span style=color:#e6db74>&#39;upload_file&#39;</span>][<span style=color:#e6db74>&#39;name&#39;</span>],<span style=color:#a6e22e>strrpos</span>($_FILES[<span style=color:#e6db74>&#39;upload_file&#39;</span>][<span style=color:#e6db74>&#39;name&#39;</span>],<span style=color:#e6db74>&#34;.&#34;</span>)<span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>);
-    <span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>in_array</span>($file_ext,$ext_arr)){
-        $temp_file <span style=color:#f92672>=</span> $_FILES[<span style=color:#e6db74>&#39;upload_file&#39;</span>][<span style=color:#e6db74>&#39;tmp_name&#39;</span>];
-        <span style=color:#75715e>// 注意这个位置
-</span><span style=color:#75715e></span>        <span style=color:#75715e>// 最后拼接的储存路径，是由用户提交上的数据来做为路径
-</span><span style=color:#75715e></span>        $img_path <span style=color:#f92672>=</span> $_POST[<span style=color:#e6db74>&#39;save_path&#39;</span>]<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;/&#34;</span><span style=color:#f92672>.</span><span style=color:#a6e22e>rand</span>(<span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>99</span>)<span style=color:#f92672>.</span><span style=color:#a6e22e>date</span>(<span style=color:#e6db74>&#34;YmdHis&#34;</span>)<span style=color:#f92672>.</span><span style=color:#e6db74>&#34;.&#34;</span><span style=color:#f92672>.</span>$file_ext;
+<span class=c1>// Generate Anti-CSRF token
+</span><span class=c1></span><span class=nx>generateSessionToken</span><span class=p>();</span>
+</code></pre></td></tr></table></div></div><h3 id=extension>Extension</h3><p><strong>00%截断</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-PHP data-lang=PHP><span class=nv>$is_upload</span> <span class=o>=</span> <span class=k>false</span><span class=p>;</span>
+<span class=nv>$msg</span> <span class=o>=</span> <span class=k>null</span><span class=p>;</span>
+<span class=k>if</span><span class=p>(</span><span class=nx>isset</span><span class=p>(</span><span class=nv>$_POST</span><span class=p>[</span><span class=s1>&#39;submit&#39;</span><span class=p>])){</span>
+    <span class=c1>// 白名单
+</span><span class=c1></span>    <span class=nv>$ext_arr</span> <span class=o>=</span> <span class=k>array</span><span class=p>(</span><span class=s1>&#39;jpg&#39;</span><span class=p>,</span><span class=s1>&#39;png&#39;</span><span class=p>,</span><span class=s1>&#39;gif&#39;</span><span class=p>);</span>
+    <span class=nv>$file_ext</span> <span class=o>=</span> <span class=nx>substr</span><span class=p>(</span><span class=nv>$_FILES</span><span class=p>[</span><span class=s1>&#39;upload_file&#39;</span><span class=p>][</span><span class=s1>&#39;name&#39;</span><span class=p>],</span><span class=nx>strrpos</span><span class=p>(</span><span class=nv>$_FILES</span><span class=p>[</span><span class=s1>&#39;upload_file&#39;</span><span class=p>][</span><span class=s1>&#39;name&#39;</span><span class=p>],</span><span class=s2>&#34;.&#34;</span><span class=p>)</span><span class=o>+</span><span class=mi>1</span><span class=p>);</span>
+    <span class=k>if</span><span class=p>(</span><span class=nx>in_array</span><span class=p>(</span><span class=nv>$file_ext</span><span class=p>,</span><span class=nv>$ext_arr</span><span class=p>)){</span>
+        <span class=nv>$temp_file</span> <span class=o>=</span> <span class=nv>$_FILES</span><span class=p>[</span><span class=s1>&#39;upload_file&#39;</span><span class=p>][</span><span class=s1>&#39;tmp_name&#39;</span><span class=p>];</span>
+        <span class=c1>// 注意这个位置
+</span><span class=c1></span>        <span class=c1>// 最后拼接的储存路径，是由用户提交上的数据来做为路径
+</span><span class=c1></span>        <span class=nv>$img_path</span> <span class=o>=</span> <span class=nv>$_POST</span><span class=p>[</span><span class=s1>&#39;save_path&#39;</span><span class=p>]</span><span class=o>.</span><span class=s2>&#34;/&#34;</span><span class=o>.</span><span class=nx>rand</span><span class=p>(</span><span class=mi>10</span><span class=p>,</span> <span class=mi>99</span><span class=p>)</span><span class=o>.</span><span class=nx>date</span><span class=p>(</span><span class=s2>&#34;YmdHis&#34;</span><span class=p>)</span><span class=o>.</span><span class=s2>&#34;.&#34;</span><span class=o>.</span><span class=nv>$file_ext</span><span class=p>;</span>
 
-        <span style=color:#66d9ef>if</span>(<span style=color:#a6e22e>move_uploaded_file</span>($temp_file,$img_path)){
-            $is_upload <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
-        } <span style=color:#66d9ef>else</span> {
-            $msg <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;上传失败&#34;</span>;
-        }
-    } <span style=color:#66d9ef>else</span> {
-        $msg <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;只允许上传.jpg|.png|.gif类型文件！&#34;</span>;
-    }
-}
-</code></pre></div><p>代码采用的白名单校验，只允许上传图片格式，理论上这个上传是不好绕过的。</p><p>但是后面采用保存文件的时候，是路径拼接的形式，而路径又是从前端获取，所以我们可以在路径上做手脚。</p><p>如下上传，显示文件路径中有个空格，这并不是真正意义上的空格，而是%00截断后显示成的空格。</p><blockquote><p>在url中%00表示ascll码中的0 ，而ascii中0作为特殊字符保留，表示字符串结束，所以当url中出现%00时就会认为读取已结束 (php版本要小于5.3.4，5.3.4及以上已经修复该问题)</p></blockquote></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+        <span class=k>if</span><span class=p>(</span><span class=nx>move_uploaded_file</span><span class=p>(</span><span class=nv>$temp_file</span><span class=p>,</span><span class=nv>$img_path</span><span class=p>)){</span>
+            <span class=nv>$is_upload</span> <span class=o>=</span> <span class=k>true</span><span class=p>;</span>
+        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+            <span class=nv>$msg</span> <span class=o>=</span> <span class=s2>&#34;上传失败&#34;</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+        <span class=nv>$msg</span> <span class=o>=</span> <span class=s2>&#34;只允许上传.jpg|.png|.gif类型文件！&#34;</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table></div></div><p>代码采用的白名单校验，只允许上传图片格式，理论上这个上传是不好绕过的。</p><p>但是后面采用保存文件的时候，是路径拼接的形式，而路径又是从前端获取，所以我们可以在路径上做手脚。</p><p>如下上传，显示文件路径中有个空格，这并不是真正意义上的空格，而是%00截断后显示成的空格。</p><blockquote><p>在url中%00表示ascll码中的0 ，而ascii中0作为特殊字符保留，表示字符串结束，所以当url中出现%00时就会认为读取已结束 (php版本要小于5.3.4，5.3.4及以上已经修复该问题)</p></blockquote></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/sql_injection_blind/ title="Previous post (older)"><span>Previous</span>
+Sql Injection Blind</a>
+<a rel=next href=/blog/consistent_hash_algorithm/ title="Next post (newer)"><span>Next</span>
+一致性哈希算法</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

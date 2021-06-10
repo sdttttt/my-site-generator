@@ -1,40 +1,82 @@
-<!doctype html><html lang=zh-cn><title>Azure Pipelines | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/azure_pipelines/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>Azure Pipelines</h1></header><p>Azure Pipelines是一种云服务，可用于自动构建和测试您的代码项目并将其提供给其他用户。它几乎适用于任何语言或项目类型。</p><p>Azure Pipelines将持续集成（CI）和持续交付（CD）相结合，以持续不断地测试和构建您的代码并将其交付给任何目标。</p><p>Azure Pipelines 支持非常多的语言。</p><h4 id=price>Price</h4><p>如果使用公共项目，则Azure Pipelines是免费的。如果您使用私人项目，则每月可以免费运行多达1800分钟（30小时）的管道作业。了解有关基于并行作业定价的更多信息。</p><p>是不是非常的棒呢 o(<em>////▽////</em>)q</p><p><strong>请遵循以下基本步骤：</strong></p><ul><li>配置Azure Pipelines以使用您的Git存储库。</li><li>编辑azure-pipelines.yml文件以定义构建。</li><li>将您的代码推送到版本控制存储库。此操作将启动默认触发器以构建和部署，然后监视结果。</li></ul><h2 id=ruby>Ruby</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#75715e># Ruby</span>
-<span style=color:#75715e># Package your Ruby project.</span>
-<span style=color:#75715e># Add steps that install rails, analyze code, save build artifacts, deploy, and more:</span>
-<span style=color:#75715e># https://docs.microsoft.com/azure/devops/pipelines/languages/ruby</span>
-
-<span style=color:#f92672>trigger</span>:
-  <span style=color:#f92672>branches</span>:
-    <span style=color:#75715e># 只有以下分支提交才会触发CICD</span>
-    <span style=color:#f92672>include</span>:
-      - <span style=color:#ae81ff>master</span>
-      - <span style=color:#ae81ff>sdtttttt</span>
-      - <span style=color:#ae81ff>CICD</span>
-      - <span style=color:#ae81ff>depend*</span>
-  <span style=color:#f92672>paths</span>:
-    <span style=color:#75715e># 只有以下文件提交时不触发CICD</span>
-    <span style=color:#f92672>exclude</span>:
-      - <span style=color:#ae81ff>README.md</span>
-      - <span style=color:#ae81ff>appveyor.yml</span>
-
-<span style=color:#f92672>pool</span>:
-  <span style=color:#f92672>vmImage</span>: <span style=color:#e6db74>&#39;ubuntu-18.04&#39;</span>
-
-<span style=color:#f92672>steps</span>:
-- <span style=color:#f92672>task</span>: <span style=color:#ae81ff>UseRubyVersion@0</span>
-  <span style=color:#f92672>inputs</span>:
-  <span style=color:#75715e># 天杀的，微软提供的Ubuntu 镜像已经不支持 Ruby2.6.3</span>
-    <span style=color:#f92672>versionSpec</span>: <span style=color:#e6db74>&#39;&gt;= 2.6.3&#39;</span>
-
-<span style=color:#75715e># Rails 内置数据库 SQLite3 需要依赖以下工具</span>
-- <span style=color:#f92672>script</span>: <span style=color:#ae81ff>sudo apt-get -yqq install libsqlite3-dev libpq-dev</span>
-  <span style=color:#f92672>displayName</span>: <span style=color:#ae81ff>install sqlite3</span>
-
-- <span style=color:#f92672>script</span>: |<span style=color:#e6db74>
-</span><span style=color:#e6db74>    gem install bundler
-</span><span style=color:#e6db74>    bundle install --retry=3 --jobs=4</span>    
-  <span style=color:#f92672>displayName</span>: <span style=color:#e6db74>&#39;bundle install&#39;</span>
-
-- <span style=color:#f92672>script</span>: <span style=color:#ae81ff>bundle exec rake</span>
-  <span style=color:#f92672>displayName</span>: <span style=color:#e6db74>&#39;bundle exec rake&#39;</span>
-</code></pre></div></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>Azure Pipelines | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>Azure Pipelines</h1><div class=post-meta><div>By on <time>January 01, 0001</time></div><div class=tags><a href=/tags/cicd/>CICD</a></div></div></div></div></header></article><div class=article-post><p>Azure Pipelines是一种云服务，可用于自动构建和测试您的代码项目并将其提供给其他用户。它几乎适用于任何语言或项目类型。</p><p>Azure Pipelines将持续集成（CI）和持续交付（CD）相结合，以持续不断地测试和构建您的代码并将其交付给任何目标。</p><p>Azure Pipelines 支持非常多的语言。</p><h4 id=price>Price</h4><p>如果使用公共项目，则Azure Pipelines是免费的。如果您使用私人项目，则每月可以免费运行多达1800分钟（30小时）的管道作业。了解有关基于并行作业定价的更多信息。</p><p>是不是非常的棒呢 o(<em>////▽////</em>)q</p><p><strong>请遵循以下基本步骤：</strong></p><ul><li>配置Azure Pipelines以使用您的Git存储库。</li><li>编辑azure-pipelines.yml文件以定义构建。</li><li>将您的代码推送到版本控制存储库。此操作将启动默认触发器以构建和部署，然后监视结果。</li></ul><h2 id=ruby>Ruby</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=c># Ruby</span><span class=w>
+</span><span class=w></span><span class=c># Package your Ruby project.</span><span class=w>
+</span><span class=w></span><span class=c># Add steps that install rails, analyze code, save build artifacts, deploy, and more:</span><span class=w>
+</span><span class=w></span><span class=c># https://docs.microsoft.com/azure/devops/pipelines/languages/ruby</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>trigger</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>branches</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=c># 只有以下分支提交才会触发CICD</span><span class=w>
+</span><span class=w>    </span><span class=nt>include</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=l>master</span><span class=w>
+</span><span class=w>      </span>- <span class=l>sdtttttt</span><span class=w>
+</span><span class=w>      </span>- <span class=l>CICD</span><span class=w>
+</span><span class=w>      </span>- <span class=l>depend*</span><span class=w>
+</span><span class=w>  </span><span class=nt>paths</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=c># 只有以下文件提交时不触发CICD</span><span class=w>
+</span><span class=w>    </span><span class=nt>exclude</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=l>README.md</span><span class=w>
+</span><span class=w>      </span>- <span class=l>appveyor.yml</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>pool</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>vmImage</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;ubuntu-18.04&#39;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span><span class=w></span>- <span class=nt>task</span><span class=p>:</span><span class=w> </span><span class=l>UseRubyVersion@0</span><span class=w>
+</span><span class=w>  </span><span class=nt>inputs</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=c># 天杀的，微软提供的Ubuntu 镜像已经不支持 Ruby2.6.3</span><span class=w>
+</span><span class=w>    </span><span class=nt>versionSpec</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;&gt;= 2.6.3&#39;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># Rails 内置数据库 SQLite3 需要依赖以下工具</span><span class=w>
+</span><span class=w></span>- <span class=nt>script</span><span class=p>:</span><span class=w> </span><span class=l>sudo apt-get -yqq install libsqlite3-dev libpq-dev</span><span class=w>
+</span><span class=w>  </span><span class=nt>displayName</span><span class=p>:</span><span class=w> </span><span class=l>install sqlite3</span><span class=w>
+</span><span class=w>
+</span><span class=w></span>- <span class=nt>script</span><span class=p>:</span><span class=w> </span><span class=p>|</span><span class=sd>
+</span><span class=sd>    gem install bundler
+</span><span class=sd>    bundle install --retry=3 --jobs=4</span><span class=w>    
+</span><span class=w>  </span><span class=nt>displayName</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;bundle install&#39;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span>- <span class=nt>script</span><span class=p>:</span><span class=w> </span><span class=l>bundle exec rake</span><span class=w>
+</span><span class=w>  </span><span class=nt>displayName</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;bundle exec rake&#39;</span><span class=w>
+</span></code></pre></td></tr></table></div></div></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/rails_development/ title="Previous post (older)"><span>Previous</span>
+Rails Development</a>
+<a rel=next href=/blog/appveyor/ title="Next post (newer)"><span>Next</span>
+Appveyor</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

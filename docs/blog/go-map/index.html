@@ -1,19 +1,39 @@
-<!doctype html><html lang=zh-cn><title>Go的map的个什么结构 | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Go的map是怎么工作的。"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/go-map/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>Go的map的个什么结构</h1><time datetime=2020-11-13T15:31:53+08:00>November 13, 2020</time></header><p>实际上<code>Go</code>的<code>map</code>和<code>Java7</code>之前的<code>HashMap</code>, 非常相似。都是<code>Array</code> + <code>LinkedTable</code>的结构。</p><h3 id=结构>结构</h3><p><code>map</code>数据结构由<code>runtime/map.go/hmap</code>定义:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go>
-<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>hmap</span> <span style=color:#66d9ef>struct</span> {
- <span style=color:#a6e22e>count</span>     <span style=color:#66d9ef>int</span> <span style=color:#75715e>// 当前保存的元素个数
-</span><span style=color:#75715e></span> <span style=color:#f92672>...</span>
- <span style=color:#a6e22e>B</span>         <span style=color:#66d9ef>uint8</span>  <span style=color:#75715e>// 指示bucket数组的大小
-</span><span style=color:#75715e></span> <span style=color:#f92672>...</span>
- <span style=color:#a6e22e>buckets</span>    <span style=color:#a6e22e>unsafe</span>.<span style=color:#a6e22e>Pointer</span> <span style=color:#75715e>// bucket数组指针，数组的大小为2^B
-</span><span style=color:#75715e></span> <span style=color:#f92672>...</span>
-}
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>Go的map的个什么结构 | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>Go的map的个什么结构</h1><div class=post-meta><div>By sdttttt on <time>November 13, 2020</time></div><div class=tags><a href=/tags/go/>Go</a></div></div></div></div></header></article><div class=article-post><p>实际上<code>Go</code>的<code>map</code>和<code>Java7</code>之前的<code>HashMap</code>, 非常相似。都是<code>Array</code> + <code>LinkedTable</code>的结构。</p><h3 id=结构>结构</h3><p><code>map</code>数据结构由<code>runtime/map.go/hmap</code>定义:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go>
+<span class=kd>type</span> <span class=nx>hmap</span> <span class=kd>struct</span> <span class=p>{</span>
+ <span class=nx>count</span>     <span class=kt>int</span> <span class=c1>// 当前保存的元素个数
+</span><span class=c1></span> <span class=o>...</span>
+ <span class=nx>B</span>         <span class=kt>uint8</span>  <span class=c1>// 指示bucket数组的大小
+</span><span class=c1></span> <span class=o>...</span>
+ <span class=nx>buckets</span>    <span class=nx>unsafe</span><span class=p>.</span><span class=nx>Pointer</span> <span class=c1>// bucket数组指针，数组的大小为2^B
+</span><span class=c1></span> <span class=o>...</span>
+<span class=p>}</span>
 
-</code></pre></div><p><code>bucket</code>数据结构由<code>runtime/map.go/bmap</code>定义：</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go>
-<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>bmap</span> <span style=color:#66d9ef>struct</span> {
- <span style=color:#a6e22e>tophash</span> [<span style=color:#ae81ff>8</span>]<span style=color:#66d9ef>uint8</span> <span style=color:#75715e>//存储哈希值的高8位
-</span><span style=color:#75715e></span> <span style=color:#a6e22e>data</span>    <span style=color:#66d9ef>byte</span>[<span style=color:#ae81ff>1</span>]  <span style=color:#75715e>//key value数据:key/key/key/.../value/value/value...
-</span><span style=color:#75715e></span> <span style=color:#a6e22e>overflow</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>bmap</span>   <span style=color:#75715e>//溢出bucket的地址
-</span><span style=color:#75715e></span>}
+</code></pre></td></tr></table></div></div><p><code>bucket</code>数据结构由<code>runtime/map.go/bmap</code>定义：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-go data-lang=go>
+<span class=kd>type</span> <span class=nx>bmap</span> <span class=kd>struct</span> <span class=p>{</span>
+ <span class=nx>tophash</span> <span class=p>[</span><span class=mi>8</span><span class=p>]</span><span class=kt>uint8</span> <span class=c1>//存储哈希值的高8位
+</span><span class=c1></span> <span class=nx>data</span>    <span class=kt>byte</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>  <span class=c1>//key value数据:key/key/key/.../value/value/value...
+</span><span class=c1></span> <span class=nx>overflow</span> <span class=o>*</span><span class=nx>bmap</span>   <span class=c1>//溢出bucket的地址
+</span><span class=c1></span><span class=p>}</span>
 
-</code></pre></div><p>这里使用的数组对齐方式来存放数据。<code>overflow</code>指向下一个<code>bucket</code>.</p><h3 id=工作流程>工作流程</h3><p>首先通过<code>key</code>计算Hash值，通过Hash的低位，计算出该元素需要存放在<code>buckets</code>中的哪一个<code>bucket</code>.
-如果Hash冲突，也就是当前<code>bucket</code>已经有人进去了。那么就使用该<code>bucket</code>的<code>overflow</code>指向自己的<code>bucket</code>.</p><p>查找元素也是大同小异。</p></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+</code></pre></td></tr></table></div></div><p>这里使用的数组对齐方式来存放数据。<code>overflow</code>指向下一个<code>bucket</code>.</p><h3 id=工作流程>工作流程</h3><p>首先通过<code>key</code>计算Hash值，通过Hash的低位，计算出该元素需要存放在<code>buckets</code>中的哪一个<code>bucket</code>.
+如果Hash冲突，也就是当前<code>bucket</code>已经有人进去了。那么就使用该<code>bucket</code>的<code>overflow</code>指向自己的<code>bucket</code>.</p><p>查找元素也是大同小异。</p></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/grc-4/ title="Previous post (older)"><span>Previous</span>
+GRC 4</a>
+<a rel=next href=/blog/grc-5/ title="Next post (newer)"><span>Next</span>
+GRC 5</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>

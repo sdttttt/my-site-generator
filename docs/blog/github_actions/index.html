@@ -1,28 +1,58 @@
-<!doctype html><html lang=zh-cn><title>Github Actions | SDTTTTT's Log</title><meta charset=utf-8><meta name=generator content="Hugo 0.76.5"><meta name=description content="Hugo ---sdttttt"><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=https://sdttttt.github.io/css/index.css><link rel=canonical href=https://sdttttt.github.io/blog/github_actions/><link rel=alternate type=application/rss+xml href title="SDTTTTT's Log"><header><a href=https://sdttttt.github.io/ class=title>SDTTTTT's Log</a><nav><a href=/about/>About</a></nav></header><article><header><h1>Github Actions</h1><time datetime=2020-03-11T00:50:00+08:00>March 11, 2020</time></header><h2 id=github-actions-上传-releases>Github Actions 上传 Releases</h2><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>name</span>: <span style=color:#ae81ff>release</span>
-
-<span style=color:#75715e># https://help.github.com/en/articles/workflow-syntax-for-github-actions#on</span>
-<span style=color:#f92672>on</span>:
-  <span style=color:#f92672>push</span>:
-    <span style=color:#f92672>tags</span>:
-      - <span style=color:#e6db74>&#39;*&#39;</span>
-
-<span style=color:#f92672>jobs</span>:
-  <span style=color:#f92672>build</span>:
-    <span style=color:#f92672>runs-on</span>: <span style=color:#ae81ff>ubuntu-latest</span>
-    <span style=color:#f92672>steps</span>:
-    - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>actions/checkout@v1</span>
-    - <span style=color:#f92672>name</span>: <span style=color:#e6db74>&#34;find env&#34;</span>
-      <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
-</span><span style=color:#e6db74>        set | grep GITHUB_ | grep -v GITHUB_TOKEN
-</span><span style=color:#e6db74>        zip -r pkg.zip *.md</span>        
-    - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>xresloader/upload-to-github-release@v1</span>
-      <span style=color:#f92672>env</span>:
-        <span style=color:#f92672>GITHUB_TOKEN</span>: <span style=color:#ae81ff>${{ secrets.GITHUB_TOKEN }}</span>
-      <span style=color:#f92672>with</span>:
-        <span style=color:#f92672>file</span>: <span style=color:#e6db74>&#34;*.md;*.zip&#34;</span>
-        <span style=color:#f92672>tags</span>: <span style=color:#66d9ef>true</span>
-        <span style=color:#f92672>draft</span>: <span style=color:#66d9ef>false</span>
-        <span style=color:#f92672>prerelease</span>: <span style=color:#66d9ef>true</span>
-        <span style=color:#f92672>overwrite</span>: <span style=color:#66d9ef>true</span>
-        <span style=color:#f92672>verbose</span>: <span style=color:#66d9ef>true</span>
-</code></pre></div></article><script src=https://utteranc.es/client.js repo=sdttttt/sdttttt.github.io issue-term=pathname theme=github-light crossorigin=anonymous async></script></html>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=theme-color content="dark"><title>Github Actions | SDTTTTT</title><link rel=stylesheet href=/sass/main.min.12754930aaca2409561861a9f13c52153f073ef96d63061a9a330c250f392fcb.css></head><body class=dark><nav class=navbar><div class=container><div class=flex><div><a class=brand href=/>SDTTTTT</a></div><div class=flex><button id=dark-mode-button></button></div></div></div></nav><main><div class=container><article><header class=article-header><div class=thumb><div><h1>Github Actions</h1><div class=post-meta><div>By on <time>March 11, 2020</time></div><div class=tags></div></div></div></div></header></article><div class=article-post><h2 id=github-actions-上传-releases>Github Actions 上传 Releases</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre class=chroma><code class=language-yaml data-lang=yaml><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>release</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=c># https://help.github.com/en/articles/workflow-syntax-for-github-actions#on</span><span class=w>
+</span><span class=w></span><span class=nt>on</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>push</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>tags</span><span class=p>:</span><span class=w>
+</span><span class=w>      </span>- <span class=s1>&#39;*&#39;</span><span class=w>
+</span><span class=w>
+</span><span class=w></span><span class=nt>jobs</span><span class=p>:</span><span class=w>
+</span><span class=w>  </span><span class=nt>build</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span><span class=nt>runs-on</span><span class=p>:</span><span class=w> </span><span class=l>ubuntu-latest</span><span class=w>
+</span><span class=w>    </span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/checkout@v1</span><span class=w>
+</span><span class=w>    </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;find env&#34;</span><span class=w>
+</span><span class=w>      </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=p>|</span><span class=sd>
+</span><span class=sd>        set | grep GITHUB_ | grep -v GITHUB_TOKEN
+</span><span class=sd>        zip -r pkg.zip *.md</span><span class=w>        
+</span><span class=w>    </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>xresloader/upload-to-github-release@v1</span><span class=w>
+</span><span class=w>      </span><span class=nt>env</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span><span class=nt>GITHUB_TOKEN</span><span class=p>:</span><span class=w> </span><span class=l>${{ secrets.GITHUB_TOKEN }}</span><span class=w>
+</span><span class=w>      </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span><span class=w>        </span><span class=nt>file</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;*.md;*.zip&#34;</span><span class=w>
+</span><span class=w>        </span><span class=nt>tags</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>        </span><span class=nt>draft</span><span class=p>:</span><span class=w> </span><span class=kc>false</span><span class=w>
+</span><span class=w>        </span><span class=nt>prerelease</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>        </span><span class=nt>overwrite</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span><span class=w>        </span><span class=nt>verbose</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span></code></pre></td></tr></table></div></div></div></div><div class=container><nav class="flex container suggested"><a rel=prev href=/blog/appveyor/ title="Previous post (older)"><span>Previous</span>
+Appveyor</a>
+<a rel=next href=/blog/protubuf/ title="Next post (newer)"><span>Next</span>
+Protubuf 原理</a></nav></div></main></main><footer class="footer flex"><section class=container><nav class=footer-links></nav></section><script async src=/js/features.min.f77830aff4bfb7a756b9ef68388f40d2187cb0046d41790785074eb8cd054cc3.js data-enable-footnotes=true></script></footer></body></html>
