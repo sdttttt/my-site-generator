@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on SDTTTTT's Log</title><link>https://sdttttt.github.io/blog/</link><description>Recent content in Blogs on SDTTTTT's Log</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Copyright © 2020, SDTTTTT.</copyright><lastBuildDate>Fri, 16 Apr 2021 11:26:17 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Free Software</title><link>https://sdttttt.github.io/blog/free-software/</link><pubDate>Fri, 16 Apr 2021 11:26:17 +0800</pubDate><guid>https://sdttttt.github.io/blog/free-software/</guid><description>最近把我所有在github上软件的许可证换成了The Unlicense. 为啥呢.. 这个就不得不说一下关于理查德·马修·斯托曼的一个故事..
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Blogs on SDTTTTT's Log</title><link>https://sdttttt.github.io/blog/</link><description>Recent content in Blogs on SDTTTTT's Log</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><copyright>Copyright © 2020, SDTTTTT.</copyright><lastBuildDate>Thu, 10 Jun 2021 15:38:03 +0800</lastBuildDate><atom:link href="https://sdttttt.github.io/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>New PC</title><link>https://sdttttt.github.io/blog/about-mbp/</link><pubDate>Thu, 10 Jun 2021 15:38:03 +0800</pubDate><guid>https://sdttttt.github.io/blog/about-mbp/</guid><description>最近入手了一台二手的 16 款 MBP. 配置是 i7-6700|16G|视网膜屏幕|512G 价格是 7000
+购买的时候是周四，第二周的星期一到的。 总结来说这台机器的情况比我想得要好，外壳上有一些使用痕迹，这挺正常，机器屏幕和键盘都是完好的，硬件也没有缺陷，驱动都可以正常使用。
+还有充电循环只有 1 次，也就是基本是 99 新的机器。 真tm是捡到宝了。
+虽然这玩意是16年的机器，不过使用X OS 10.15.7版本还是很流畅的。最新的Big Sur就不升级了，感觉会被负优化。
+唯一比较有遗憾的就是MBP发热都是这么严重的么。打开网页看一会视频，键盘面的额头就开始发烫，摸上去感觉有60度了。
+这个散热真的大丈夫？
+最后说说感想吧，头一次用苹果的产品，整个笔记本无论是硬件还是软件的设计只能用一个词来形容： 性感。</description></item><item><title>宏</title><link>https://sdttttt.github.io/blog/hong/</link><pubDate>Fri, 23 Apr 2021 16:18:21 +0800</pubDate><guid>https://sdttttt.github.io/blog/hong/</guid><description>前几天在B乎上看到一个问题&amp;hellip;《java有没有宏？》
+这&amp;hellip;我想了半天，这种语法规则问题基本百度就能找到，这&amp;hellip;
+java作为解释型语言宏肯定是没有的&amp;hellip;这里稍微说一下宏这个东西的作用吧。
+C/C++等编译型语言一般为了跨平台编译的方便性，肯定会在一些无法跨平台的代码中编写宏，宏会在编译期展开不会影响程序在执行时的性能。
+宏具体会怎么展开就要看展开的条件了，比如只有类UNIX才能用的宏，或者配合环境变量展开的宏。还有一些能节省代码的宏。
+Rust的宏非常变态，你甚至可以用Rust的宏自定义一门编程语言&amp;hellip;
+解释型语言基本上屏蔽了不同平台之间的细节，而且没有编译期，也就不需要宏这种东西了。</description></item><item><title>Free Software</title><link>https://sdttttt.github.io/blog/free-software/</link><pubDate>Fri, 16 Apr 2021 11:26:17 +0800</pubDate><guid>https://sdttttt.github.io/blog/free-software/</guid><description>最近把我所有在github上软件的许可证换成了The Unlicense. 为啥呢.. 这个就不得不说一下关于理查德·马修·斯托曼的一个故事..
 理查德·马修·斯托曼可以说是GNU的领袖. 别和我说你不知道GNU是什么.. 如果你不知道也不用去查, 等会会讲到.. 上世纪80年代, 黑客文化被资本主义侵蚀, 诞生了很多专利软件, 在黑客社区里有相当一部分的人都流失了, 应该说是被挖走了.
 这个黑客的意思是计算机技术专家,狂热爱好者.
 斯托曼为了抗衡专利软件, 就创建了GNU计划. GNU在百科上也能看到, 是一套兼容于UNIX的操作系统. 内部包含了所有GNU的一系列自由软件.
